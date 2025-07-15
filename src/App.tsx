@@ -9,7 +9,7 @@ import {
   PlayIcon,
   SparklesIcon,
   CogIcon,
-  EyeIcon,
+    EyeIcon,
   XMarkIcon,
   PlusIcon,
   TrashIcon,
@@ -200,7 +200,7 @@ function App() {
     return filteredLocations.filter(loc => selectedLocationIds.includes(loc.id));
   }, [useExclusionMode, filteredLocations, excludedLocationIds, selectedLocationIds]);
 
-  // Dynamic stats calculation
+  // Dynamic stats calculation - Updated for single file export
   const stats = useMemo(() => {
     const totalCampaigns = effectiveSelectedLocations.length * campaignConfig.ads.length;
     const totalBudget = campaignConfig.budget * totalCampaigns;
@@ -212,7 +212,7 @@ function App() {
       estimatedReach,
       selectedLocations: effectiveSelectedLocations.length,
       totalAds: campaignConfig.ads.length,
-      totalFiles: campaignConfig.ads.length
+      totalFiles: 1 // Single file export
     };
   }, [effectiveSelectedLocations.length, campaignConfig.ads.length, campaignConfig.budget]);
 
@@ -311,41 +311,37 @@ function App() {
     try {
       setCurrentStep(5);
       
-      // Generate a separate campaign for each ad with location-specific radius
-      const jobs = await Promise.all(
-        campaignConfig.ads.map(async (ad) => {
-          // Create location-specific ad configurations
-          const locationSpecificAds = effectiveSelectedLocations.map(location => ({
-            ...ad,
-            radius: `${location.locationPrime}+4m`, // Dynamic radius with location code
-            scheduledDate: campaignConfig.selectedDate.toLocaleDateString('en-US')
-          }));
-
-          const response = await mockApi.generateAds(
-            effectiveSelectedLocations.map(loc => loc.id),
-            [ad.templateId],
-            {
-              format: 'excel',
-              includeHeaders: true,
-              customFields: ['landingPage', 'radius', 'caption', 'additionalNotes', 'scheduledDate', 'status'],
-              fileName: `${campaignConfig.prefix}_${campaignConfig.platform}_${campaignConfig.month}${campaignConfig.day}_${ad.name.replace(/\s+/g, '_')}_campaigns.xlsx`,
-              campaign: {
-                ...campaignConfig,
-                ads: locationSpecificAds // Each file contains location-specific variations
-              }
-            }
-          );
-          return response.data;
-        })
+      // Generate a single file containing all campaigns and ads
+      const locationSpecificAds = effectiveSelectedLocations.flatMap(location => 
+        campaignConfig.ads.map(ad => ({
+          ...ad,
+          radius: `${location.locationPrime}+4m`, // Dynamic radius with location code
+          scheduledDate: campaignConfig.selectedDate.toLocaleDateString('en-US'),
+          locationId: location.id // Add location reference
+        }))
       );
 
-      // For demo purposes, we'll use the first job for progress tracking
-      if (jobs[0]) {
-        setGenerationJob(jobs[0]);
+      const response = await mockApi.generateAds(
+        effectiveSelectedLocations.map(loc => loc.id),
+        campaignConfig.ads.map(ad => ad.templateId),
+        {
+          format: 'excel',
+          includeHeaders: true,
+          customFields: ['landingPage', 'radius', 'caption', 'additionalNotes', 'scheduledDate', 'status'],
+          fileName: `${campaignConfig.prefix}_${campaignConfig.platform}_${campaignConfig.month}${campaignConfig.day}_AllCampaigns.xlsx`,
+          campaign: {
+            ...campaignConfig,
+            ads: locationSpecificAds // Single file contains all location-ad combinations
+          }
+        }
+      );
+
+      if (response.success && response.data) {
+        setGenerationJob(response.data);
         
         // Elegant polling with exponential backoff
         const pollStatus = async () => {
-          const statusResponse = await mockApi.getGenerationStatus(jobs[0]!.id);
+          const statusResponse = await mockApi.getGenerationStatus(response.data!.id);
           if (statusResponse.success && statusResponse.data) {
             setGenerationJob(statusResponse.data);
             
@@ -362,7 +358,7 @@ function App() {
     }
   };
 
-  // Progress steps with beautiful icons and states
+  // Progress steps with beautiful icons and states - Updated workflow: Locations -> Campaigns -> Ads
   const steps = [
     { 
       id: 1, 
@@ -373,17 +369,17 @@ function App() {
     },
     { 
       id: 2, 
-      title: 'Ads', 
-      icon: DocumentIcon, 
-      completed: campaignConfig.ads.length > 0,
-      description: 'Configure multiple ads'
+      title: 'Campaigns', 
+      icon: CogIcon, 
+      completed: campaignConfig.prefix !== '',
+      description: 'Configure campaigns'
     },
     { 
       id: 3, 
-      title: 'Configure', 
-      icon: CogIcon, 
-      completed: campaignConfig.prefix !== '',
-      description: 'Campaign settings'
+      title: 'Ads', 
+      icon: DocumentIcon, 
+      completed: campaignConfig.ads.length > 0,
+      description: 'Create ads for campaigns'
     },
     { 
       id: 4, 
@@ -397,7 +393,7 @@ function App() {
       title: 'Generate', 
       icon: SparklesIcon, 
       completed: false,
-      description: 'Create campaigns'
+      description: 'Export single file'
     }
   ];
 
@@ -422,7 +418,7 @@ function App() {
               }}
             />
             <h2 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '8px' }}>
-              Loading Campaign Studio
+              Loading Ad Tools
             </h2>
             <p style={{ color: 'var(--gray-600)' }}>
               Preparing your creative workspace...
@@ -435,14 +431,14 @@ function App() {
 
   return (
     <div className="app-container">
-      <div className="main-content">
+      <div className="main-content" style={{ paddingTop: '88px' }}>
         <motion.div
           variants={containerVariants}
           initial="hidden"
           animate="visible"
         >
           {/* App Header */}
-          <AppHeader />
+          <AppHeader onSettingsClick={() => setShowSettings(!showSettings)} />
 
           {/* Progress Steps */}
           <ProgressSteps
@@ -634,7 +630,7 @@ function App() {
                       disabled={effectiveSelectedLocations.length === 0}
                       style={{ opacity: effectiveSelectedLocations.length === 0 ? 0.5 : 1 }}
                     >
-                      Continue to Ads
+                      Continue to Campaigns
                       <ArrowRightIcon className="icon" />
                     </button>
                   </div>
@@ -643,6 +639,152 @@ function App() {
             )}
 
             {currentStep === 2 && (
+              <motion.div
+                key="campaigns"
+                variants={cardVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+              >
+                <div className="card">
+                  <div style={{ marginBottom: 'var(--space-xl)' }}>
+                    <h2 style={{ fontSize: '2rem', fontWeight: 700, marginBottom: 'var(--space-sm)' }}>
+                      Campaign Configuration
+                    </h2>
+                    <p style={{ color: 'var(--gray-600)', fontSize: '1.1rem' }}>
+                      Set up your Facebook/Meta campaign parameters. These settings will be applied to all generated campaigns.
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-3" style={{ marginBottom: 'var(--space-xl)' }}>
+                    <div className="form-group">
+                      <label className="form-label">Campaign Prefix</label>
+                      <input
+                        type="text"
+                        value={campaignConfig.prefix}
+                        onChange={(e) => setCampaignConfig(prev => ({ ...prev, prefix: e.target.value }))}
+                        className="form-input"
+                        placeholder="EWC_Meta_"
+                      />
+                    </div>
+                    
+                    <Select
+                      value={campaignConfig.platform}
+                      onChange={(value) => setCampaignConfig(prev => ({ ...prev, platform: value }))}
+                      options={[
+                        { value: 'Meta', label: 'Meta' },
+                        { value: 'Facebook', label: 'Facebook' },
+                        { value: 'Instagram', label: 'Instagram' }
+                      ]}
+                      label="Platform"
+                    />
+
+                    <div className="form-group">
+                      <ModernDatePicker
+                        value={campaignConfig.selectedDate}
+                        onChange={(date) => setCampaignConfig(prev => ({ ...prev, selectedDate: date }))}
+                        placeholder="Select campaign date"
+                        label="Campaign Date"
+                      />
+                    </div>
+
+                    <AutocompleteInput
+                      value={campaignConfig.objective}
+                      onChange={(value) => setCampaignConfig(prev => ({ ...prev, objective: value }))}
+                      options={defaultObjectives}
+                      placeholder="Select or type objective..."
+                      allowCustom={true}
+                      customLabel="Add custom objective:"
+                      label="Objective"
+                    />
+
+                    <Select
+                      value={campaignConfig.testType}
+                      onChange={(value) => setCampaignConfig(prev => ({ ...prev, testType: value }))}
+                      options={[
+                        { value: 'LocalTest', label: 'Local Test' },
+                        { value: 'RegionalTest', label: 'Regional Test' },
+                        { value: 'NationalTest', label: 'National Test' }
+                      ]}
+                      label="Test Type"
+                    />
+
+                    <div className="form-group">
+                      <label className="form-label">Budget ($)</label>
+                      <input
+                        type="number"
+                        step="0.01"
+                        value={campaignConfig.budget}
+                        onChange={(e) => setCampaignConfig(prev => ({ ...prev, budget: parseFloat(e.target.value) || 0 }))}
+                        className="form-input"
+                        placeholder="92.69"
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label className="form-label">Targeting Radius (miles)</label>
+                      <input
+                        type="number"
+                        step="0.5"
+                        min="1"
+                        max="50"
+                        value={campaignConfig.radius}
+                        onChange={(e) => setCampaignConfig(prev => ({ ...prev, radius: parseFloat(e.target.value) || 5 }))}
+                        className="form-input"
+                        placeholder="5"
+                      />
+                      <p style={{ fontSize: '0.75rem', color: 'var(--gray-500)', marginTop: 'var(--space-xs)' }}>
+                        Radius around each location's coordinates for targeting
+                      </p>
+                    </div>
+
+                    <Select
+                      value={campaignConfig.bidStrategy}
+                      onChange={(value) => setCampaignConfig(prev => ({ ...prev, bidStrategy: value }))}
+                      options={[
+                        { value: 'Highest volume or value', label: 'Highest volume or value' },
+                        { value: 'Cost cap', label: 'Cost cap' },
+                        { value: 'Bid cap', label: 'Bid cap' },
+                        { value: 'Target cost', label: 'Target cost' }
+                      ]}
+                      label="Bid Strategy"
+                    />
+
+                    <Select
+                      value={campaignConfig.duration}
+                      onChange={(value) => setCampaignConfig(prev => ({ ...prev, duration: value }))}
+                      options={[
+                        { value: 'Evergreen', label: 'Evergreen' },
+                        { value: 'Seasonal', label: 'Seasonal' },
+                        { value: 'Limited', label: 'Limited Time' }
+                      ]}
+                      label="Duration"
+                    />
+                  </div>
+
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <button
+                      className="btn btn-secondary"
+                      onClick={() => setCurrentStep(1)}
+                    >
+                      Back to Locations
+                    </button>
+                    <button
+                      className="btn btn-primary btn-lg"
+                      onClick={() => setCurrentStep(3)}
+                      disabled={campaignConfig.prefix === ''}
+                      style={{ opacity: campaignConfig.prefix === '' ? 0.5 : 1 }}
+                    >
+                      Continue to Ads
+                      <ArrowRightIcon className="icon" />
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
+            {/* Step 3: Configure Ads for the Campaign */}
+            {currentStep === 3 && (
               <motion.div
                 key="ads"
                 variants={cardVariants}
@@ -656,7 +798,7 @@ function App() {
                       Configure Campaign Ads
                     </h2>
                     <p style={{ color: 'var(--gray-600)', fontSize: '1.1rem' }}>
-                      Set up multiple ads for your campaign. Each ad will generate a separate file with all selected locations. Default is 4 ads per campaign.
+                      Set up multiple ads for your campaign. All ads will be included in a single export file. Default is 4 ads per campaign.
                     </p>
                   </div>
 
@@ -817,153 +959,7 @@ function App() {
                     </motion.button>
                   </div>
 
-                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <button
-                      className="btn btn-secondary"
-                      onClick={() => setCurrentStep(1)}
-                    >
-                      Back to Locations
-                    </button>
-                    <button
-                      className="btn btn-primary btn-lg"
-                      onClick={() => setCurrentStep(3)}
-                      disabled={campaignConfig.ads.length === 0}
-                      style={{ opacity: campaignConfig.ads.length === 0 ? 0.5 : 1 }}
-                    >
-                      Configure Campaign
-                      <ArrowRightIcon className="icon" />
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-            )}
-
-            {/* Rest of the steps remain similar but with updated stats and workflow */}
-            {currentStep === 3 && (
-              <motion.div
-                key="configure"
-                variants={cardVariants}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-              >
-                <div className="card">
-                  <div style={{ marginBottom: 'var(--space-xl)' }}>
-                    <h2 style={{ fontSize: '2rem', fontWeight: 700, marginBottom: 'var(--space-sm)' }}>
-                      Campaign Configuration
-                    </h2>
-                    <p style={{ color: 'var(--gray-600)', fontSize: '1.1rem' }}>
-                      Set up your Facebook/Meta campaign parameters. These settings will be applied to all generated campaigns.
-                    </p>
-                  </div>
-
-                  <div className="grid grid-cols-3" style={{ marginBottom: 'var(--space-xl)' }}>
-                    <div className="form-group">
-                      <label className="form-label">Campaign Prefix</label>
-                      <input
-                        type="text"
-                        value={campaignConfig.prefix}
-                        onChange={(e) => setCampaignConfig(prev => ({ ...prev, prefix: e.target.value }))}
-                        className="form-input"
-                        placeholder="EWC_Meta_"
-                      />
-                    </div>
-                    
-                    <Select
-                      value={campaignConfig.platform}
-                      onChange={(value) => setCampaignConfig(prev => ({ ...prev, platform: value }))}
-                      options={[
-                        { value: 'Meta', label: 'Meta' },
-                        { value: 'Facebook', label: 'Facebook' },
-                        { value: 'Instagram', label: 'Instagram' }
-                      ]}
-                      label="Platform"
-                    />
-
-                    <div className="form-group">
-                      <ModernDatePicker
-                        value={campaignConfig.selectedDate}
-                        onChange={(date) => setCampaignConfig(prev => ({ ...prev, selectedDate: date }))}
-                        placeholder="Select campaign date"
-                        label="Campaign Date"
-                      />
-                    </div>
-
-                    <AutocompleteInput
-                      value={campaignConfig.objective}
-                      onChange={(value) => setCampaignConfig(prev => ({ ...prev, objective: value }))}
-                      options={defaultObjectives}
-                      placeholder="Select or type objective..."
-                      allowCustom={true}
-                      customLabel="Add custom objective:"
-                      label="Objective"
-                    />
-
-                    <Select
-                      value={campaignConfig.testType}
-                      onChange={(value) => setCampaignConfig(prev => ({ ...prev, testType: value }))}
-                      options={[
-                        { value: 'LocalTest', label: 'Local Test' },
-                        { value: 'RegionalTest', label: 'Regional Test' },
-                        { value: 'NationalTest', label: 'National Test' }
-                      ]}
-                      label="Test Type"
-                    />
-
-                    <div className="form-group">
-                      <label className="form-label">Budget ($)</label>
-                      <input
-                        type="number"
-                        step="0.01"
-                        value={campaignConfig.budget}
-                        onChange={(e) => setCampaignConfig(prev => ({ ...prev, budget: parseFloat(e.target.value) || 0 }))}
-                        className="form-input"
-                        placeholder="92.69"
-                      />
-                    </div>
-
-                    <div className="form-group">
-                      <label className="form-label">Targeting Radius (miles)</label>
-                      <input
-                        type="number"
-                        step="0.5"
-                        min="1"
-                        max="50"
-                        value={campaignConfig.radius}
-                        onChange={(e) => setCampaignConfig(prev => ({ ...prev, radius: parseFloat(e.target.value) || 5 }))}
-                        className="form-input"
-                        placeholder="5"
-                      />
-                      <p style={{ fontSize: '0.75rem', color: 'var(--gray-500)', marginTop: 'var(--space-xs)' }}>
-                        Radius around each location's coordinates for targeting
-                      </p>
-                    </div>
-
-                    <Select
-                      value={campaignConfig.bidStrategy}
-                      onChange={(value) => setCampaignConfig(prev => ({ ...prev, bidStrategy: value }))}
-                      options={[
-                        { value: 'Highest volume or value', label: 'Highest volume or value' },
-                        { value: 'Cost cap', label: 'Cost cap' },
-                        { value: 'Bid cap', label: 'Bid cap' },
-                        { value: 'Target cost', label: 'Target cost' }
-                      ]}
-                      label="Bid Strategy"
-                    />
-
-                    <Select
-                      value={campaignConfig.duration}
-                      onChange={(value) => setCampaignConfig(prev => ({ ...prev, duration: value }))}
-                      options={[
-                        { value: 'Evergreen', label: 'Evergreen' },
-                        { value: 'Seasonal', label: 'Seasonal' },
-                        { value: 'Limited', label: 'Limited Time' }
-                      ]}
-                      label="Duration"
-                    />
-                  </div>
-
-                  {/* Campaign Name Preview */}
+                  {/* Single File Preview */}
                   <div className="file-naming-preview" style={{ 
                     background: 'linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(217, 70, 239, 0.1))',
                     border: '1px solid rgba(14, 165, 233, 0.2)',
@@ -972,23 +968,21 @@ function App() {
                     marginBottom: 'var(--space-xl)'
                   }}>
                     <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: 'var(--space-sm)' }}>
-                      File Naming Preview:
+                      Single File Export Preview:
                     </h3>
-                    {campaignConfig.ads.map((ad, index) => (
-                      <p key={ad.id} style={{ 
-                        fontFamily: 'JetBrains Mono, monospace',
-                        fontSize: '0.9rem',
-                        color: 'var(--primary-700)',
-                        background: 'white',
-                        padding: 'var(--space-sm) var(--space-md)',
-                        borderRadius: 'var(--radius-md)',
-                        margin: index > 0 ? 'var(--space-xs) 0 0 0' : '0 0 var(--space-xs) 0'
-                      }}>
-                        {campaignConfig.prefix}_{campaignConfig.platform}_{campaignConfig.month}{campaignConfig.day}_{ad.name.replace(/\s+/g, '_')}_campaigns.xlsx
-                      </p>
-                    ))}
+                    <p style={{ 
+                      fontFamily: 'JetBrains Mono, monospace',
+                      fontSize: '0.9rem',
+                      color: 'var(--primary-700)',
+                      background: 'white',
+                      padding: 'var(--space-sm) var(--space-md)',
+                      borderRadius: 'var(--radius-md)',
+                      margin: '0 0 var(--space-xs) 0'
+                    }}>
+                      {campaignConfig.prefix}_{campaignConfig.platform}_{campaignConfig.month}{campaignConfig.day}_AllCampaigns.xlsx
+                    </p>
                     <p style={{ fontSize: '0.875rem', color: 'var(--gray-600)', margin: 'var(--space-sm) 0 0 0' }}>
-                      Each file will contain {effectiveSelectedLocations.length} location-specific campaigns
+                      Single file containing {effectiveSelectedLocations.length} locations × {campaignConfig.ads.length} ads = {effectiveSelectedLocations.length * campaignConfig.ads.length} total campaigns
                     </p>
                   </div>
 
@@ -997,11 +991,13 @@ function App() {
                       className="btn btn-secondary"
                       onClick={() => setCurrentStep(2)}
                     >
-                      Back to Ads
+                      Back to Campaigns
                     </button>
                     <button
                       className="btn btn-primary btn-lg"
                       onClick={() => setCurrentStep(4)}
+                      disabled={campaignConfig.ads.length === 0}
+                      style={{ opacity: campaignConfig.ads.length === 0 ? 0.5 : 1 }}
                     >
                       Review Campaign
                       <ArrowRightIcon className="icon" />
@@ -1072,7 +1068,7 @@ function App() {
                     >
                       <DocumentDuplicateIcon className="icon-xl" style={{ color: 'rgba(255, 255, 255, 0.8)', marginBottom: 'var(--space-sm)' }} />
                       <div className="stat-value">{stats.totalFiles}</div>
-                      <div className="stat-label">Excel Files</div>
+                      <div className="stat-label">Excel File</div>
                     </motion.div>
                   </div>
 
@@ -1086,12 +1082,12 @@ function App() {
                     </h3>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-md)' }}>
                       {[
-                        `${stats.totalFiles} separate Excel files (one per ad variation)`,
+                        `${stats.totalFiles} comprehensive Excel file containing all campaigns`,
                         `${stats.totalCampaigns.toLocaleString()} total Facebook/Meta campaign configurations`,
-                        'Each file with complete 73-column campaign import format',
-                        `Dynamic file names: ${campaignConfig.prefix}${campaignConfig.month}${campaignConfig.day}_[AdName]_campaigns.xlsx`,
+                        'Complete 73-column campaign import format',
+                        `File name: ${campaignConfig.prefix}_${campaignConfig.platform}_${campaignConfig.month}${campaignConfig.day}_AllCampaigns.xlsx`,
                         'Location-specific targeting coordinates and demographics',
-                        'Personalized ad copy for each location',
+                        'All ad variations organized in a single file',
                         'Ready for Facebook Ads Manager bulk import'
                       ].map((item, index) => (
                         <motion.div
@@ -1134,7 +1130,7 @@ function App() {
                         }}
                       >
                         <PlayIcon className="icon" />
-                        Generate {stats.totalFiles} Campaign Files
+                        Generate Campaign File
                         <SparklesIcon className="icon" />
                       </motion.button>
                     </div>
@@ -1177,10 +1173,10 @@ function App() {
                       </motion.div>
                       
                       <h2 style={{ fontSize: '2rem', fontWeight: 700, marginBottom: 'var(--space-sm)' }}>
-                        Generating Your Campaign Files
+                        Generating Your Campaign File
                       </h2>
                       <p style={{ color: 'var(--gray-600)', fontSize: '1.1rem', marginBottom: 'var(--space-xl)' }}>
-                        Creating {stats.totalFiles} Excel files with {stats.totalCampaigns.toLocaleString()} Facebook/Meta campaigns
+                        Creating single Excel file with {stats.totalCampaigns.toLocaleString()} Facebook/Meta campaigns
                       </p>
                       
                       {/* Progress Bar */}
@@ -1235,10 +1231,10 @@ function App() {
                       </motion.div>
                       
                       <h2 style={{ fontSize: '2rem', fontWeight: 700, marginBottom: 'var(--space-sm)' }}>
-                        Campaign Files Generated!
+                        Campaign File Generated!
                       </h2>
                       <p style={{ color: 'var(--gray-600)', fontSize: '1.1rem', marginBottom: 'var(--space-xl)' }}>
-                        Successfully generated {stats.totalFiles} Excel files with {stats.totalCampaigns.toLocaleString()} Facebook/Meta campaigns
+                        Successfully generated Excel file with {stats.totalCampaigns.toLocaleString()} Facebook/Meta campaigns
                       </p>
                       
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-md)', alignItems: 'center' }}>
@@ -1256,38 +1252,35 @@ function App() {
                           Preview Generated Data
                         </motion.button>
                         
-                        {campaignConfig.ads.map((ad, index) => (
-                          <motion.button
-                            key={ad.id}
-                            className="btn btn-success btn-lg"
-                            onClick={async () => {
-                              try {
-                                const response = await mockApi.downloadGeneratedFile(generationJob.id);
-                                if (response.success && response.data) {
-                                  const url = URL.createObjectURL(response.data);
-                                  const a = document.createElement('a');
-                                  a.href = url;
-                                  a.download = `${campaignConfig.prefix}${campaignConfig.month}${campaignConfig.day}_${ad.name.replace(/\s+/g, '_')}_campaigns.xlsx`;
-                                  document.body.appendChild(a);
-                                  a.click();
-                                  document.body.removeChild(a);
-                                  URL.revokeObjectURL(url);
-                                }
-                              } catch (error) {
-                                console.error('Download failed:', error);
+                        <motion.button
+                          className="btn btn-success btn-lg"
+                          onClick={async () => {
+                            try {
+                              const response = await mockApi.downloadGeneratedFile(generationJob.id);
+                              if (response.success && response.data) {
+                                const url = URL.createObjectURL(response.data);
+                                const a = document.createElement('a');
+                                a.href = url;
+                                a.download = `${campaignConfig.prefix}_${campaignConfig.platform}_${campaignConfig.month}${campaignConfig.day}_AllCampaigns.xlsx`;
+                                document.body.appendChild(a);
+                                a.click();
+                                document.body.removeChild(a);
+                                URL.revokeObjectURL(url);
                               }
-                            }}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: (index + 1) * 0.1 }}
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            style={{ minWidth: '300px' }}
-                          >
-                            <DownloadIcon className="icon" />
-                            Download {ad.name} File
-                          </motion.button>
-                        ))}
+                            } catch (error) {
+                              console.error('Download failed:', error);
+                            }
+                          }}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.2 }}
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          style={{ minWidth: '300px' }}
+                        >
+                          <DownloadIcon className="icon" />
+                          Download All Campaigns
+                        </motion.button>
                       </div>
                     </motion.div>
                   )}
@@ -1335,16 +1328,6 @@ function App() {
           </AnimatePresence>
         </motion.div>
       </div>
-
-      {/* Floating Settings Button */}
-      <motion.button
-        className="fab"
-        onClick={() => setShowSettings(!showSettings)}
-        whileHover={{ rotate: 180 }}
-        whileTap={{ scale: 0.9 }}
-      >
-        <CogIcon className="icon-lg" />
-      </motion.button>
 
       {/* Settings Panel */}
       <div className={`settings-panel ${showSettings ? 'open' : ''}`}>

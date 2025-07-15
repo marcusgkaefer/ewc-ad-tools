@@ -1,214 +1,170 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import {
-  SparklesIcon,
-  BoltIcon,
-  RocketLaunchIcon
+  ChartBarIcon,
+  Cog6ToothIcon
 } from '@heroicons/react/24/outline';
 
-const AppHeader: React.FC = () => {
+interface AppHeaderProps {
+  onSettingsClick?: () => void;
+}
+
+const AppHeader: React.FC<AppHeaderProps> = ({ onSettingsClick }) => {
+  const [showTooltip, setShowTooltip] = useState(false);
+  const { scrollY: motionScrollY } = useScroll();
+
+  // More subtle transform values for professional look
+  const headerHeight = useTransform(motionScrollY, [0, 100], [72, 64]);
+  const titleSize = useTransform(motionScrollY, [0, 100], [1.75, 1.5]);
+  const logoSize = useTransform(motionScrollY, [0, 100], [40, 36]);
+
   return (
     <motion.header
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
       style={{
-        background: 'linear-gradient(135deg, var(--primary-600), var(--secondary-600))',
-        borderRadius: 'var(--radius-2xl)',
-        padding: 'var(--space-2xl)',
-        marginBottom: 'var(--space-2xl)',
-        position: 'relative',
-        overflow: 'hidden',
-        boxShadow: 'var(--shadow-2xl)',
-        border: '1px solid rgba(255, 255, 255, 0.1)'
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 1000,
+        background: useTransform(
+          motionScrollY,
+          [0, 50],
+          [
+            'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%)',
+            'linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.98) 100%)'
+          ]
+        ),
+        backdropFilter: useTransform(
+          motionScrollY,
+          [0, 50],
+          ['blur(20px)', 'blur(30px)']
+        ),
+        borderBottom: '1px solid rgba(226, 232, 240, 0.8)',
+        boxShadow: useTransform(
+          motionScrollY,
+          [0, 50],
+          [
+            '0 2px 8px rgba(0, 0, 0, 0.04)',
+            '0 4px 16px rgba(0, 0, 0, 0.08)'
+          ]
+        ),
+        height: headerHeight,
+        padding: '0 var(--space-lg)'
       }}
     >
-      {/* Animated Background Pattern */}
-      <motion.div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: 'radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%)',
-          borderRadius: 'var(--radius-2xl)'
-        }}
-        animate={{
-          background: [
-            'radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%)',
-            'radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.15) 0%, transparent 50%), radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.15) 0%, transparent 50%)',
-            'radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%)'
-          ]
-        }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
-      />
-
-      {/* Floating Elements */}
-      <motion.div
-        style={{
-          position: 'absolute',
-          top: '20px',
-          right: '20px',
-          opacity: 0.2
-        }}
-        animate={{
-          y: [-10, 10, -10],
-          rotate: [0, 5, 0]
-        }}
-        transition={{
-          duration: 6,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
-      >
-        <SparklesIcon style={{ width: '40px', height: '40px', color: 'white' }} />
-      </motion.div>
-
-      <motion.div
-        style={{
-          position: 'absolute',
-          bottom: '20px',
-          left: '20px',
-          opacity: 0.15
-        }}
-        animate={{
-          y: [10, -10, 10],
-          rotate: [0, -5, 0]
-        }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay: 2
-        }}
-      >
-        <BoltIcon style={{ width: '32px', height: '32px', color: 'white' }} />
-      </motion.div>
-
-      {/* Main Content */}
       <div style={{
-        position: 'relative',
-        zIndex: 1,
-        textAlign: 'center',
-        color: 'white'
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        height: '100%',
+        margin: '0 auto'
       }}>
-        {/* Logo/Icon */}
-        <motion.div
-          style={{
-            width: '80px',
-            height: '80px',
-            background: 'rgba(255, 255, 255, 0.2)',
-            borderRadius: '50%',
+        {/* Left side - Logo and title */}
+        <a 
+          href="/" 
+          style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '0.75rem',
+            textDecoration: 'none',
+            cursor: 'pointer'
+          }}
+        >
+          <motion.div style={{
+            width: logoSize,
+            height: logoSize,
+            background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)',
+            borderRadius: '0.5rem',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            margin: '0 auto var(--space-lg)',
-            backdropFilter: 'blur(20px)',
-            border: '2px solid rgba(255, 255, 255, 0.3)'
-          }}
-          initial={{ scale: 0, rotate: -180 }}
-          animate={{ scale: 1, rotate: 0 }}
-          transition={{ 
-            type: "spring", 
-            stiffness: 200, 
-            damping: 20,
-            delay: 0.2 
-          }}
-          whileHover={{ scale: 1.1, rotate: 5 }}
-        >
-          <RocketLaunchIcon style={{ width: '40px', height: '40px' }} />
-        </motion.div>
-
-        {/* Title */}
-        <motion.h1
-          style={{
-            fontSize: '3rem',
-            fontWeight: 800,
-            margin: 0,
-            marginBottom: 'var(--space-md)',
-            background: 'linear-gradient(135deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0.8))',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-            letterSpacing: '-0.02em'
-          }}
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-        >
-          Campaign Creator Studio
-        </motion.h1>
-
-        {/* Subtitle */}
-                 <motion.p
-           style={{
-             fontSize: '1.25rem',
-             fontWeight: 400,
-             margin: '0 auto',
-             opacity: 0.9,
-             lineHeight: 1.6,
-             maxWidth: '600px'
-           }}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 0.9, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-        >
-          Create professional Facebook & Meta campaigns in minutes with AI-powered location targeting and dynamic content generation
-        </motion.p>
-
-        {/* Feature Pills */}
-        <motion.div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            gap: 'var(--space-md)',
-            marginTop: 'var(--space-xl)',
-            flexWrap: 'wrap'
-          }}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.7 }}
-        >
-          {[
-            { icon: '🎯', text: 'Smart Targeting' },
-            { icon: '⚡', text: 'Lightning Fast' },
-            { icon: '📊', text: 'Data Driven' },
-            { icon: '🚀', text: 'Ready to Launch' }
-          ].map((feature, index) => (
-            <motion.div
-              key={feature.text}
-              style={{
-                background: 'rgba(255, 255, 255, 0.15)',
-                backdropFilter: 'blur(20px)',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                borderRadius: 'var(--radius-full)',
-                padding: 'var(--space-sm) var(--space-lg)',
-                fontSize: '0.875rem',
-                fontWeight: 500,
-                display: 'flex',
-                alignItems: 'center',
-                gap: 'var(--space-sm)'
-              }}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ 
-                duration: 0.5, 
-                delay: 0.8 + (index * 0.1),
-                type: "spring",
-                stiffness: 200
-              }}
-              whileHover={{ scale: 1.05, y: -2 }}
-            >
-              <span style={{ fontSize: '1rem' }}>{feature.icon}</span>
-              {feature.text}
+            boxShadow: '0 2px 8px rgba(59, 130, 246, 0.2)',
+            flexShrink: 0
+          }}>
+            <motion.div style={{ 
+              width: useTransform(motionScrollY, [0, 100], [20, 18]), 
+              height: useTransform(motionScrollY, [0, 100], [20, 18])
+            }}>
+              <ChartBarIcon style={{ width: '100%', height: '100%', color: 'white' }} />
             </motion.div>
-          ))}
-        </motion.div>
+          </motion.div>
+          
+          <motion.h1 style={{
+            fontSize: titleSize,
+            fontWeight: 600,
+            margin: 0,
+            color: '#1e293b',
+            letterSpacing: '-0.025em',
+            lineHeight: 1,
+            fontSize: '1.5rem'
+          }}>
+            Ad Tools
+          </motion.h1>
+        </a>
+
+        {/* Right side - Settings Icon */}
+        <div style={{ position: 'relative' }}>
+          <motion.button
+            onClick={onSettingsClick}
+            onMouseEnter={() => setShowTooltip(true)}
+            onMouseLeave={() => setShowTooltip(false)}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '40px',
+              height: '40px',
+              background: 'transparent',
+              border: 'none',
+              borderRadius: '0.5rem',
+              color: '#64748b',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease'
+            }}
+            whileHover={{
+              color: '#3b82f6',
+              scale: 1.05
+            }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Cog6ToothIcon style={{ width: '20px', height: '20px' }} />
+          </motion.button>
+
+          {/* Tooltip */}
+          {showTooltip && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              style={{
+                position: 'absolute',
+                top: '100%',
+                right: 0,
+                marginTop: '8px',
+                padding: '8px 12px',
+                background: '#1f2937',
+                color: 'white',
+                fontSize: '0.75rem',
+                borderRadius: '6px',
+                whiteSpace: 'nowrap',
+                zIndex: 1001,
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
+              }}
+            >
+              Quick Actions
+              <div style={{
+                position: 'absolute',
+                top: '-4px',
+                right: '12px',
+                width: 0,
+                height: 0,
+                borderLeft: '4px solid transparent',
+                borderRight: '4px solid transparent',
+                borderBottom: '4px solid #1f2937'
+              }} />
+            </motion.div>
+          )}
+        </div>
       </div>
     </motion.header>
   );
