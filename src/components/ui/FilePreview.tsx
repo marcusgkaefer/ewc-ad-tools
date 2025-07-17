@@ -1,15 +1,13 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  XMarkIcon, 
+import {
+  XMarkIcon,
+  DocumentArrowDownIcon,
   EyeIcon,
-  MapPinIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
   MagnifyingGlassIcon,
-  FunnelIcon,
-  DocumentTextIcon,
-  ChartBarIcon
+  CheckCircleIcon,
+  ExclamationTriangleIcon,
+  InformationCircleIcon
 } from '@heroicons/react/24/outline';
 import type { LocationSummary, AdConfiguration, CampaignConfiguration } from '../../types';
 
@@ -23,20 +21,52 @@ interface FilePreviewProps {
 }
 
 interface PreviewRow {
-  locationId: string;
-  locationName: string;
-  city: string;
-  state: string;
-  coordinates: string;
-  adName: string;
+  location: LocationSummary;
+  ad: AdConfiguration;
   campaignName: string;
+  adSetName: string;
+  adName: string;
+  objective: string;
+  budget: number;
+  bidStrategy: string;
+  startDate: string;
+  endDate: string;
   landingPage: string;
+  radius: string;
   caption: string;
   status: string;
-  scheduledDate: string;
-  budget: number;
-  objective: string;
 }
+
+const generatePreviewData = (
+  locations: LocationSummary[],
+  ads: AdConfiguration[],
+  campaign: CampaignConfiguration
+): PreviewRow[] => {
+  const data: PreviewRow[] = [];
+  
+  locations.forEach(location => {
+    ads.forEach(ad => {
+      data.push({
+        location,
+        ad,
+        campaignName: `${campaign.prefix}_${campaign.platform}_${campaign.month}${campaign.day}_${location.locationPrime}`,
+        adSetName: `${campaign.prefix}_${campaign.platform}_${campaign.month}${campaign.day}_${location.locationPrime}_AdSet`,
+        adName: `${campaign.prefix}_${campaign.platform}_${campaign.month}${campaign.day}_${location.locationPrime}_${ad.name}`,
+        objective: campaign.objective,
+        budget: campaign.budget,
+        bidStrategy: campaign.bidStrategy,
+        startDate: campaign.startDate,
+        endDate: campaign.endDate,
+        landingPage: ad.landingPage,
+        radius: `${location.coordinates.lat}, ${location.coordinates.lng} +${campaign.radius}mi`,
+        caption: ad.caption,
+        status: ad.status
+      });
+    });
+  });
+  
+  return data;
+};
 
 const FilePreview: React.FC<FilePreviewProps> = ({
   isOpen,
@@ -44,468 +74,270 @@ const FilePreview: React.FC<FilePreviewProps> = ({
   locations,
   ads,
   campaign,
-  title = 'Campaign Data Preview'
+  title = "Campaign Data Preview"
 }) => {
-  const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedAd, setSelectedAd] = useState<string>('all');
-  const itemsPerPage = 12;
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPerPage = 10;
 
-  // Generate preview data
-  const previewData = useMemo(() => {
-    const data: PreviewRow[] = [];
-    
-    for (const location of locations) {
-      for (const ad of ads) {
-        const locationName = location.name.replace(/\s+/g, '');
-        const campaignName = `${campaign.prefix}${campaign.month}${campaign.day}_${campaign.objective}_${campaign.testType}_${locationName}`;
-        
-        data.push({
-          locationId: location.id,
-          locationName: location.name,
-          city: location.city,
-          state: location.state,
-          coordinates: `(${location.coordinates.lat.toFixed(3)}, ${location.coordinates.lng.toFixed(3)}) +${campaign.radius}mi`,
-          adName: ad.name,
-          campaignName,
-          landingPage: ad.landingPage,
-          caption: ad.caption,
-          status: ad.status,
-          scheduledDate: ad.scheduledDate || campaign.selectedDate.toLocaleDateString('en-US'),
-          budget: campaign.budget,
-          objective: campaign.objective
-        });
-      }
-    }
-    
-    return data;
-  }, [locations, ads, campaign]);
-
-  // Filter data based on search and ad selection
-  const filteredData = useMemo(() => {
-    let filtered = previewData;
-    
-    // Filter by ad
-    if (selectedAd !== 'all') {
-      filtered = filtered.filter(row => row.adName === selectedAd);
-    }
-    
-    // Filter by search query
-    if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(row => 
-        row.locationName.toLowerCase().includes(query) ||
-        row.city.toLowerCase().includes(query) ||
-        row.state.toLowerCase().includes(query) ||
-        row.campaignName.toLowerCase().includes(query)
-      );
-    }
-    
-    return filtered;
-  }, [previewData, selectedAd, searchQuery]);
-
-  // Pagination
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-  const paginatedData = filteredData.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
+  const previewData = useMemo(() => 
+    generatePreviewData(locations, ads, campaign), 
+    [locations, ads, campaign]
   );
 
-  const stats = {
-    totalCampaigns: filteredData.length,
-    totalLocations: new Set(filteredData.map(row => row.locationId)).size,
-    totalAds: new Set(filteredData.map(row => row.adName)).size,
-    totalBudget: filteredData.reduce((sum, row) => sum + row.budget, 0)
-  };
+  const filteredData = useMemo(() => {
+    if (!searchQuery.trim()) return previewData;
+    const query = searchQuery.toLowerCase();
+    return previewData.filter(row =>
+      row.location.name.toLowerCase().includes(query) ||
+      row.location.city.toLowerCase().includes(query) ||
+      row.location.state.toLowerCase().includes(query) ||
+      row.ad.name.toLowerCase().includes(query) ||
+      row.campaignName.toLowerCase().includes(query)
+    );
+  }, [previewData, searchQuery]);
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(Math.max(1, Math.min(page, totalPages)));
-  };
+  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+  const startIndex = (currentPage - 1) * rowsPerPage;
+  const currentData = filteredData.slice(startIndex, startIndex + rowsPerPage);
+
+  const stats = useMemo(() => ({
+    totalLocations: locations.length,
+    totalAds: ads.length,
+    totalCampaigns: previewData.length,
+    totalBudget: previewData.reduce((sum, row) => sum + row.budget, 0),
+    estimatedReach: previewData.length * 15000
+  }), [locations.length, ads.length, previewData]);
+
+  if (!isOpen) return null;
 
   return (
     <AnimatePresence>
-      {isOpen && (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/50 backdrop-blur-sm"
+        onClick={onClose}
+      >
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            zIndex: 1000,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: 'var(--space-lg)',
-            background: 'rgba(0, 0, 0, 0.5)',
-            backdropFilter: 'blur(8px)'
-          }}
-          onClick={onClose}
+          initial={{ opacity: 0, scale: 0.95, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.95, y: 20 }}
+          transition={{ duration: 0.3 }}
+          className="w-full max-w-7xl max-h-[90vh] overflow-hidden bg-white rounded-3xl shadow-2xl border border-gray-200"
+          onClick={(e) => e.stopPropagation()}
         >
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            transition={{ duration: 0.3 }}
-            style={{
-              width: '100%',
-              maxWidth: '1200px',
-              maxHeight: '90vh',
-              overflow: 'hidden',
-              background: 'white',
-              borderRadius: 'var(--radius-2xl)',
-              boxShadow: 'var(--shadow-2xl)',
-              border: '1px solid var(--gray-200)'
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Header */}
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              padding: 'var(--space-xl)',
-              borderBottom: '1px solid var(--gray-200)',
-              background: 'linear-gradient(135deg, var(--primary-50), var(--secondary-50))'
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-md)' }}>
-                <div style={{
-                  width: '40px',
-                  height: '40px',
-                  background: 'var(--primary-100)',
-                  borderRadius: 'var(--radius-lg)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}>
-                  <EyeIcon style={{ width: '20px', height: '20px', color: 'var(--primary-600)' }} />
-                </div>
-                <div>
-                  <h2 style={{ 
-                    fontSize: '1.5rem', 
-                    fontWeight: 700, 
-                    color: 'var(--gray-900)',
-                    margin: 0
-                  }}>
-                    {title}
-                  </h2>
-                  <p style={{ 
-                    fontSize: '0.875rem', 
-                    color: 'var(--gray-600)',
-                    margin: 0
-                  }}>
-                    Preview of {stats.totalCampaigns} campaigns across {stats.totalLocations} locations
-                  </p>
-                </div>
+          {/* Header */}
+          <div className="flex items-center justify-between p-8 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-purple-50">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-blue-100 rounded-xl">
+                <EyeIcon className="w-6 h-6 text-blue-600" />
               </div>
-              <button
-                onClick={onClose}
-                style={{
-                  padding: 'var(--space-sm)',
-                  background: 'var(--gray-100)',
-                  border: 'none',
-                  borderRadius: 'var(--radius-md)',
-                  color: 'var(--gray-600)',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease'
-                }}
-              >
-                <XMarkIcon style={{ width: '20px', height: '20px' }} />
-              </button>
-            </div>
-
-            {/* Stats Bar */}
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(4, 1fr)',
-              gap: 'var(--space-lg)',
-              padding: 'var(--space-lg)',
-              background: 'var(--gray-50)',
-              borderBottom: '1px solid var(--gray-200)'
-            }}>
-              <div style={{ textAlign: 'center' }}>
-                <div style={{ 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center',
-                  gap: 'var(--space-sm)',
-                  marginBottom: 'var(--space-xs)'
-                }}>
-                  <ChartBarIcon style={{ width: '16px', height: '16px', color: 'var(--primary-500)' }} />
-                  <div style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--primary-600)' }}>
-                    {stats.totalCampaigns}
-                  </div>
-                </div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--gray-600)' }}>Campaigns</div>
-              </div>
-              <div style={{ textAlign: 'center' }}>
-                <div style={{ 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center',
-                  gap: 'var(--space-sm)',
-                  marginBottom: 'var(--space-xs)'
-                }}>
-                  <MapPinIcon style={{ width: '16px', height: '16px', color: 'var(--success-500)' }} />
-                  <div style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--success-600)' }}>
-                    {stats.totalLocations}
-                  </div>
-                </div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--gray-600)' }}>Locations</div>
-              </div>
-              <div style={{ textAlign: 'center' }}>
-                <div style={{ 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center',
-                  gap: 'var(--space-sm)',
-                  marginBottom: 'var(--space-xs)'
-                }}>
-                  <DocumentTextIcon style={{ width: '16px', height: '16px', color: 'var(--secondary-500)' }} />
-                  <div style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--secondary-600)' }}>
-                    {stats.totalAds}
-                  </div>
-                </div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--gray-600)' }}>Ad Variations</div>
-              </div>
-              <div style={{ textAlign: 'center' }}>
-                <div style={{ 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center',
-                  gap: 'var(--space-sm)',
-                  marginBottom: 'var(--space-xs)'
-                }}>
-                  <div style={{ 
-                    fontSize: '16px', 
-                    fontWeight: 700, 
-                    color: 'var(--orange-500)' 
-                  }}>
-                    $
-                  </div>
-                  <div style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--orange-600)' }}>
-                    {stats.totalBudget.toLocaleString()}
-                  </div>
-                </div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--gray-600)' }}>Total Budget</div>
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 mb-1">
+                  {title}
+                </h2>
+                <p className="text-sm text-gray-600">
+                  Preview of your Facebook/Meta campaign data before generation
+                </p>
               </div>
             </div>
+            
+            <motion.button
+              onClick={onClose}
+              className="p-3 text-gray-500 bg-white/80 backdrop-blur-sm border border-gray-200/50 rounded-xl transition-all duration-200 hover:bg-white hover:text-gray-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <XMarkIcon className="w-6 h-6" />
+            </motion.button>
+          </div>
 
-            {/* Filters */}
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 'var(--space-lg)',
-              padding: 'var(--space-lg)',
-              borderBottom: '1px solid var(--gray-200)',
-              background: 'white'
-            }}>
-              <div style={{ flex: 1, position: 'relative' }}>
-                <MagnifyingGlassIcon style={{
-                  position: 'absolute',
-                  left: 'var(--space-md)',
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  width: '16px',
-                  height: '16px',
-                  color: 'var(--gray-400)'
-                }} />
+          {/* Stats Bar */}
+          <div className="p-6 bg-gray-50 border-b border-gray-200">
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-blue-600">{stats.totalLocations}</div>
+                <div className="text-sm text-gray-600">Locations</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-purple-600">{stats.totalAds}</div>
+                <div className="text-sm text-gray-600">Ad Variations</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-green-600">{stats.totalCampaigns}</div>
+                <div className="text-sm text-gray-600">Total Campaigns</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-orange-600">${stats.totalBudget.toFixed(2)}</div>
+                <div className="text-sm text-gray-600">Total Budget</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-red-600">{stats.estimatedReach.toLocaleString()}</div>
+                <div className="text-sm text-gray-600">Est. Reach</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Search and Controls */}
+          <div className="p-6 border-b border-gray-200">
+            <div className="flex items-center justify-between gap-4">
+              <div className="relative flex-1 max-w-md">
+                <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
                   type="text"
+                  placeholder="Search campaigns, locations, ads..."
                   value={searchQuery}
-                  onChange={(e) => {
-                    setSearchQuery(e.target.value);
-                    setCurrentPage(1);
-                  }}
-                  style={{
-                    width: '100%',
-                    padding: 'var(--space-md) var(--space-lg) var(--space-md) var(--space-xl)',
-                    border: '1px solid var(--gray-300)',
-                    borderRadius: 'var(--radius-lg)',
-                    fontSize: '0.875rem',
-                    outline: 'none',
-                    transition: 'border-color 0.2s ease'
-                  }}
-                  placeholder="Search locations or campaigns..."
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:ring-4 focus:ring-blue-100 focus:outline-none transition-all duration-200"
                 />
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-sm)' }}>
-                <FunnelIcon style={{ width: '16px', height: '16px', color: 'var(--gray-500)' }} />
-                <select
-                  value={selectedAd}
-                  onChange={(e) => {
-                    setSelectedAd(e.target.value);
-                    setCurrentPage(1);
-                  }}
-                  style={{
-                    padding: 'var(--space-sm) var(--space-md)',
-                    border: '1px solid var(--gray-300)',
-                    borderRadius: 'var(--radius-md)',
-                    fontSize: '0.875rem',
-                    background: 'white',
-                    cursor: 'pointer'
-                  }}
+              
+              <div className="flex items-center gap-4">
+                <div className="text-sm text-gray-600">
+                  {filteredData.length} of {previewData.length} campaigns
+                </div>
+                
+                <motion.button
+                  className="flex items-center gap-2 px-4 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-lg transition-all duration-200 hover:bg-blue-700 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  <option value="all">All Ads</option>
-                  {ads.map(ad => (
-                    <option key={ad.id} value={ad.name}>{ad.name}</option>
-                  ))}
-                </select>
+                  <DocumentArrowDownIcon className="w-5 h-5" />
+                  Export Data
+                </motion.button>
               </div>
             </div>
+          </div>
 
-            {/* Table */}
-            <div style={{ 
-              padding: 'var(--space-lg)', 
-              overflowY: 'auto',
-              maxHeight: '400px'
-            }}>
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr',
-                gap: 'var(--space-md)',
-                padding: 'var(--space-md) 0',
-                borderBottom: '2px solid var(--gray-200)',
-                fontSize: '0.75rem',
-                fontWeight: 600,
-                color: 'var(--gray-700)',
-                textTransform: 'uppercase',
-                letterSpacing: '0.025em'
-              }}>
-                <div>Location</div>
-                <div>Ad</div>
-                <div>Campaign</div>
-                <div>Budget</div>
-                <div>Status</div>
-                <div>Objective</div>
-                <div>Date</div>
-                <div>Coordinates</div>
+          {/* Table */}
+          <div className="flex-1 overflow-auto">
+            <div className="min-w-full">
+              <table className="w-full">
+                <thead className="bg-gray-100 sticky top-0">
+                  <tr>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-b border-gray-200">Campaign</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-b border-gray-200">Location</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-b border-gray-200">Ad</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-b border-gray-200">Budget</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-b border-gray-200">Status</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-b border-gray-200">Details</th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {currentData.map((row, index) => (
+                    <motion.tr
+                      key={`${row.location.id}-${row.ad.id}`}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.05 }}
+                      className="hover:bg-gray-50 transition-colors duration-200"
+                    >
+                      <td className="px-4 py-4 text-sm">
+                        <div className="font-medium text-gray-900">{row.campaignName}</div>
+                        <div className="text-gray-500 text-xs">{row.objective}</div>
+                      </td>
+                      <td className="px-4 py-4 text-sm">
+                        <div className="font-medium text-gray-900">{row.location.name}</div>
+                        <div className="text-gray-500 text-xs">{row.location.city}, {row.location.state}</div>
+                      </td>
+                      <td className="px-4 py-4 text-sm">
+                        <div className="font-medium text-gray-900">{row.ad.name}</div>
+                        <div className="text-gray-500 text-xs truncate max-w-xs">{row.caption}</div>
+                      </td>
+                      <td className="px-4 py-4 text-sm font-medium text-gray-900">
+                        ${row.budget.toFixed(2)}
+                      </td>
+                      <td className="px-4 py-4 text-sm">
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                          row.status === 'Active' 
+                            ? 'bg-green-100 text-green-800'
+                            : row.status === 'Paused'
+                            ? 'bg-yellow-100 text-yellow-800'
+                            : 'bg-gray-100 text-gray-800'
+                        }`}>
+                          {row.status === 'Active' && <CheckCircleIcon className="w-3 h-3 mr-1" />}
+                          {row.status === 'Paused' && <ExclamationTriangleIcon className="w-3 h-3 mr-1" />}
+                          {row.status === 'Draft' && <InformationCircleIcon className="w-3 h-3 mr-1" />}
+                          {row.status}
+                        </span>
+                      </td>
+                      <td className="px-4 py-4 text-sm text-gray-500">
+                        <div className="space-y-1">
+                          <div>Radius: {campaign.radius}mi</div>
+                          <div>Start: {new Date(row.startDate).toLocaleDateString()}</div>
+                        </div>
+                      </td>
+                    </motion.tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between p-6 border-t border-gray-200 bg-gray-50">
+              <div className="text-sm text-gray-600">
+                Showing {startIndex + 1}-{Math.min(startIndex + rowsPerPage, filteredData.length)} of {filteredData.length} campaigns
               </div>
               
-              {paginatedData.map((row, index) => (
-                <motion.div
-                  key={`${row.locationId}-${row.adName}`}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.02 }}
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr',
-                    gap: 'var(--space-md)',
-                    padding: 'var(--space-md) 0',
-                    borderBottom: '1px solid var(--gray-100)',
-                    fontSize: '0.875rem',
-                    alignItems: 'center',
-                    transition: 'background-color 0.2s ease'
-                  }}
+              <div className="flex items-center gap-2">
+                <motion.button
+                  onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                  disabled={currentPage === 1}
+                  className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
+                    currentPage === 1
+                      ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                      : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 hover:border-gray-300'
+                  }`}
+                  whileHover={currentPage !== 1 ? { scale: 1.05 } : {}}
+                  whileTap={currentPage !== 1 ? { scale: 0.95 } : {}}
                 >
-                  <div>
-                    <div style={{ fontWeight: 500, color: 'var(--gray-900)' }}>
-                      {row.locationName}
-                    </div>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--gray-600)' }}>
-                      {row.city}, {row.state}
-                    </div>
-                  </div>
-                  <div style={{ color: 'var(--gray-800)' }}>{row.adName}</div>
-                  <div style={{ 
-                    fontFamily: 'monospace', 
-                    fontSize: '0.75rem', 
-                    color: 'var(--gray-700)' 
-                  }}>
-                    {row.campaignName.length > 20 ? 
-                      `${row.campaignName.substring(0, 20)}...` : 
-                      row.campaignName
-                    }
-                  </div>
-                  <div style={{ fontWeight: 500, color: 'var(--gray-900)' }}>
-                    ${row.budget}
-                  </div>
-                  <div>
-                    <span style={{
-                      padding: 'var(--space-xs) var(--space-sm)',
-                      borderRadius: 'var(--radius-full)',
-                      fontSize: '0.75rem',
-                      fontWeight: 500,
-                      background: 
-                        row.status === 'Active' ? 'var(--success-100)' :
-                        row.status === 'Paused' ? 'var(--warning-100)' : 'var(--gray-100)',
-                      color: 
-                        row.status === 'Active' ? 'var(--success-700)' :
-                        row.status === 'Paused' ? 'var(--warning-700)' : 'var(--gray-700)'
-                    }}>
-                      {row.status}
-                    </span>
-                  </div>
-                  <div style={{ color: 'var(--gray-700)' }}>{row.objective}</div>
-                  <div style={{ color: 'var(--gray-700)' }}>{row.scheduledDate}</div>
-                  <div style={{ 
-                    fontFamily: 'monospace', 
-                    fontSize: '0.75rem', 
-                    color: 'var(--gray-600)' 
-                  }}>
-                    {row.coordinates}
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                padding: 'var(--space-lg)',
-                borderTop: '1px solid var(--gray-200)',
-                background: 'var(--gray-50)'
-              }}>
-                <div style={{ fontSize: '0.875rem', color: 'var(--gray-600)' }}>
-                  Showing {(currentPage - 1) * itemsPerPage + 1} to {Math.min(currentPage * itemsPerPage, filteredData.length)} of {filteredData.length} results
+                  Previous
+                </motion.button>
+                
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                    const page = i + 1;
+                    const isActive = page === currentPage;
+                    return (
+                      <motion.button
+                        key={page}
+                        onClick={() => setCurrentPage(page)}
+                        className={`w-10 h-10 text-sm font-medium rounded-lg transition-all duration-200 ${
+                          isActive
+                            ? 'bg-blue-600 text-white'
+                            : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
+                        }`}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        {page}
+                      </motion.button>
+                    );
+                  })}
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-sm)' }}>
-                  <button
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage === 1}
-                    style={{
-                      padding: 'var(--space-sm)',
-                      background: currentPage === 1 ? 'var(--gray-100)' : 'white',
-                      border: '1px solid var(--gray-300)',
-                      borderRadius: 'var(--radius-md)',
-                      color: currentPage === 1 ? 'var(--gray-400)' : 'var(--gray-700)',
-                      cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
-                      transition: 'all 0.2s ease'
-                    }}
-                  >
-                    <ChevronLeftIcon style={{ width: '16px', height: '16px' }} />
-                  </button>
-                  <div style={{ fontSize: '0.875rem', color: 'var(--gray-600)' }}>
-                    Page {currentPage} of {totalPages}
-                  </div>
-                  <button
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage === totalPages}
-                    style={{
-                      padding: 'var(--space-sm)',
-                      background: currentPage === totalPages ? 'var(--gray-100)' : 'white',
-                      border: '1px solid var(--gray-300)',
-                      borderRadius: 'var(--radius-md)',
-                      color: currentPage === totalPages ? 'var(--gray-400)' : 'var(--gray-700)',
-                      cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
-                      transition: 'all 0.2s ease'
-                    }}
-                  >
-                    <ChevronRightIcon style={{ width: '16px', height: '16px' }} />
-                  </button>
-                </div>
+                
+                <motion.button
+                  onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                  disabled={currentPage === totalPages}
+                  className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
+                    currentPage === totalPages
+                      ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                      : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 hover:border-gray-300'
+                  }`}
+                  whileHover={currentPage !== totalPages ? { scale: 1.05 } : {}}
+                  whileTap={currentPage !== totalPages ? { scale: 0.95 } : {}}
+                >
+                  Next
+                </motion.button>
               </div>
-            )}
-          </motion.div>
+            </div>
+          )}
         </motion.div>
-      )}
+      </motion.div>
     </AnimatePresence>
   );
 };

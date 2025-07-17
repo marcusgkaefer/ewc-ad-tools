@@ -1,29 +1,47 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  SparklesIcon,
-  ArrowRightIcon,
-  ArrowLeftIcon,
-  XMarkIcon,
   MapPinIcon,
-  DocumentTextIcon,
-  CogIcon,
-  EyeIcon,
-  PlayIcon
+  DocumentDuplicateIcon,
+  ChartBarIcon,
+  SparklesIcon,
+  XMarkIcon,
+  ArrowRightIcon,
+  ArrowLeftIcon
 } from '@heroicons/react/24/outline';
-
-interface WizardStep {
-  id: string;
-  title: string;
-  description: string;
-  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-}
 
 interface FirstAccessWizardProps {
   isOpen: boolean;
   onClose: () => void;
   onComplete: () => void;
 }
+
+const wizardSteps = [
+  {
+    id: 1,
+    title: 'Welcome to Ad Tools',
+    description: 'Create professional Facebook/Meta ad campaigns with ease. This tour will show you the key features.',
+    icon: SparklesIcon
+  },
+  {
+    id: 2,
+    title: 'Select Target Locations',
+    description: 'Choose from hundreds of locations or use exclusion mode for bulk selection. Smart search and filtering included.',
+    icon: MapPinIcon
+  },
+  {
+    id: 3,
+    title: 'Create Multiple Ads',
+    description: 'Design multiple ad variations per campaign. Each location gets all your ad variations in a single export file.',
+    icon: DocumentDuplicateIcon
+  },
+  {
+    id: 4,
+    title: 'Generate & Export',
+    description: 'Export everything as Facebook/Meta ready Excel files. Complete 73-column format for bulk import.',
+    icon: ChartBarIcon
+  }
+];
 
 const FirstAccessWizard: React.FC<FirstAccessWizardProps> = ({
   isOpen,
@@ -32,40 +50,7 @@ const FirstAccessWizard: React.FC<FirstAccessWizardProps> = ({
 }) => {
   const [currentStep, setCurrentStep] = useState(0);
 
-  const wizardSteps: WizardStep[] = [
-    {
-      id: 'welcome',
-      title: 'Welcome to Campaign Creator',
-      description: 'Create professional Facebook & Meta campaigns in 5 simple steps. This quick tour will show you the essentials.',
-      icon: SparklesIcon
-    },
-    {
-      id: 'locations',
-      title: 'Select Locations',
-      description: 'Choose target locations with powerful search and bulk selection tools. Use exclusion mode for easier management.',
-      icon: MapPinIcon
-    },
-    {
-      id: 'ads',
-      title: 'Configure Ads',
-      description: 'Set up multiple ad variations with templates, landing pages, and custom messaging for A/B testing.',
-      icon: DocumentTextIcon
-    },
-    {
-      id: 'settings',
-      title: 'Campaign Settings',
-      description: 'Configure budget, objectives, targeting radius, and other campaign parameters.',
-      icon: CogIcon
-    },
-    {
-      id: 'review',
-      title: 'Review & Generate',
-      description: 'Preview your data and generate professional Excel files ready for Facebook Ads Manager import.',
-      icon: EyeIcon
-    }
-  ];
-
-  const nextStep = () => {
+  const handleNext = () => {
     if (currentStep < wizardSteps.length - 1) {
       setCurrentStep(currentStep + 1);
     } else {
@@ -73,21 +58,16 @@ const FirstAccessWizard: React.FC<FirstAccessWizardProps> = ({
     }
   };
 
-  const prevStep = () => {
+  const handlePrevious = () => {
     if (currentStep > 0) {
       setCurrentStep(currentStep - 1);
     }
   };
 
-  const skipTour = () => {
-    onComplete();
-  };
+  const currentStepData = wizardSteps[currentStep];
+  const Icon = currentStepData?.icon || SparklesIcon;
 
   if (!isOpen) return null;
-
-  const currentStepData = wizardSteps[currentStep];
-  const Icon = currentStepData.icon;
-  const isLastStep = currentStep === wizardSteps.length - 1;
 
   return (
     <AnimatePresence>
@@ -95,173 +75,91 @@ const FirstAccessWizard: React.FC<FirstAccessWizardProps> = ({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: 'rgba(0, 0, 0, 0.6)',
-          backdropFilter: 'blur(8px)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 1000,
-          padding: 'var(--space-lg)'
-        }}
+        className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-6"
       >
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}
           transition={{ type: "spring", damping: 25, stiffness: 400 }}
-          style={{
-            background: 'white',
-            borderRadius: 'var(--radius-xl)',
-            padding: 'var(--space-2xl)',
-            maxWidth: '480px',
-            width: '100%',
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-            position: 'relative'
-          }}
+          className="bg-white rounded-2xl p-8 max-w-lg w-full shadow-2xl relative"
         >
           {/* Close Button */}
           <button
             onClick={onClose}
-            style={{
-              position: 'absolute',
-              top: 'var(--space-lg)',
-              right: 'var(--space-lg)',
-              background: 'none',
-              border: 'none',
-              padding: 'var(--space-sm)',
-              cursor: 'pointer',
-              borderRadius: 'var(--radius-md)',
-              color: 'var(--gray-500)',
-              transition: 'all 0.2s ease'
-            }}
+            className="absolute top-6 right-6 p-2 text-gray-500 bg-transparent border-none cursor-pointer rounded-lg transition-all duration-200 hover:text-gray-700 hover:bg-gray-100"
           >
-            <XMarkIcon style={{ width: '20px', height: '20px' }} />
+            <XMarkIcon className="w-5 h-5" />
           </button>
 
           {/* Progress Dots */}
-          <div style={{
-            display: 'flex',
-            justifyContent: 'center',
-            gap: 'var(--space-xs)',
-            marginBottom: 'var(--space-xl)'
-          }}>
+          <div className="flex justify-center gap-1 mb-8">
             {wizardSteps.map((_, index) => (
               <div
                 key={index}
-                style={{
-                  width: '8px',
-                  height: '8px',
-                  borderRadius: '50%',
-                  background: index === currentStep 
-                    ? 'var(--primary-500)' 
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  index === currentStep 
+                    ? 'bg-blue-500' 
                     : index < currentStep 
-                    ? 'var(--success-400)' 
-                    : 'var(--gray-300)',
-                  transition: 'all 0.3s ease'
-                }}
+                    ? 'bg-green-400' 
+                    : 'bg-gray-300'
+                }`}
               />
             ))}
           </div>
 
           {/* Content */}
-          <div style={{ textAlign: 'center', marginBottom: 'var(--space-2xl)' }}>
+          <div className="text-center mb-8">
             {/* Icon */}
-            <div style={{
-              width: '80px',
-              height: '80px',
-              borderRadius: '50%',
-              background: 'linear-gradient(135deg, var(--primary-500), var(--secondary-500))',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              margin: '0 auto var(--space-lg)',
-              boxShadow: '0 10px 30px rgba(0, 0, 0, 0.15)'
-            }}>
-              <Icon style={{ width: '40px', height: '40px', color: 'white' }} />
+            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center mx-auto mb-6 shadow-lg shadow-blue-500/30">
+              <Icon className="w-10 h-10 text-white" />
             </div>
 
             {/* Title */}
-            <h2 style={{
-              fontSize: '1.5rem',
-              fontWeight: 700,
-              color: 'var(--gray-800)',
-              margin: 0,
-              marginBottom: 'var(--space-md)'
-            }}>
+            <h2 className="text-2xl font-bold text-gray-800 mb-4">
               {currentStepData.title}
             </h2>
 
             {/* Description */}
-            <p style={{
-              fontSize: '1rem',
-              color: 'var(--gray-600)',
-              lineHeight: 1.6,
-              margin: 0
-            }}>
+            <p className="text-base text-gray-600 leading-relaxed">
               {currentStepData.description}
             </p>
           </div>
 
           {/* Navigation */}
-          <div style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            gap: 'var(--space-md)'
-          }}>
-            <div style={{ display: 'flex', gap: 'var(--space-sm)' }}>
-              {currentStep > 0 && (
-                <button
-                  onClick={prevStep}
-                  className="btn btn-secondary"
-                  style={{ padding: 'var(--space-sm) var(--space-md)' }}
-                >
-                  <ArrowLeftIcon style={{ width: '16px', height: '16px' }} />
-                  Back
-                </button>
-              )}
-              <button
-                onClick={skipTour}
-                className="btn btn-ghost"
-                style={{ padding: 'var(--space-sm) var(--space-md)' }}
-              >
-                Skip Tour
-              </button>
+          <div className="flex justify-between items-center">
+            <button
+              onClick={handlePrevious}
+              disabled={currentStep === 0}
+              className={`inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
+                currentStep === 0
+                  ? 'text-gray-400 cursor-not-allowed'
+                  : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
+              }`}
+            >
+              <ArrowLeftIcon className="w-4 h-4" />
+              Previous
+            </button>
+
+            <div className="flex items-center gap-2 text-sm text-gray-500">
+              <span>{currentStep + 1}</span>
+              <span>/</span>
+              <span>{wizardSteps.length}</span>
             </div>
 
-            <button
-              onClick={nextStep}
-              className="btn btn-primary"
-              style={{ padding: 'var(--space-sm) var(--space-lg)' }}
+            <motion.button
+              onClick={handleNext}
+              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold rounded-lg shadow-lg transition-all duration-200 hover:from-blue-600 hover:to-purple-600 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
-              {isLastStep ? (
-                <>
-                  <PlayIcon style={{ width: '16px', height: '16px' }} />
-                  Start Creating
-                </>
+              {currentStep === wizardSteps.length - 1 ? 'Get Started' : 'Next'}
+              {currentStep === wizardSteps.length - 1 ? (
+                <SparklesIcon className="w-4 h-4" />
               ) : (
-                <>
-                  Next
-                  <ArrowRightIcon style={{ width: '16px', height: '16px' }} />
-                </>
+                <ArrowRightIcon className="w-4 h-4" />
               )}
-            </button>
-          </div>
-
-          {/* Step Counter */}
-          <div style={{
-            textAlign: 'center',
-            marginTop: 'var(--space-lg)',
-            fontSize: '0.875rem',
-            color: 'var(--gray-500)'
-          }}>
-            {currentStep + 1} of {wizardSteps.length}
+            </motion.button>
           </div>
         </motion.div>
       </motion.div>

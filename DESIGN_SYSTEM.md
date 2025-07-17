@@ -24,163 +24,156 @@ The Campaign Creator Studio Design System is built to deliver an award-winning u
 
 ## Color Palette
 
-### Primary Colors
-```css
---primary-50: #f0f9ff    /* Light blue backgrounds */
---primary-100: #e0f2fe   /* Subtle highlights */
---primary-200: #bae6fd   /* Soft accents */
---primary-300: #7dd3fc   /* Interactive elements */
---primary-400: #38bdf8   /* Hover states */
---primary-500: #0ea5e9   /* Main brand color */
---primary-600: #0284c7   /* Active states */
---primary-700: #0369a1   /* Text on light backgrounds */
---primary-800: #075985   /* Dark mode elements */
---primary-900: #0c4a6e   /* High contrast text */
+### Primary Colors (Blue Scale)
+```tailwind
+bg-blue-50        /* Light blue backgrounds */
+bg-blue-100       /* Subtle highlights */
+bg-blue-200       /* Soft accents */
+bg-blue-300       /* Interactive elements */
+bg-blue-400       /* Hover states */
+bg-blue-500       /* Main brand color */
+bg-blue-600       /* Active states */
+bg-blue-700       /* Text on light backgrounds */
+bg-blue-800       /* Dark mode elements */
+bg-blue-900       /* High contrast text */
 ```
 
-### Secondary Colors
-```css
---secondary-50: #fdf4ff   /* Light purple backgrounds */
---secondary-100: #fae8ff  /* Subtle highlights */
---secondary-200: #f5d0fe  /* Soft accents */
---secondary-300: #f0abfc  /* Interactive elements */
---secondary-400: #e879f9  /* Hover states */
---secondary-500: #d946ef  /* Accent brand color */
---secondary-600: #c026d3  /* Active states */
---secondary-700: #a21caf  /* Text on light backgrounds */
---secondary-800: #86198f  /* Dark mode elements */
---secondary-900: #701a75  /* High contrast text */
+### Secondary Colors (Purple Scale)
+```tailwind
+bg-purple-50      /* Light purple backgrounds */
+bg-purple-100     /* Subtle highlights */
+bg-purple-200     /* Soft accents */
+bg-purple-300     /* Interactive elements */
+bg-purple-400     /* Hover states */
+bg-purple-500     /* Accent brand color */
+bg-purple-600     /* Active states */
+bg-purple-700     /* Text on light backgrounds */
+bg-purple-800     /* Dark mode elements */
+bg-purple-900     /* High contrast text */
 ```
 
 ### Semantic Colors
-```css
---success-500: #10b981   /* Success states */
---warning-500: #f59e0b   /* Warning states */
---error-500: #ef4444     /* Error states */
---info-500: #3b82f6      /* Information states */
+```tailwind
+bg-green-500      /* Success states */
+bg-yellow-500     /* Warning states */
+bg-red-500        /* Error states */
+bg-blue-500       /* Information states */
 ```
 
 ### Neutral Colors
-```css
---gray-50: #f9fafb       /* Page backgrounds */
---gray-100: #f3f4f6      /* Card backgrounds */
---gray-200: #e5e7eb      /* Borders */
---gray-300: #d1d5db      /* Disabled states */
---gray-400: #9ca3af      /* Placeholder text */
---gray-500: #6b7280      /* Secondary text */
---gray-600: #4b5563      /* Primary text */
---gray-700: #374151      /* Headings */
---gray-800: #1f2937      /* High contrast text */
---gray-900: #111827      /* Maximum contrast */
+```tailwind
+bg-gray-50        /* Page backgrounds */
+bg-gray-100       /* Card backgrounds */
+bg-gray-200       /* Borders */
+bg-gray-300       /* Disabled states */
+bg-gray-400       /* Placeholder text */
+bg-gray-500       /* Secondary text */
+bg-gray-600       /* Primary text */
+bg-gray-700       /* Headings */
+bg-gray-800       /* High contrast text */
+bg-gray-900       /* Maximum contrast */
 ```
 
 ## Typography
 
 ### Font Families
-- **Primary**: Inter (modern, clean, highly readable)
-- **Monospace**: JetBrains Mono (code and technical content)
+- **Primary**: Inter (modern, clean, highly readable) - `font-sans`
+- **Monospace**: JetBrains Mono (code and technical content) - `font-mono`
 
 ### Font Weights
-- **Light**: 300 (Large headings only)
-- **Regular**: 400 (Body text)
-- **Medium**: 500 (Emphasized text)
-- **Semi-bold**: 600 (Subheadings)
-- **Bold**: 700 (Headings)
-- **Extra-bold**: 800 (Hero titles)
+- **Light**: `font-light` (Large headings only)
+- **Regular**: `font-normal` (Body text)
+- **Medium**: `font-medium` (Emphasized text)
+- **Semi-bold**: `font-semibold` (Subheadings)
+- **Bold**: `font-bold` (Headings)
+- **Extra-bold**: `font-extrabold` (Hero titles)
 
 ### Type Scale
-- **Hero Title**: clamp(2rem, 5vw, 4rem) - Bold, animated gradient
-- **Page Title**: 2rem - Extra bold
-- **Section Title**: 1.5rem - Bold
-- **Card Title**: 1.25rem - Bold
-- **Subheading**: 1.125rem - Semi-bold
-- **Body**: 1rem - Regular
-- **Caption**: 0.875rem - Medium
-- **Small**: 0.75rem - Medium
+- **Hero Title**: `text-4xl lg:text-6xl font-extrabold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-500 bg-clip-text text-transparent`
+- **Page Title**: `text-3xl font-extrabold`
+- **Section Title**: `text-2xl font-bold`
+- **Card Title**: `text-xl font-bold`
+- **Subheading**: `text-lg font-semibold`
+- **Body**: `text-base font-normal`
+- **Caption**: `text-sm font-medium`
+- **Small**: `text-xs font-medium`
 
 ## Spacing System
 
-### Scale
-```css
---space-xs: 0.25rem     /* 4px */
---space-sm: 0.5rem      /* 8px */
---space-md: 1rem        /* 16px */
---space-lg: 1.5rem      /* 24px */
---space-xl: 2rem        /* 32px */
---space-2xl: 3rem       /* 48px */
---space-3xl: 4rem       /* 64px */
+### Tailwind Spacing Classes
+```tailwind
+p-1       /* 4px padding */
+p-2       /* 8px padding */
+p-4       /* 16px padding */
+p-6       /* 24px padding */
+p-8       /* 32px padding */
+p-12      /* 48px padding */
+p-16      /* 64px padding */
+
+m-1       /* 4px margin */
+m-2       /* 8px margin */
+m-4       /* 16px margin */
+m-6       /* 24px margin */
+m-8       /* 32px margin */
+m-12      /* 48px margin */
+m-16      /* 64px margin */
+
+gap-4     /* 16px grid/flex gap */
+gap-6     /* 24px grid/flex gap */
+gap-8     /* 32px grid/flex gap */
 ```
 
 ### Application
-- **Component padding**: md to lg
-- **Section spacing**: xl to 2xl
-- **Hero spacing**: 2xl to 3xl
-- **Grid gaps**: md to lg
-- **Element margins**: xs to md
+- **Component padding**: `p-4` to `p-6`
+- **Section spacing**: `mb-8` to `mb-12`
+- **Hero spacing**: `py-12` to `py-16`
+- **Grid gaps**: `gap-4` to `gap-6`
+- **Element margins**: `mb-1` to `mb-4`
 
 ## Border Radius
 
-```css
---radius-sm: 0.375rem    /* 6px - Small elements */
---radius-md: 0.5rem      /* 8px - Form elements */
---radius-lg: 0.75rem     /* 12px - Cards */
---radius-xl: 1rem        /* 16px - Large cards */
---radius-2xl: 1.5rem     /* 24px - Hero elements */
---radius-full: 9999px    /* Pills and circles */
+```tailwind
+rounded-md        /* 6px - Small elements */
+rounded-lg        /* 8px - Form elements */
+rounded-xl        /* 12px - Cards */
+rounded-2xl       /* 16px - Large cards */
+rounded-3xl       /* 24px - Hero elements */
+rounded-full      /* Pills and circles */
 ```
 
 ## Shadows & Elevation
 
-```css
---shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05)
---shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)
---shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)
---shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)
---shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25)
+```tailwind
+shadow-sm         /* Subtle separation */
+shadow-md         /* Form elements */
+shadow-lg         /* Interactive cards */
+shadow-xl         /* Floating elements */
+shadow-2xl        /* Modal overlays */
 ```
 
 ### Usage
-- **Floating elements**: shadow-xl
-- **Interactive cards**: shadow-lg
-- **Form elements**: shadow-md
-- **Subtle separation**: shadow-sm
+- **Floating elements**: `shadow-xl`
+- **Interactive cards**: `shadow-lg`
+- **Form elements**: `shadow-md`
+- **Subtle separation**: `shadow-sm`
 
 ## Layout Components
 
 ### App Container
-```css
-.app-container {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  overflow-x: hidden;
-}
+```tailwind
+<div className="min-h-screen flex flex-col relative overflow-x-hidden">
 ```
 
 ### Main Content
-```css
-.main-content {
-  flex: 1;
-  padding: var(--space-lg);
-  position: relative;
-  z-index: 1;
-}
+```tailwind
+<div className="flex-1 p-6 relative z-10">
 ```
 
 ### Card System
 Cards are the primary content containers with glassmorphism effects.
 
-```css
-.card {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: var(--radius-xl);
-  padding: var(--space-xl);
-  box-shadow: var(--shadow-xl);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
+```tailwind
+<div className="bg-white/95 backdrop-blur-xl border border-white/20 rounded-2xl p-8 shadow-xl transition-all duration-300 hover:shadow-2xl">
 ```
 
 ## Interactive Components
@@ -188,225 +181,160 @@ Cards are the primary content containers with glassmorphism effects.
 ### Button System
 
 #### Primary Button
-```css
-.btn-primary {
-  background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
-  color: white;
-  box-shadow: var(--shadow-lg);
-  padding: var(--space-md) var(--space-xl);
-  border-radius: var(--radius-lg);
-  font-weight: 600;
-  transition: all 0.2s ease;
-}
+```tailwind
+<button className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-xl shadow-lg transition-all duration-200 hover:from-blue-600 hover:to-blue-700 hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+```
 
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-xl);
-}
+#### Secondary Button
+```tailwind
+<button className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white text-gray-700 font-semibold rounded-lg border-2 border-gray-200 shadow-md transition-all duration-200 hover:border-blue-500 hover:text-blue-600 hover:-translate-y-0.5 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
 ```
 
 #### Button Sizes
-- **Small**: `btn-sm` - Compact actions
-- **Regular**: Default size
-- **Large**: `btn-lg` - Primary actions
+- **Small**: `px-3 py-1.5 text-xs h-8 rounded-lg`
+- **Regular**: `px-4 py-2 text-sm h-10 rounded-lg`
+- **Large**: `px-6 py-3 text-base h-12 rounded-xl`
 
 ### Form Elements
 
 #### Input Fields
-```css
-.form-input {
-  width: 100%;
-  padding: var(--space-md) var(--space-lg);
-  border: 2px solid var(--gray-200);
-  border-radius: var(--radius-lg);
-  font-size: 1rem;
-  transition: all 0.2s ease;
-  background: white;
-}
-
-.form-input:focus {
-  border-color: var(--primary-500);
-  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
-  transform: translateY(-1px);
-}
+```tailwind
+<input className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-base transition-all duration-200 bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-100 focus:-translate-y-0.5 focus:outline-none">
 ```
 
 #### Labels
-```css
-.form-label {
-  display: block;
-  font-weight: 600;
-  color: var(--gray-700);
-  margin-bottom: var(--space-sm);
-  font-size: 0.875rem;
-  letter-spacing: 0.025em;
-  text-transform: uppercase;
-}
+```tailwind
+<label className="block font-semibold text-gray-700 mb-2 text-sm uppercase tracking-wide">
 ```
 
 ## Progress System
 
 ### Progress Container
-```css
-.progress-container {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(20px);
-  border-radius: var(--radius-full);
-  padding: var(--space-md);
-  margin-bottom: var(--space-2xl);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
+```tailwind
+<div className="bg-white/10 backdrop-blur-xl rounded-full p-4 mb-12 border border-white/20">
 ```
 
 ### Progress Steps
 Interactive step indicators with state management:
-- **Default**: Inactive step
-- **Active**: Current step with scale transform
-- **Completed**: Finished step with success color
+
+```tailwind
+<!-- Default Step -->
+<div className="flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 bg-white/10 border border-transparent min-w-[120px] justify-center">
+
+<!-- Active Step -->
+<div className="flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 bg-white/20 border border-white/30 transform scale-110 min-w-[120px] justify-center">
+
+<!-- Completed Step -->
+<div className="flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 bg-gradient-to-r from-green-500 to-green-600 text-white border border-green-500 min-w-[120px] justify-center">
+```
 
 ## Selection Components
 
 ### Selection Cards
-```css
-.selection-card {
-  background: white;
-  border: 2px solid var(--gray-200);
-  border-radius: var(--radius-xl);
-  padding: var(--space-lg);
-  transition: all 0.3s ease;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
+```tailwind
+<!-- Default Selection Card -->
+<div className="bg-white border-2 border-gray-200 rounded-2xl p-6 transition-all duration-300 cursor-pointer relative overflow-hidden hover:-translate-y-1 hover:shadow-lg hover:border-blue-400">
 
-.selection-card.selected {
-  border-color: var(--primary-500);
-  background: linear-gradient(135deg, rgba(14, 165, 233, 0.05), rgba(217, 70, 239, 0.05));
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-xl);
-}
+<!-- Selected Card -->
+<div className="bg-white border-2 border-blue-500 rounded-2xl p-6 transition-all duration-300 cursor-pointer relative overflow-hidden bg-gradient-to-br from-blue-50 to-purple-50 -translate-y-1 shadow-xl">
+  <!-- Selection indicator -->
+  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-purple-500"></div>
+</div>
 ```
 
 ## Animation System
 
 ### Micro-interactions
 All interactive elements include subtle animations:
-- **Hover effects**: Transform and shadow changes
-- **Focus states**: Border color and glow effects
-- **Loading states**: Smooth transitions and skeleton screens
-- **State changes**: Scale and color transitions
 
-### Page Transitions
-```css
-/* Fade in animation */
-.animate-fade-in {
-  animation: fadeIn 0.6s ease-out;
-}
+```tailwind
+<!-- Hover effects -->
+hover:-translate-y-1 hover:shadow-lg
 
-/* Slide up animation */
-.animate-slide-up {
-  animation: slideUp 0.6s ease-out;
-}
+<!-- Focus states -->
+focus:ring-4 focus:ring-blue-100 focus:border-blue-500
 
-/* Scale in animation */
-.animate-scale-in {
-  animation: scaleIn 0.4s ease-out;
-}
+<!-- Loading states -->
+animate-pulse
+
+<!-- State changes -->
+transition-all duration-200 ease-out
 ```
 
-### Framer Motion Variants
-```javascript
-const cardVariants = {
-  hidden: { opacity: 0, rotateY: -15 },
-  visible: { opacity: 1, rotateY: 0, transition: { duration: 0.6, ease: "easeOut" } },
-  exit: { opacity: 0, rotateY: 15, transition: { duration: 0.4 } }
-};
+### Animation Classes
+```tailwind
+animate-fade-in       /* Fade in animation */
+animate-slide-up      /* Slide up animation */
+animate-scale-in      /* Scale in animation */
+animate-bounce-gentle /* Gentle bounce */
+animate-pulse-slow    /* Slow pulse */
+animate-shimmer       /* Shimmer effect */
 ```
 
 ## Grid System
 
 ### Responsive Grid
-```css
-.grid {
-  display: grid;
-  gap: var(--space-lg);
-}
+```tailwind
+<!-- Basic Grid -->
+<div className="grid gap-6">
+<div className="grid-cols-1">
+<div className="grid-cols-2">
+<div className="grid-cols-3">
+<div className="grid-cols-4">
 
-.grid-cols-1 { grid-template-columns: repeat(1, 1fr); }
-.grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
-.grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
-.grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+<!-- Responsive Grid -->
+<div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 ```
 
-### Breakpoints
-```css
-@media (max-width: 768px) {
-  .grid-cols-2, .grid-cols-3, .grid-cols-4 {
-    grid-template-columns: 1fr;
-  }
-}
-```
+### Responsive Breakpoints
+- **Mobile**: Default (no prefix)
+- **Tablet**: `md:` (768px+)
+- **Desktop**: `lg:` (1024px+)
+- **Large Desktop**: `xl:` (1280px+)
 
 ## Special Components
 
 ### Hero Section
-```css
-.hero {
-  text-align: center;
-  padding: var(--space-3xl) var(--space-lg);
-  position: relative;
-  overflow: hidden;
-}
-
-.hero-title {
-  font-size: clamp(2rem, 5vw, 4rem);
-  font-weight: 800;
-  background: linear-gradient(135deg, var(--primary-600), var(--secondary-600), var(--primary-500));
-  background-size: 200% 200%;
-  animation: textGradient 3s ease infinite;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
+```tailwind
+<div className="text-center py-16 px-6 relative overflow-hidden">
+  <h1 className="text-4xl lg:text-6xl font-extrabold mb-6 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-500 bg-clip-text text-transparent leading-tight tracking-tight drop-shadow-sm">
+    Campaign Creator Studio
+  </h1>
+  <p className="text-xl text-white/90 mb-12 max-w-2xl mx-auto font-normal">
+    Create beautiful, effective ad campaigns with our intuitive tools
+  </p>
+</div>
 ```
 
 ### Stats Cards
-```css
-.stat-card {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: var(--radius-xl);
-  padding: var(--space-xl);
-  text-align: center;
-}
+```tailwind
+<div className="bg-gradient-to-br from-white/20 to-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-8 text-center relative overflow-hidden">
+  <!-- Top border indicator -->
+  <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500"></div>
+  
+  <div className="text-4xl font-extrabold text-white mb-2 leading-none">
+    1,234
+  </div>
+  <div className="text-white/80 font-medium text-sm uppercase tracking-wider">
+    Total Campaigns
+  </div>
+</div>
 ```
 
 ### Floating Action Button
-```css
-.fab {
-  position: fixed;
-  bottom: var(--space-xl);
-  right: var(--space-xl);
-  width: 60px;
-  height: 60px;
-  border-radius: var(--radius-full);
-  background: linear-gradient(135deg, var(--primary-500), var(--secondary-500));
-  color: white;
-  box-shadow: var(--shadow-2xl);
-  transition: all 0.3s ease;
-}
+```tailwind
+<button className="fixed bottom-8 right-8 w-15 h-15 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-2xl transition-all duration-300 hover:scale-110 hover:shadow-xl flex items-center justify-center z-50">
 ```
 
 ## Usage Guidelines
 
 ### Do's ✅
-- Use consistent spacing from the scale
-- Apply hover effects to interactive elements
-- Maintain visual hierarchy with typography
-- Use semantic colors for states
-- Include loading states for async operations
-- Provide clear feedback for user actions
+- Use Tailwind spacing classes consistently
+- Apply hover effects with `hover:` prefix
+- Maintain visual hierarchy with typography classes
+- Use semantic color classes for states
+- Include loading states with `animate-pulse`
+- Provide clear feedback with `focus:` states
 
 ### Don'ts ❌
 - Don't use arbitrary spacing values
@@ -420,12 +348,12 @@ const cardVariants = {
 
 ### Color Contrast
 - All text meets WCAG AA standards
-- Interactive elements have clear focus states
+- Interactive elements have clear focus states using `focus:ring-*`
 - Color is not the only way to convey information
 
 ### Keyboard Navigation
 - All interactive elements are keyboard accessible
-- Focus indicators are clearly visible
+- Focus indicators are clearly visible with `focus:ring-*`
 - Tab order is logical and intuitive
 
 ### Screen Readers
@@ -435,16 +363,16 @@ const cardVariants = {
 
 ## Performance Considerations
 
-### CSS Optimization
-- Use CSS custom properties for consistency
-- Minimize expensive operations (box-shadow, backdrop-filter)
-- Use transform and opacity for animations
-- Implement proper z-index management
+### Tailwind Optimization
+- Use Tailwind's purge/content configuration to remove unused styles
+- Minimize redundant classes
+- Use efficient selectors
+- Leverage Tailwind's built-in responsive design
 
 ### Bundle Size
-- Tree-shake unused CSS
-- Minimize redundant styles
-- Use efficient selectors
+- Tree-shake unused Tailwind utilities automatically
+- Use component classes for repeated patterns
+- Optimize for production builds
 
 ## Browser Support
 
@@ -455,103 +383,113 @@ const cardVariants = {
 - Edge 90+
 
 ### Graceful Degradation
-- Backdrop-filter fallbacks
-- Animation-friendly reduced motion
+- Backdrop-filter fallbacks with `bg-white/95`
+- Animation-friendly with `motion-reduce:` prefix
 - Progressive enhancement approach
 
 ## Maintenance
 
 ### Adding New Components
-1. Follow established patterns
-2. Use design tokens (CSS custom properties)
+1. Follow established Tailwind patterns
+2. Use consistent spacing and color classes
 3. Include hover and focus states
 4. Test across different screen sizes
 5. Update documentation
 
 ### Updating Colors
-1. Modify CSS custom properties
+1. Modify Tailwind config colors
 2. Test contrast ratios
 3. Update all variants
-4. Verify dark mode compatibility
+4. Verify responsive design
 
 ## Enhanced Workflow Features
 
 ### Compact Location Selection
 
-The location selection interface has been redesigned for maximum efficiency:
+The location selection interface uses Tailwind for maximum efficiency:
 
 #### Flat List Design
-```css
-.compact-location-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--space-sm) var(--space-md);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-size: 0.9rem;
-}
-
-.compact-location-item:hover {
-  background-color: rgba(14, 165, 233, 0.05);
-}
-
-.compact-location-item.selected {
-  background-color: rgba(14, 165, 233, 0.1);
-}
+```tailwind
+<div className="flex items-center justify-between py-2 px-4 cursor-pointer transition-all duration-200 text-sm hover:bg-blue-50">
+  <div className="flex items-center gap-2 flex-1">
+    <div className="w-4 h-4 rounded border-2 border-gray-300 transition-all duration-200 flex items-center justify-center data-[selected=true]:border-blue-500 data-[selected=true]:bg-blue-500">
+      <!-- Checkmark when selected -->
+    </div>
+    <div className="font-medium text-gray-800">Location Name</div>
+  </div>
+  <div className="text-gray-600 text-xs flex items-center gap-2">
+    <span>City, State</span>
+    <span className="text-gray-400">•</span>
+    <span>ZIP</span>
+  </div>
+</div>
 ```
 
 #### Exclusion Mode
-- Toggle between "select what you want" and "exclude what you don't want"
-- Particularly useful when most locations should be included
-- Visual indicators show inclusion/exclusion status
-- Bulk operations respect the current mode
+```tailwind
+<label className="flex items-center gap-2 cursor-pointer text-sm font-medium">
+  <input type="checkbox" className="w-4 h-4 accent-blue-500" />
+  Use exclusion mode (select locations to exclude instead)
+</label>
+```
 
 #### Bulk Operations
-- **Select All / Include All**: Choose all visible locations
-- **Clear All / Exclude All**: Deselect all visible locations  
-- **Random Selection**: Quick testing with random subset
-- **Search Integration**: Bulk operations work with filtered results
+```tailwind
+<div className="flex gap-4 flex-wrap">
+  <button className="inline-flex items-center gap-2 px-4 py-2 bg-white text-gray-700 font-semibold rounded-lg border-2 border-gray-200 shadow-md transition-all duration-200 hover:border-blue-500 hover:text-blue-600 text-sm">
+    <CheckCircleIcon className="w-4 h-4" />
+    Select All
+  </button>
+  <button className="inline-flex items-center gap-2 px-4 py-2 bg-white text-gray-700 font-semibold rounded-lg border-2 border-gray-200 shadow-md transition-all duration-200 hover:border-red-500 hover:text-red-600 text-sm">
+    <XMarkIcon className="w-4 h-4" />
+    Clear All
+  </button>
+</div>
+```
 
 ### Multiple Ad Configuration
 
-Each campaign now supports multiple ad variations with separate file generation:
+Each campaign supports multiple ad variations:
 
 #### Ad Management Interface
-- Default 4 ads per campaign (industry standard)
-- Add/remove ads dynamically
-- Individual template selection per ad
-- Live template preview for each ad
-- Custom naming for better organization
-
-#### File Generation Strategy
-- One Excel file per ad variation
-- Dynamic file naming: `Prefix_Date_AdName_campaigns.xlsx`
-- Each file contains all selected locations
-- Complete 73-column Facebook/Meta format
-- Parallel generation for efficiency
+```tailwind
+<div className="bg-white/70 border-2 border-gray-200 rounded-2xl p-6 mb-6 transition-all duration-200 hover:shadow-lg">
+  <div className="flex justify-between items-start mb-6">
+    <h3 className="text-xl font-semibold text-gray-800">Ad Name</h3>
+    <button className="inline-flex items-center gap-1 px-3 py-1 text-sm bg-white text-gray-700 rounded-lg border border-gray-200 hover:border-red-500 hover:text-red-600 transition-all duration-200">
+      <TrashIcon className="w-4 h-4" />
+    </button>
+  </div>
+  <!-- Ad configuration fields -->
+</div>
+```
 
 #### Template Preview
-Real-time preview showing:
-- Headline text
-- Description content
-- Call-to-action button
-- Variable substitution examples
+```tailwind
+<div className="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-xl">
+  <div className="text-sm font-semibold text-gray-700 mb-2">Preview:</div>
+  <div className="text-sm space-y-1">
+    <div><strong>Headline:</strong> Template Headline</div>
+    <div><strong>Description:</strong> Template Description</div>
+    <div><strong>CTA:</strong> Call to Action</div>
+  </div>
+</div>
+```
 
 ### Enhanced Statistics
 
-The dashboard now displays comprehensive campaign metrics:
+Live dashboard metrics with Tailwind styling:
 
-#### Live Calculations
-- **Locations**: Total targeted locations
-- **Ads**: Number of ad variations configured
-- **Campaigns**: Total campaigns (Locations × Ads)
-- **Files**: Number of Excel files to be generated
+#### Stats Grid
+```tailwind
+<div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mb-12">
+  <div className="bg-gradient-to-br from-white/20 to-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-8 text-center relative overflow-hidden animate-scale-in">
+    <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500"></div>
+    <MapPinIcon className="w-8 h-8 text-white/80 mx-auto mb-2" />
+    <div className="text-4xl font-extrabold text-white mb-1 leading-none">1,234</div>
+    <div className="text-white/80 font-medium text-sm uppercase tracking-wider">Locations</div>
+  </div>
+</div>
+```
 
-#### Dynamic Updates
-- Real-time recalculation as selections change
-- Exclusion mode calculations
-- Budget projections per campaign
-- File size estimations
-
-This design system ensures consistency, maintainability, and an award-winning user experience across the entire Campaign Creator Studio application. 
+This design system ensures consistency, maintainability, and an award-winning user experience across the entire Campaign Creator Studio application using Tailwind CSS. 

@@ -56,7 +56,7 @@ const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
   // Handle keyboard navigation
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (!isOpen) {
-      if (e.key === 'ArrowDown' || e.key === 'Enter') {
+      if (e.key === 'Enter' || e.key === 'ArrowDown' || e.key === 'ArrowUp') {
         setIsOpen(true);
         return;
       }
@@ -75,24 +75,25 @@ const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
         break;
       case 'Enter':
         e.preventDefault();
-        if (highlightedIndex >= 0 && highlightedIndex < allOptions.length) {
+        if (highlightedIndex >= 0 && allOptions[highlightedIndex]) {
           handleOptionSelect(allOptions[highlightedIndex]);
         }
         break;
       case 'Escape':
         setIsOpen(false);
         setHighlightedIndex(-1);
+        inputRef.current?.blur();
         break;
     }
   };
 
-  // Handle click outside
+  // Click outside to close
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (inputRef.current && !inputRef.current.contains(event.target as Node)) {
         setIsOpen(false);
-        setHighlightedIndex(-1);
         setSearchTerm('');
+        setHighlightedIndex(-1);
       }
     };
 
@@ -100,7 +101,7 @@ const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Scroll highlighted option into view
+  // Auto-scroll highlighted option into view
   useEffect(() => {
     if (listRef.current && highlightedIndex >= 0) {
       const highlightedElement = listRef.current.children[highlightedIndex] as HTMLElement;
@@ -114,14 +115,14 @@ const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
   }, [highlightedIndex]);
 
   return (
-    <div className="form-group">
+    <div className="space-y-2">
       {label && (
-        <label className="form-label" style={{ marginBottom: 'var(--space-sm)' }}>
+        <label className="block font-semibold text-gray-700 mb-2 text-sm uppercase tracking-wide">
           {label}
         </label>
       )}
-      <div style={{ position: 'relative' }} ref={inputRef}>
-        <div style={{ position: 'relative' }}>
+      <div className="relative" ref={inputRef}>
+        <div className="relative">
           <motion.input
             type="text"
             value={searchTerm || value}
@@ -129,66 +130,26 @@ const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
             onKeyDown={handleKeyDown}
             onFocus={() => setIsOpen(true)}
             placeholder={placeholder}
-            style={{
-              width: '100%',
-              padding: 'var(--space-md) var(--space-xl) var(--space-md) var(--space-xl)',
-              background: 'white',
-              border: `2px solid ${isOpen ? 'var(--primary-500)' : 'var(--gray-300)'}`,
-              borderRadius: 'var(--radius-lg)',
-              fontSize: '1rem',
-              color: 'var(--gray-700)',
-              outline: 'none',
-              transition: 'all 0.2s ease',
-              boxShadow: isOpen ? 'var(--shadow-lg)' : 'none',
-              minHeight: '48px'
-            }}
+            className={`w-full pl-12 pr-12 py-3 bg-white border-2 rounded-lg text-base text-gray-700 transition-all duration-200 focus:outline-none min-h-[48px] ${
+              isOpen ? 'border-blue-500 shadow-lg' : 'border-gray-300'
+            }`}
             whileFocus={{
-              borderColor: 'var(--primary-500)',
-              boxShadow: 'var(--shadow-lg)'
+              borderColor: '#3b82f6',
+              boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)'
             }}
           />
           
-          <div style={{
-            position: 'absolute',
-            left: 'var(--space-md)',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            pointerEvents: 'none',
-            zIndex: 1
-          }}>
-            <MagnifyingGlassIcon style={{ 
-              width: '20px', 
-              height: '20px', 
-              color: 'var(--gray-400)' 
-            }} />
+          <div className="absolute left-4 top-1/2 transform -translate-y-1/2 pointer-events-none z-10">
+            <MagnifyingGlassIcon className="w-5 h-5 text-gray-400" />
           </div>
 
-          <motion.button
-            type="button"
-            onClick={() => setIsOpen(!isOpen)}
-            style={{
-              position: 'absolute',
-              right: 'var(--space-md)',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              color: 'var(--gray-400)',
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              padding: 'var(--space-xs)',
-              borderRadius: 'var(--radius-md)',
-              transition: 'all 0.2s ease',
-              zIndex: 1
-            }}
-            whileHover={{ 
-              color: 'var(--gray-600)',
-              backgroundColor: 'var(--gray-100)'
-            }}
-            whileTap={{ scale: 0.95 }}
+          <motion.div 
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none z-10"
             animate={{ rotate: isOpen ? 180 : 0 }}
+            transition={{ duration: 0.2 }}
           >
-            <ChevronDownIcon style={{ width: '20px', height: '20px' }} />
-          </motion.button>
+            <ChevronDownIcon className="w-5 h-5 text-gray-400" />
+          </motion.div>
         </div>
 
         <AnimatePresence>
@@ -197,138 +158,63 @@ const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
               initial={{ opacity: 0, y: -10, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -10, scale: 0.95 }}
-              transition={{ duration: 0.2, ease: "easeOut" }}
-              style={{
-                position: 'absolute',
-                zIndex: 50,
-                width: '100%',
-                marginTop: 'var(--space-sm)',
-                background: 'white',
-                backdropFilter: 'blur(20px)',
-                border: '2px solid var(--primary-500)',
-                borderRadius: 'var(--radius-xl)',
-                overflow: 'hidden',
-              boxShadow: 'var(--shadow-2xl)'
-            }}
-          >
-            <ul 
-              ref={listRef} 
-              style={{ 
-                maxHeight: '240px', 
-                overflowY: 'auto',
-                margin: 0,
-                padding: 'var(--space-sm)',
-                listStyle: 'none'
-              }}
+              transition={{ duration: 0.2 }}
+              className="absolute top-full left-0 right-0 z-50 mt-1 bg-white backdrop-blur-lg border-2 border-blue-500 rounded-lg shadow-2xl max-h-60 overflow-hidden"
             >
+              <ul
+                ref={listRef}
+                className="max-h-60 overflow-y-auto py-1"
+              >
               {allOptions.length === 0 ? (
-                <li style={{ 
-                  padding: 'var(--space-lg)', 
-                  color: 'var(--gray-500)', 
-                  textAlign: 'center',
-                  fontSize: '0.875rem'
-                }}>
+                <li className="px-6 py-4 text-gray-500 text-center text-sm">
                   No options found
                 </li>
               ) : (
                 allOptions.map((option, index) => (
-                  <li key={option.id} style={{ margin: 0 }}>
+                  <li key={option.id} className="m-0">
                     <motion.button
                       type="button"
                       onClick={() => handleOptionSelect(option)}
-                      style={{
-                        width: '100%',
-                        padding: 'var(--space-md)',
-                        textAlign: 'left',
-                        background: highlightedIndex === index 
+                      className={`w-full px-4 py-3 text-left border-none rounded-md text-sm cursor-pointer transition-all duration-200 flex items-center justify-between ${
+                        highlightedIndex === index 
                           ? option.isCustom 
-                            ? 'var(--secondary-50)'
-                            : 'var(--primary-50)'
-                          : 'transparent',
-                        border: 'none',
-                        borderRadius: 'var(--radius-md)',
-                        fontSize: '0.875rem',
-                        color: option.isCustom ? 'var(--secondary-700)' : 'var(--gray-700)',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s ease',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between'
-                      }}
+                            ? 'bg-purple-50'
+                            : 'bg-blue-50'
+                          : 'bg-transparent'
+                      } ${
+                        option.isCustom ? 'text-purple-700' : 'text-gray-700'
+                      }`}
                       whileHover={{
                         backgroundColor: option.isCustom 
-                          ? 'var(--secondary-100)'
-                          : 'var(--primary-100)',
+                          ? '#f3e8ff'
+                          : '#dbeafe',
                         scale: 1.02
                       }}
                       whileTap={{ scale: 0.98 }}
                     >
-                      <div style={{ 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        gap: 'var(--space-sm)' 
-                      }}>
-                        {option.isCustom && (
-                          <div style={{
-                            width: '24px',
-                            height: '24px',
-                            background: 'var(--secondary-100)',
-                            borderRadius: '50%',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center'
-                          }}>
-                            <PlusIcon style={{ 
-                              width: '14px', 
-                              height: '14px', 
-                              color: 'var(--secondary-600)' 
-                            }} />
-                          </div>
+                      <div className="flex items-center gap-3">
+                        {option.isCustom ? (
+                          <PlusIcon className="w-4 h-4 text-purple-600 flex-shrink-0" />
+                        ) : (
+                          <div className="w-4 h-4 flex-shrink-0" />
                         )}
-                        <div>
-                          <div style={{ fontWeight: 500 }}>
-                            {option.isCustom ? 'Create Custom:' : option.label}
-                          </div>
-                          {option.isCustom && (
-                            <div style={{ 
-                              fontSize: '0.75rem', 
-                              color: 'var(--secondary-600)',
-                              fontWeight: 600
-                            }}>
-                              "{searchTerm}"
-                            </div>
-                          )}
-                        </div>
+                        
+                        <span className="flex-1 truncate">
+                          {option.label}
+                        </span>
                       </div>
-                      {value === option.value && (
-                        <motion.div
-                          initial={{ scale: 0 }}
-                          animate={{ scale: 1 }}
-                          style={{
-                            width: '20px',
-                            height: '20px',
-                            background: 'var(--success-500)',
-                            borderRadius: '50%',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center'
-                          }}
-                        >
-                          <CheckIcon style={{ 
-                            width: '12px', 
-                            height: '12px', 
-                            color: 'white' 
-                          }} />
-                        </motion.div>
+                      
+                      {option.value === value && !option.isCustom && (
+                        <CheckIcon className="w-4 h-4 text-blue-600 flex-shrink-0" />
                       )}
                     </motion.button>
                   </li>
                 ))
               )}
-            </ul>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              </ul>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );

@@ -54,14 +54,14 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({
   const selectedTemplate = templates.find(t => t.id === selectedTemplateId);
 
   return (
-    <div className={`template-selector ${className}`}>
+    <div className={`space-y-6 ${className}`}>
       {/* Header */}
-      <div style={{ marginBottom: 'var(--space-lg)' }}>
-        <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-sm)' }}>
-          <DocumentTextIcon className="icon-sm" />
+      <div className="mb-6">
+        <label className="flex items-center gap-2 block font-semibold text-gray-700 mb-2 text-sm uppercase tracking-wide">
+          <DocumentTextIcon className="w-4 h-4" />
           Template Selection
         </label>
-        <p style={{ fontSize: '0.875rem', color: 'var(--gray-600)', margin: '0' }}>
+        <p className="text-sm text-gray-600 m-0">
           Choose a template for your ad campaign
         </p>
       </div>
@@ -71,97 +71,48 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          style={{
-            padding: 'var(--space-lg)',
-            background: 'linear-gradient(135deg, var(--primary-50), var(--secondary-50))',
-            border: '2px solid var(--primary-200)',
-            borderRadius: 'var(--radius-xl)',
-            marginBottom: 'var(--space-lg)',
-            position: 'relative',
-            overflow: 'hidden'
-          }}
+          className="p-6 bg-gradient-to-br from-blue-50 to-purple-50 border-2 border-blue-200 rounded-2xl mb-6 relative overflow-hidden"
         >
-          <div style={{
-            position: 'absolute',
-            top: 0,
-            right: 0,
-            padding: 'var(--space-sm)',
-            color: 'var(--primary-600)'
-          }}>
-            <CheckCircleIconSolid className="icon-sm" />
+          <div className="absolute top-0 right-0 p-2 text-blue-600">
+            <CheckCircleIconSolid className="w-4 h-4" />
           </div>
           
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--space-md)' }}>
-            <div style={{
-              width: '48px',
-              height: '48px',
-              background: 'var(--primary-100)',
-              borderRadius: 'var(--radius-lg)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexShrink: 0
-            }}>
-              <DocumentTextIcon style={{ width: '24px', height: '24px', color: 'var(--primary-600)' }} />
+          <div className="flex items-start gap-4">
+            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <DocumentTextIcon className="w-6 h-6 text-blue-600" />
             </div>
             
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-sm)', marginBottom: 'var(--space-xs)' }}>
-                <h3 style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--gray-900)', margin: 0 }}>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-1">
+                <h3 className="text-base font-semibold text-gray-900 m-0">
                   {selectedTemplate.name}
                 </h3>
                 {selectedTemplate.isCustom && (
-                  <span style={{
-                    padding: 'var(--space-xs) var(--space-sm)',
-                    background: 'var(--secondary-100)',
-                    color: 'var(--secondary-700)',
-                    fontSize: '0.75rem',
-                    fontWeight: 500,
-                    borderRadius: 'var(--radius-full)'
-                  }}>
+                  <span className="px-2 py-1 bg-purple-100 text-purple-700 text-xs font-medium rounded-full">
                     Custom
                   </span>
                 )}
               </div>
               
-              <div style={{ fontSize: '0.875rem', color: 'var(--gray-700)', marginBottom: 'var(--space-sm)' }}>
+              <div className="text-sm text-gray-700 mb-2">
                 <div><strong>Headline:</strong> {selectedTemplate.fields.headline}</div>
-                <div style={{ marginTop: 'var(--space-xs)' }}>
+                <div className="mt-1">
                   <strong>Description:</strong> {selectedTemplate.fields.description}
                 </div>
               </div>
               
-              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-md)' }}>
-                <span style={{
-                  padding: 'var(--space-xs) var(--space-sm)',
-                  background: 'var(--primary-600)',
-                  color: 'white',
-                  fontSize: '0.75rem',
-                  fontWeight: 500,
-                  borderRadius: 'var(--radius-md)'
-                }}>
+              <div className="flex items-center gap-4">
+                <span className="px-2 py-1 bg-blue-600 text-white text-xs font-medium rounded-lg">
                   {selectedTemplate.fields.callToAction}
                 </span>
                 
                 <motion.button
                   onClick={() => setPreviewTemplate(selectedTemplate)}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 'var(--space-xs)',
-                    padding: 'var(--space-xs) var(--space-sm)',
-                    background: 'rgba(255, 255, 255, 0.8)',
-                    border: '1px solid var(--primary-200)',
-                    borderRadius: 'var(--radius-md)',
-                    fontSize: '0.75rem',
-                    color: 'var(--primary-700)',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease'
-                  }}
+                  className="flex items-center gap-1 px-2 py-1 bg-white/80 border border-blue-200 rounded-lg text-xs text-blue-700 cursor-pointer transition-all duration-200 hover:bg-white hover:border-blue-300"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <EyeIcon style={{ width: '14px', height: '14px' }} />
+                  <EyeIcon className="w-3.5 h-3.5" />
                   Preview
                 </motion.button>
               </div>
@@ -175,12 +126,7 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-          gap: 'var(--space-md)',
-          marginBottom: 'var(--space-lg)'
-        }}
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6"
       >
         {/* Existing Templates */}
         {templates.map((template) => {
@@ -191,17 +137,11 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({
             <motion.div
               key={template.id}
               variants={itemVariants}
-              style={{
-                position: 'relative',
-                background: 'white',
-                border: `2px solid ${isSelected ? 'var(--primary-500)' : 'var(--gray-200)'}`,
-                borderRadius: 'var(--radius-xl)',
-                padding: 'var(--space-lg)',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease',
-                transform: isHovered ? 'translateY(-4px)' : 'translateY(0)',
-                boxShadow: isHovered ? 'var(--shadow-xl)' : isSelected ? 'var(--shadow-lg)' : 'var(--shadow-sm)'
-              }}
+              className={`relative bg-white border-2 rounded-2xl p-6 cursor-pointer transition-all duration-200 ${
+                isSelected ? 'border-blue-500 shadow-lg' : 'border-gray-200 shadow-sm'
+              } ${
+                isHovered ? '-translate-y-1 shadow-xl' : ''
+              }`}
               onClick={() => onTemplateSelect(template.id)}
               onMouseEnter={() => setHoveredTemplate(template.id)}
               onMouseLeave={() => setHoveredTemplate(null)}
@@ -213,63 +153,38 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  style={{
-                    position: 'absolute',
-                    top: 'var(--space-md)',
-                    right: 'var(--space-md)',
-                    width: '24px',
-                    height: '24px',
-                    background: 'var(--primary-500)',
-                    borderRadius: '50%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}
+                  className="absolute top-4 right-4 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center"
                 >
-                  <CheckCircleIcon style={{ width: '16px', height: '16px', color: 'white' }} />
+                  <CheckCircleIcon className="w-4 h-4 text-white" />
                 </motion.div>
               )}
 
               {/* Template Content */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-md)' }}>
+              <div className="flex flex-col gap-4">
                 {/* Header */}
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--space-sm)' }}>
-                  <div style={{
-                    width: '40px',
-                    height: '40px',
-                    background: template.isCustom ? 'var(--secondary-100)' : 'var(--primary-100)',
-                    borderRadius: 'var(--radius-lg)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexShrink: 0
-                  }}>
+                <div className="flex items-start gap-2">
+                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                    template.isCustom ? 'bg-purple-100' : 'bg-blue-100'
+                  }`}>
                     {template.isCustom ? (
-                      <StarIcon style={{ width: '20px', height: '20px', color: 'var(--secondary-600)' }} />
+                      <StarIcon className="w-5 h-5 text-purple-600" />
                     ) : (
-                      <DocumentTextIcon style={{ width: '20px', height: '20px', color: 'var(--primary-600)' }} />
+                      <DocumentTextIcon className="w-5 h-5 text-blue-600" />
                     )}
                   </div>
                   
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-sm)', marginBottom: 'var(--space-xs)' }}>
-                      <h4 style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--gray-900)', margin: 0 }}>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <h4 className="text-sm font-semibold text-gray-900 m-0">
                         {template.name}
                       </h4>
                       {template.isCustom && (
-                        <span style={{
-                          padding: 'var(--space-xs) var(--space-sm)',
-                          background: 'var(--secondary-100)',
-                          color: 'var(--secondary-700)',
-                          fontSize: '0.7rem',
-                          fontWeight: 500,
-                          borderRadius: 'var(--radius-full)'
-                        }}>
+                        <span className="px-2 py-0.5 bg-purple-100 text-purple-700 text-xs font-medium rounded-full">
                           Custom
                         </span>
                       )}
                     </div>
-                    <p style={{ fontSize: '0.8rem', color: 'var(--gray-600)', margin: 0, lineHeight: 1.4 }}>
+                    <p className="text-xs text-gray-600 m-0 leading-relaxed">
                       {template.fields.description.length > 80 
                         ? `${template.fields.description.substring(0, 80)}...`
                         : template.fields.description
@@ -279,57 +194,35 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({
                 </div>
 
                 {/* Preview Content */}
-                <div style={{
-                  padding: 'var(--space-sm)',
-                  background: 'var(--gray-50)',
-                  borderRadius: 'var(--radius-md)',
-                  border: '1px solid var(--gray-100)'
-                }}>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--gray-700)', marginBottom: 'var(--space-xs)' }}>
+                <div className="p-2 bg-gray-50 rounded-lg border border-gray-100">
+                  <div className="text-xs text-gray-700 mb-1">
                     <strong>Headline:</strong> {template.fields.headline.length > 40 
                       ? `${template.fields.headline.substring(0, 40)}...`
                       : template.fields.headline
                     }
                   </div>
-                  <div style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    padding: 'var(--space-xs) var(--space-sm)',
-                    background: isSelected ? 'var(--primary-100)' : 'var(--gray-200)',
-                    color: isSelected ? 'var(--primary-700)' : 'var(--gray-700)',
-                    fontSize: '0.7rem',
-                    fontWeight: 500,
-                    borderRadius: 'var(--radius-md)'
-                  }}>
-                    <CursorArrowRippleIcon style={{ width: '12px', height: '12px', marginRight: 'var(--space-xs)' }} />
+                  <div className={`inline-flex items-center px-2 py-1 text-xs font-medium rounded-lg ${
+                    isSelected ? 'bg-blue-100 text-blue-700' : 'bg-gray-200 text-gray-700'
+                  }`}>
+                    <CursorArrowRippleIcon className="w-3 h-3 mr-1" />
                     {template.fields.callToAction}
                   </div>
                 </div>
 
                 {/* Actions */}
-                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <div className="flex justify-end">
                   <motion.button
                     onClick={(e) => {
                       e.stopPropagation();
                       setPreviewTemplate(template);
                     }}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 'var(--space-xs)',
-                      padding: 'var(--space-xs) var(--space-sm)',
-                      background: isHovered ? 'var(--primary-50)' : 'transparent',
-                      border: '1px solid var(--gray-200)',
-                      borderRadius: 'var(--radius-md)',
-                      fontSize: '0.75rem',
-                      color: 'var(--gray-600)',
-                      cursor: 'pointer',
-                      transition: 'all 0.2s ease'
-                    }}
-                    whileHover={{ scale: 1.05, backgroundColor: 'var(--primary-50)', color: 'var(--primary-700)' }}
+                    className={`flex items-center gap-1 px-2 py-1 border border-gray-200 rounded-lg text-xs text-gray-600 cursor-pointer transition-all duration-200 ${
+                      isHovered ? 'bg-blue-50 text-blue-700 border-blue-200' : 'bg-transparent'
+                    }`}
+                    whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    <EyeIcon style={{ width: '12px', height: '12px' }} />
+                    <EyeIcon className="w-3 h-3" />
                     Preview
                   </motion.button>
                 </div>
@@ -341,71 +234,34 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({
         {/* Create New Template Card */}
         <motion.div
           variants={itemVariants}
-          style={{
-            background: 'linear-gradient(135deg, var(--primary-50), var(--secondary-50))',
-            border: '2px dashed var(--primary-300)',
-            borderRadius: 'var(--radius-xl)',
-            padding: 'var(--space-xl)',
-            cursor: 'pointer',
-            transition: 'all 0.2s ease',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            textAlign: 'center',
-            minHeight: '200px'
-          }}
+          className="bg-gradient-to-br from-blue-50 to-purple-50 border-2 border-dashed border-blue-300 rounded-2xl p-8 cursor-pointer transition-all duration-200 flex flex-col items-center justify-center text-center min-h-[200px] hover:border-blue-500 hover:bg-blue-100"
           onClick={onCreateTemplate}
-          whileHover={{ 
-            scale: 1.02,
-            borderColor: 'var(--primary-500)',
-            backgroundColor: 'var(--primary-100)'
-          }}
+          whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >
           <motion.div
-            style={{
-              width: '64px',
-              height: '64px',
-              background: 'var(--primary-100)',
-              borderRadius: '50%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginBottom: 'var(--space-md)'
-            }}
+            className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4"
             whileHover={{ 
-              backgroundColor: 'var(--primary-200)',
+              backgroundColor: '#dbeafe',
               rotate: 180
             }}
             transition={{ duration: 0.3 }}
           >
-            <PlusIcon style={{ width: '28px', height: '28px', color: 'var(--primary-600)' }} />
+            <PlusIcon className="w-7 h-7 text-blue-600" />
           </motion.div>
           
-          <h4 style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--primary-700)', margin: 0, marginBottom: 'var(--space-sm)' }}>
+          <h4 className="text-base font-semibold text-blue-700 m-0 mb-2">
             Create New Template
           </h4>
-          <p style={{ fontSize: '0.875rem', color: 'var(--primary-600)', margin: 0, lineHeight: 1.4 }}>
+          <p className="text-sm text-blue-600 m-0 leading-relaxed">
             Design a custom template for your specific campaign needs
           </p>
           
           <motion.div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 'var(--space-xs)',
-              marginTop: 'var(--space-md)',
-              padding: 'var(--space-sm) var(--space-md)',
-              background: 'var(--primary-500)',
-              color: 'white',
-              borderRadius: 'var(--radius-md)',
-              fontSize: '0.875rem',
-              fontWeight: 500
-            }}
-            whileHover={{ backgroundColor: 'var(--primary-600)' }}
+            className="flex items-center gap-1 mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg text-sm font-medium"
+            whileHover={{ backgroundColor: '#2563eb' }}
           >
-            <SparklesIcon style={{ width: '16px', height: '16px' }} />
+            <SparklesIcon className="w-4 h-4" />
             Get Started
           </motion.div>
         </motion.div>
@@ -418,141 +274,90 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            style={{
-              position: 'fixed',
-              inset: 0,
-              zIndex: 50,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: 'var(--space-lg)',
-              background: 'rgba(0, 0, 0, 0.5)',
-              backdropFilter: 'blur(8px)'
-            }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/50 backdrop-blur-sm"
             onClick={() => setPreviewTemplate(null)}
           >
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              style={{
-                width: '100%',
-                maxWidth: '600px',
-                background: 'white',
-                borderRadius: 'var(--radius-2xl)',
-                padding: 'var(--space-xl)',
-                boxShadow: 'var(--shadow-2xl)'
-              }}
+              className="w-full max-w-2xl bg-white rounded-3xl p-8 shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 'var(--space-xl)' }}>
-                <h3 style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--gray-900)', margin: 0 }}>
+              <div className="flex items-center justify-between mb-8">
+                <h3 className="text-2xl font-bold text-gray-900 m-0">
                   Template Preview
                 </h3>
                 <motion.button
                   onClick={() => setPreviewTemplate(null)}
-                  style={{
-                    padding: 'var(--space-sm)',
-                    background: 'var(--gray-100)',
-                    border: 'none',
-                    borderRadius: 'var(--radius-lg)',
-                    cursor: 'pointer'
-                  }}
-                  whileHover={{ backgroundColor: 'var(--gray-200)' }}
+                  className="p-2 bg-gray-100 border-none rounded-lg cursor-pointer hover:bg-gray-200"
                   whileTap={{ scale: 0.95 }}
                 >
                   ✕
                 </motion.button>
               </div>
 
-              <div style={{
-                border: '2px solid var(--gray-200)',
-                borderRadius: 'var(--radius-xl)',
-                padding: 'var(--space-xl)',
-                background: 'var(--gray-50)'
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-md)', marginBottom: 'var(--space-lg)' }}>
-                  <div style={{
-                    width: '48px',
-                    height: '48px',
-                    background: previewTemplate.isCustom ? 'var(--secondary-100)' : 'var(--primary-100)',
-                    borderRadius: 'var(--radius-lg)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}>
+              <div className="border-2 border-gray-200 rounded-2xl p-8 bg-gray-50">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${
+                    previewTemplate.isCustom ? 'bg-purple-100' : 'bg-blue-100'
+                  }`}>
                     {previewTemplate.isCustom ? (
-                      <StarIcon style={{ width: '24px', height: '24px', color: 'var(--secondary-600)' }} />
+                      <StarIcon className="w-6 h-6 text-purple-600" />
                     ) : (
-                      <DocumentTextIcon style={{ width: '24px', height: '24px', color: 'var(--primary-600)' }} />
+                      <DocumentTextIcon className="w-6 h-6 text-blue-600" />
                     )}
                   </div>
                   <div>
-                    <h4 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--gray-900)', margin: 0 }}>
+                    <h4 className="text-xl font-semibold text-gray-900 m-0">
                       {previewTemplate.name}
                     </h4>
                     {previewTemplate.isCustom && (
-                      <span style={{
-                        padding: 'var(--space-xs) var(--space-sm)',
-                        background: 'var(--secondary-100)',
-                        color: 'var(--secondary-700)',
-                        fontSize: '0.75rem',
-                        fontWeight: 500,
-                        borderRadius: 'var(--radius-full)'
-                      }}>
+                      <span className="px-2 py-1 bg-purple-100 text-purple-700 text-xs font-medium rounded-full">
                         Custom Template
                       </span>
                     )}
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-md)' }}>
+                <div className="flex flex-col gap-4">
                   <div>
-                    <label style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--gray-700)', marginBottom: 'var(--space-xs)', display: 'block' }}>
+                    <label className="text-sm font-semibold text-gray-700 mb-1 block">
                       Headline
                     </label>
-                    <p style={{ fontSize: '1rem', color: 'var(--gray-900)', margin: 0, padding: 'var(--space-sm)', background: 'white', borderRadius: 'var(--radius-md)', border: '1px solid var(--gray-200)' }}>
+                    <p className="text-base text-gray-900 m-0 p-2 bg-white rounded-lg border border-gray-200">
                       {previewTemplate.fields.headline}
                     </p>
                   </div>
 
                   <div>
-                    <label style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--gray-700)', marginBottom: 'var(--space-xs)', display: 'block' }}>
+                    <label className="text-sm font-semibold text-gray-700 mb-1 block">
                       Description
                     </label>
-                    <p style={{ fontSize: '0.875rem', color: 'var(--gray-800)', margin: 0, padding: 'var(--space-sm)', background: 'white', borderRadius: 'var(--radius-md)', border: '1px solid var(--gray-200)', lineHeight: 1.5 }}>
+                    <p className="text-sm text-gray-800 m-0 p-2 bg-white rounded-lg border border-gray-200 leading-relaxed">
                       {previewTemplate.fields.description}
                     </p>
                   </div>
 
-                  <div style={{ display: 'flex', gap: 'var(--space-md)' }}>
-                    <div style={{ flex: 1 }}>
-                      <label style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--gray-700)', marginBottom: 'var(--space-xs)', display: 'block' }}>
+                  <div className="flex gap-4">
+                    <div className="flex-1">
+                      <label className="text-sm font-semibold text-gray-700 mb-1 block">
                         Call to Action
                       </label>
-                      <div style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        padding: 'var(--space-sm) var(--space-md)',
-                        background: 'var(--primary-500)',
-                        color: 'white',
-                        borderRadius: 'var(--radius-md)',
-                        fontSize: '0.875rem',
-                        fontWeight: 500
-                      }}>
-                        <CursorArrowRippleIcon style={{ width: '16px', height: '16px', marginRight: 'var(--space-xs)' }} />
+                      <div className="inline-flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg text-sm font-medium">
+                        <CursorArrowRippleIcon className="w-4 h-4 mr-1" />
                         {previewTemplate.fields.callToAction}
                       </div>
                     </div>
 
                     {previewTemplate.fields.imageUrl && (
-                      <div style={{ flex: 1 }}>
-                        <label style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--gray-700)', marginBottom: 'var(--space-xs)', display: 'block' }}>
+                      <div className="flex-1">
+                        <label className="text-sm font-semibold text-gray-700 mb-1 block">
                           Image
                         </label>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-sm)' }}>
-                          <PhotoIcon style={{ width: '16px', height: '16px', color: 'var(--gray-500)' }} />
-                          <span style={{ fontSize: '0.875rem', color: 'var(--gray-600)' }}>Image provided</span>
+                        <div className="flex items-center gap-2">
+                          <PhotoIcon className="w-4 h-4 text-gray-500" />
+                          <span className="text-sm text-gray-600">Image provided</span>
                         </div>
                       </div>
                     )}
@@ -560,10 +365,10 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({
                 </div>
               </div>
 
-              <div style={{ marginTop: 'var(--space-xl)', display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-md)' }}>
+              <div className="mt-8 flex justify-end gap-4">
                 <motion.button
                   onClick={() => setPreviewTemplate(null)}
-                  className="btn btn-secondary"
+                  className="px-6 py-3 bg-white text-gray-700 font-semibold rounded-lg border-2 border-gray-200 shadow-md transition-all duration-200 hover:border-gray-300 hover:shadow-lg"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -575,7 +380,7 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({
                     onTemplateSelect(previewTemplate.id);
                     setPreviewTemplate(null);
                   }}
-                  className="btn btn-primary"
+                  className="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-lg shadow-lg transition-all duration-200 hover:from-blue-600 hover:to-blue-700 hover:shadow-xl"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
