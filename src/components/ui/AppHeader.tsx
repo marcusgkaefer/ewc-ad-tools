@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { ChartBarIcon, CogIcon } from '@heroicons/react/24/solid';
+import React, { useState } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { ChartBarIcon, CogIcon } from "@heroicons/react/24/solid";
 
 interface AppHeaderProps {
   onSettingsClick: () => void;
@@ -24,26 +24,25 @@ const AppHeader: React.FC<AppHeaderProps> = ({ onSettingsClick }) => {
     >
       <div className="flex items-center justify-between h-full mx-auto">
         {/* Left side - Logo and title */}
-        <a 
-          href="/" 
+        <a
+          href="/"
           className="flex items-center gap-3 no-underline cursor-pointer"
         >
-          <motion.div 
+          <motion.div
             style={{ width: logoSize, height: logoSize }}
             className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center shadow-lg shadow-blue-500/20 flex-shrink-0"
           >
-            <motion.div style={{ 
-              width: useTransform(motionScrollY, [0, 100], [20, 18]), 
-              height: useTransform(motionScrollY, [0, 100], [20, 18])
-            }}>
+            <motion.div
+              style={{
+                width: useTransform(motionScrollY, [0, 100], [20, 18]),
+                height: useTransform(motionScrollY, [0, 100], [20, 18]),
+              }}
+            >
               <ChartBarIcon className="w-full h-full text-white" />
             </motion.div>
           </motion.div>
-          
-          <motion.h1 
-            style={{ fontSize: titleSize }}
-            className="font-semibold text-gray-800 tracking-tight leading-none text-2xl"
-          >
+
+          <motion.h1 className="font-semibold text-gray-800 tracking-tight leading-none text-2xl">
             Ad Tools
           </motion.h1>
         </a>
@@ -69,10 +68,10 @@ const AppHeader: React.FC<AppHeaderProps> = ({ onSettingsClick }) => {
           {/* Tooltip */}
           <motion.div
             initial={{ opacity: 0, y: 5, scale: 0.9 }}
-            animate={{ 
-              opacity: showTooltip ? 1 : 0, 
+            animate={{
+              opacity: showTooltip ? 1 : 0,
               y: showTooltip ? 0 : 5,
-              scale: showTooltip ? 1 : 0.9
+              scale: showTooltip ? 1 : 0.9,
             }}
             transition={{ duration: 0.2 }}
             className="absolute top-full right-0 mt-2 px-3 py-2 text-xs font-medium text-white bg-gray-800 rounded-lg shadow-lg pointer-events-none whitespace-nowrap z-50"
@@ -87,4 +86,4 @@ const AppHeader: React.FC<AppHeaderProps> = ({ onSettingsClick }) => {
   );
 };
 
-export default AppHeader; 
+export default AppHeader;

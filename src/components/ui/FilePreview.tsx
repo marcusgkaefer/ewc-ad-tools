@@ -9,19 +9,19 @@ import {
   ExclamationTriangleIcon,
   InformationCircleIcon
 } from '@heroicons/react/24/outline';
-import type { LocationSummary, AdConfiguration, CampaignConfiguration } from '../../types';
+import type { LocationWithConfig, AdConfiguration, CampaignConfiguration } from '../../types';
 
 interface FilePreviewProps {
   isOpen: boolean;
   onClose: () => void;
-  locations: LocationSummary[];
+  locations: LocationWithConfig[];
   ads: AdConfiguration[];
   campaign: CampaignConfiguration;
   title?: string;
 }
 
 interface PreviewRow {
-  location: LocationSummary;
+  location: LocationWithConfig;
   ad: AdConfiguration;
   campaignName: string;
   adSetName: string;
@@ -38,7 +38,7 @@ interface PreviewRow {
 }
 
 const generatePreviewData = (
-  locations: LocationSummary[],
+  locations: LocationWithConfig[],
   ads: AdConfiguration[],
   campaign: CampaignConfiguration
 ): PreviewRow[] => {
@@ -46,6 +46,9 @@ const generatePreviewData = (
   
   locations.forEach(location => {
     ads.forEach(ad => {
+      // Use location's landing page URL from config, with fallback
+      const landingPage = location.config?.landingPageUrl || 'https://waxcenter.com';
+      
       data.push({
         location,
         ad,
@@ -57,7 +60,7 @@ const generatePreviewData = (
         bidStrategy: campaign.bidStrategy,
         startDate: campaign.startDate,
         endDate: campaign.endDate,
-        landingPage: ad.landingPage,
+        landingPage,
         radius: `${location.coordinates.lat}, ${location.coordinates.lng} +${campaign.radius}mi`,
         caption: ad.caption,
         status: ad.status

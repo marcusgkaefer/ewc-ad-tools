@@ -1,244 +1,187 @@
-# Campaign Creator Studio 🎯
+# Ad Creation App
 
-An award-winning, state-of-the-art Facebook/Meta campaign creation tool with innovative UI/UX design and intelligent workflow automation.
+A modern React application for creating and managing advertising campaigns across multiple locations with configurable settings and budget management.
 
-## 🚀 Recent Major Improvements
+## Features
 
-### Efficient Location Selection
-- **Compact List View**: Streamlined flat list replaces card grid for better performance
-- **Exclusion Mode**: Revolutionary approach - select locations to exclude instead of include
-- **Smart Bulk Operations**: Select All, Clear All, Random 25, with search integration
-- **Visual Feedback**: Clear indicators for selected/excluded states
+- **Location Management**: Load and manage locations from Supabase database
+- **Configurable Locations**: Set custom budgets and notes for each location
+- **Template-Based Ad Generation**: Create ads using predefined templates
+- **Batch Operations**: Select and configure multiple locations at once
+- **Real-time Preview**: See generated ads before exporting
+- **Export Capabilities**: Download campaign data in various formats
 
-### Multiple Ads per Campaign  
-- **Industry Standard**: Default 4 ads per campaign (typical Facebook/Meta workflow)
-- **Individual Configuration**: Each ad gets its own template and customization
-- **Separate File Generation**: One Excel file per ad variation for organized imports
-- **Dynamic Management**: Add/remove ads as needed with live preview
+## Tech Stack
 
-### Enhanced File Generation
-- **Multiple Output Files**: Generate separate campaign files for each ad
-- **Smart Naming**: `EWC_Meta_June25_Ad1_campaigns.xlsx` format
-- **Parallel Processing**: Efficient generation of multiple files simultaneously
-- **Complete Coverage**: Each file contains all selected locations with one ad template
+- **Frontend**: React 18 with TypeScript
+- **Styling**: Tailwind CSS with custom design system
+- **Database**: Supabase (PostgreSQL)
+- **State Management**: React hooks and context
+- **Build Tool**: Vite
+- **Icons**: Heroicons
 
-## ✨ Award-Winning Features
+## Prerequisites
 
-### 🎨 Revolutionary Design System
-- **Glassmorphism Effects**: Modern transparent surfaces with backdrop blur
-- **Dynamic Gradients**: Animated backgrounds that respond to user interactions
-- **Micro-interactions**: Delightful animations throughout the entire experience
-- **Smart Spacing**: Consistent, breathing rhythm across all components
-- **Responsive Excellence**: Flawless experience across all devices
-
-### 🚀 Interactive Campaign Workflow
-- **5-Step Guided Process**: Intuitive location → ads → configuration → review → generation
-- **Real-time Stats Dashboard**: Live calculations of campaigns, budget, and file count
-- **Smart Progress Indicators**: Visual feedback with completion states
-- **Efficient Location Selection**: Compact list with exclusion mode and bulk operations
-- **Multiple Ad Management**: Default 4 ads per campaign with separate file generation
-- **Floating Settings Panel**: On-the-fly configuration without losing context
-
-### 💡 Creative UX Innovations
-- **Progressive Disclosure**: Information revealed exactly when needed
-- **Adaptive Layouts**: Interface responds intelligently to content and selections
-- **Elegant Loading States**: Beautiful transitions and skeleton screens
-- **Award-worthy Animations**: Spring physics and smooth transitions using Framer Motion
-- **Intelligent Feedback**: Clear visual and haptic feedback for every action
-
-### 🎛️ Advanced Campaign Features
-- **Multiple Ad Variations**: Default 4 ads per campaign with individual file generation
-- **Smart Location Selection**: Compact list with exclusion mode for easier bulk operations
-- **Dynamic File Naming**: Intelligent naming per ad: `Prefix_Date_AdName_campaigns.xlsx`
-- **73-Column Excel Export**: Complete Facebook/Meta Ads Manager import format
-- **Bulk Operations**: Select/exclude hundreds of locations with one click
-- **Template Customization**: Individual templates per ad with live preview
-
-## 🏆 Design System Highlights
-
-### Color Philosophy
-- **Primary Palette**: Modern blue spectrum with perfect contrast ratios
-- **Secondary Palette**: Sophisticated purple accents for visual interest
-- **Semantic Colors**: Consistent success, warning, error, and info states
-- **Accessibility First**: WCAG AA compliant color combinations
-
-### Typography Excellence
-- **Inter Font Family**: Modern, highly readable primary typeface
-- **JetBrains Mono**: Technical content with perfect character spacing
-- **Smart Type Scale**: Responsive sizing using clamp() for perfect scaling
-- **Gradient Text Effects**: Animated gradient headings for visual impact
-
-### Interactive Components
-- **Button System**: Primary, secondary, and contextual variants with hover effects
-- **Form Elements**: Elegant inputs with focus states and validation
-- **Card Components**: Interactive cards with selection states and animations
-- **Progress System**: Visual step indicators with state management
-
-## 🚀 Getting Started
-
-### Prerequisites
 - Node.js 18+ 
-- npm or yarn package manager
+- npm or yarn
+- Supabase account and project
 
-### Installation
+## Setup Instructions
+
+### 1. Clone and Install
+
 ```bash
-# Clone the repository
-git clone <repository-url>
-
-# Navigate to frontend directory
 cd ad-creation-frontend
-
-# Install dependencies
 npm install
+```
 
-# Start development server
+### 2. Supabase Setup
+
+1. Create a new project at [supabase.com](https://supabase.com)
+2. Get your project URL and anon key from the project settings
+3. Create the database schema by running the SQL commands in `database/schema.sql`
+
+### 3. Environment Configuration
+
+Create a `.env.local` file in the `ad-creation-frontend` directory:
+
+```env
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+Replace the placeholder values with your actual Supabase credentials.
+
+### 4. Database Migration
+
+If you have existing location data in `public/locations.json`, run the migration script:
+
+```bash
+npm run migrate-locations
+```
+
+This will:
+- Read your existing `locations.json` file
+- Upload all location data to Supabase
+- Skip corporate locations (code: 'CORP')
+- Handle the data in batches for optimal performance
+
+### 5. Development
+
+Start the development server:
+
+```bash
 npm run dev
 ```
 
-### Production Build
-```bash
-# Build for production
-npm run build
+Visit `http://localhost:5173` to see the application.
 
-# Preview production build
-npm run preview
-```
+## Database Schema
 
-## 🎨 Design System Documentation
+### Locations Table
+- Stores all location data including address, contact info, and working hours
+- Uses JSONB fields for complex nested data structures
+- Includes indexes for optimal search performance
 
-For comprehensive design system documentation, see [DESIGN_SYSTEM.md](./DESIGN_SYSTEM.md)
+### Location Configs Table
+- Stores user-specific configuration for each location
+- Includes budget settings, custom preferences, and notes
+- Supports per-user customization with Row Level Security
 
-### Quick Reference
-```css
-/* Design Tokens */
---primary-500: #0ea5e9     /* Brand color */
---secondary-500: #d946ef   /* Accent color */
---space-md: 1rem           /* Base spacing unit */
---radius-lg: 0.75rem       /* Card border radius */
---shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1) /* Elevated shadow */
-```
+## Features Overview
 
-## 📱 Responsive Design
+### Location Selection
+- Search and filter locations by name, city, or state
+- Multi-select with bulk operations
+- Real-time location count and statistics
 
-### Breakpoints
-- **Mobile**: < 640px - Single column layouts
-- **Tablet**: 640px - 768px - Optimized touch interfaces
-- **Desktop**: 768px+ - Full feature set with hover states
+### Location Configuration
+- Set custom budgets for each location
+- Add notes and special instructions
+- Configure location-specific campaign settings
 
-### Adaptive Features
-- **Progressive Enhancement**: Core functionality works on all devices
-- **Touch-Friendly**: Larger tap targets and swipe gestures on mobile
-- **Keyboard Navigation**: Full keyboard accessibility support
-- **Screen Reader Support**: Comprehensive ARIA labels and semantic HTML
+### Template Management
+- 4 built-in ad templates
+- Custom template creation
+- Variable substitution for location-specific content
 
-## 🔧 Technical Stack
+### Campaign Generation
+- Generate ads for selected locations
+- Preview before export
+- Download as CSV, Excel, or JSON
 
-### Core Technologies
-- **React 18**: Latest React with concurrent features
-- **TypeScript**: Type-safe development with strict mode
-- **Vite**: Lightning-fast build tool and dev server
-- **Framer Motion**: Professional animations and transitions
+## API Endpoints
 
-### Styling & Design
-- **Tailwind CSS v4**: Utility-first CSS framework
-- **Custom Design System**: Award-winning component library
-- **CSS Custom Properties**: Consistent design tokens
-- **PostCSS**: Advanced CSS processing
+The application uses a service layer that abstracts Supabase operations:
 
-### Development Tools
-- **ESLint**: Code quality and consistency
-- **TypeScript Strict Mode**: Maximum type safety
-- **Hot Module Replacement**: Instant development feedback
-- **Source Maps**: Debugging support
+- `getAllLocations()` - Fetch all active locations
+- `searchLocations(filters)` - Search with filters
+- `getLocationConfig(locationId, userId)` - Get location configuration
+- `createLocationConfig(request, userId)` - Create new configuration
+- `updateLocationConfig(locationId, request, userId)` - Update configuration
 
-## 🎯 Campaign Generation Features
+## Configuration Options
 
-### Location Management
-- **Smart Search**: Real-time location filtering
-- **Bulk Selection**: Quick actions for common scenarios
-- **Visual Selection**: Clear indication of selected locations
-- **Metadata Display**: City, state, and ZIP code information
-
-### Template System
-- **Flexible Templates**: Customizable ad copy and CTAs
-- **Preview System**: Live preview of template content
-- **Multi-selection**: Choose multiple templates for variety
-- **Field Validation**: Ensure all required fields are completed
+### Location Configuration
+- **Budget**: Set campaign budget per location
+- **Notes**: Add special instructions or notes
+- **Custom Settings**: Store additional JSON configuration
+- **Active Status**: Enable/disable locations for campaigns
 
 ### Campaign Configuration
-- **Facebook/Meta Integration**: Native campaign structure
-- **Dynamic Naming**: Location-specific campaign names
-- **Budget Management**: Per-campaign budget allocation
-- **Advanced Options**: Bid strategies, scheduling, and targeting
+- **Platform**: Meta, Google, etc.
+- **Objective**: Engagement, Conversions, etc.
+- **Duration**: Evergreen or time-bound campaigns
+- **Radius**: Geographic targeting radius
+- **Bid Strategy**: Budget optimization settings
 
-### Export & Generation
-- **Multiple File Export**: Separate Excel file per ad variation
-- **Parallel Generation**: Efficient processing of multiple campaign files
-- **Progress Tracking**: Real-time generation progress across all files
-- **Error Handling**: Graceful failure with retry options per file
-- **Smart File Naming**: Dynamic naming based on ad configuration
+## Security
 
-## 🌟 User Experience Excellence
+- Row Level Security (RLS) enabled on all tables
+- User-specific configuration isolation
+- Secure environment variable handling
+- Input validation and sanitization
 
-### Performance Optimizations
-- **Lazy Loading**: Components load only when needed
-- **Virtual Scrolling**: Smooth handling of large datasets
-- **Optimized Animations**: 60fps animations with hardware acceleration
-- **Bundle Splitting**: Efficient code splitting for faster loads
+## Performance Optimizations
 
-### Accessibility Features
-- **Keyboard Navigation**: Full keyboard support
-- **Screen Reader Support**: Comprehensive ARIA implementation
-- **High Contrast Mode**: Excellent color contrast ratios
-- **Reduced Motion**: Respects user motion preferences
+- Database indexes on frequently queried fields
+- Batch operations for large datasets
+- Efficient JSONB queries for complex filters
+- Client-side caching where appropriate
 
-### Error Handling
-- **Graceful Degradation**: Fallbacks for all interactive features
-- **Clear Error Messages**: User-friendly error communication
-- **Retry Mechanisms**: Automatic retry for transient failures
-- **Offline Support**: Basic functionality when offline
+## Troubleshooting
 
-## 🎨 Visual Design Philosophy
+### Common Issues
 
-### Glassmorphism
-Modern transparent surfaces with backdrop blur effects create depth and sophistication while maintaining readability.
+1. **Supabase Connection Errors**
+   - Verify your `.env.local` file has correct credentials
+   - Check that your Supabase project is active
+   - Ensure the database schema has been created
 
-### Dynamic Gradients
-Animated background gradients provide visual interest without overwhelming the interface or impacting performance.
+2. **Location Loading Issues**
+   - Run the migration script if using existing data
+   - Check browser console for API errors
+   - Verify RLS policies allow data access
 
-### Micro-interactions
-Every user action receives immediate, delightful feedback through carefully crafted animations and transitions.
+3. **Configuration Save Errors**
+   - Ensure user authentication is working
+   - Check that location_configs table exists
+   - Verify the user has proper permissions
 
-### Progressive Disclosure
-Information is revealed contextually, reducing cognitive load and guiding users through the workflow naturally.
+### Development Tips
 
-## 🔮 Future Enhancements
+- Use browser dev tools to monitor network requests
+- Check Supabase dashboard for real-time database activity
+- Enable verbose logging in development mode
 
-### Planned Features
-- **Dark Mode**: Complete dark theme with automatic detection
-- **Advanced Analytics**: Campaign performance predictions
-- **A/B Testing**: Built-in template testing capabilities
-- **API Integration**: Direct Facebook Ads Manager integration
-- **Collaboration**: Multi-user campaign creation workflows
+## Contributing
 
-### Design Evolution
-- **3D Elements**: Subtle 3D effects for premium feel
-- **Voice Interface**: Voice-guided campaign creation
-- **Gesture Controls**: Advanced touch and gesture support
-- **Personalization**: Adaptive interface based on user preferences
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
 
-## 📄 License
+## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🤝 Contributing
-
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details on how to get started.
-
-## 🆘 Support
-
-For questions, issues, or feature requests, please open an issue on GitHub or contact our support team.
-
----
-
-**Campaign Creator Studio** - Where creativity meets technology to deliver award-winning campaign creation experiences. 🏆✨
+This project is licensed under the MIT License.

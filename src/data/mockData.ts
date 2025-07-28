@@ -7,19 +7,19 @@ let locationsLoadingPromise: Promise<LocationSummary[]> | null = null;
 // Convert Location from JSON to LocationSummary for easier use in UI
 export const convertToLocationSummary = (location: Location): LocationSummary => {
   return {
-    id: location.id,
-    name: location.name,
-    displayName: location.display_name,
-    city: location.address_info.city,
-    state: location.state.short_name,
-    zipCode: location.address_info.zip_code,
-    phoneNumber: location.contact_info.phone_1.display_number,
-    address: `${location.address_info.address_1}${location.address_info.address_2 ? ', ' + location.address_info.address_2 : ''}, ${location.address_info.city}, ${location.state.short_name} ${location.address_info.zip_code}`,
+    id: location.id || '',
+    name: location.name || 'Unknown Location',
+    displayName: location.display_name || location.name || 'Unknown Location',
+    city: location.address_info?.city || 'Unknown City',
+    state: location.state?.short_name || 'Unknown State',
+    zipCode: location.address_info?.zip_code || '',
+    phoneNumber: location.contact_info?.phone_1?.display_number || 'No phone available',
+    address: `${location.address_info?.address_1 || 'Unknown Address'}${location.address_info?.address_2 ? ', ' + location.address_info.address_2 : ''}, ${location.address_info?.city || 'Unknown City'}, ${location.state?.short_name || 'Unknown State'} ${location.address_info?.zip_code || ''}`,
     coordinates: {
-      lat: location.location.latitude,
-      lng: location.location.longitude,
+      lat: location.location?.latitude || 0,
+      lng: location.location?.longitude || 0,
     },
-    locationPrime: location.code, // Using code as locationPrime for radius calculation
+    locationPrime: location.code || 'UNKNOWN', // Using code as locationPrime for radius calculation
   };
 };
 
@@ -436,10 +436,10 @@ export const generateMockGenerationJob = (
     totalAds,
     processedAds: 0,
     options: {
-      format: 'excel',
+      format: 'csv',
       includeHeaders: true,
       customFields: ['phoneNumber', 'address'],
-      fileName: `ad_generation_${new Date().toISOString().split('T')[0]}.xlsx`,
+      fileName: `ad_generation_${new Date().toISOString().split('T')[0]}.csv`,
       campaign: {
         prefix: 'EWC',
         platform: 'Meta',

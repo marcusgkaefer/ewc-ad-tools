@@ -17,24 +17,30 @@ import {
 } from '@heroicons/react/24/solid';
 import { ArrowDownTrayIcon as DownloadIcon } from '@heroicons/react/24/outline';
 import { mockApi } from './services/mockApi';
+import { supabaseLocationService } from './services/supabaseLocationService';
 import { defaultObjectives } from './data/mockData';
 import ModernDatePicker from './components/ui/ModernDatePicker';
 // TEMPORARILY COMMENTED OUT
 // import TemplateSelector from './components/ui/TemplateSelector';
 import TemplateCreationModal from './components/ui/TemplateCreationModal';
+import { LocationConfigModal } from './components/ui/LocationConfigModal';
 import FilePreview from './components/ui/FilePreview';
 import FirstAccessWizard from './components/ui/FirstAccessWizard';
 import Select from './components/ui/Select';
 import AppHeader from './components/ui/AppHeader';
 import ProgressSteps from './components/ui/ProgressSteps';
 import type { 
-  LocationSummary as Location, 
+  LocationWithConfig, 
   AdTemplate, 
   GenerationJob, 
+  AdConfiguration, 
   CampaignConfiguration,
-  AdConfiguration,
-  CreateTemplateRequest
+  CreateTemplateRequest,
+  LocationConfig
 } from './types';
+
+// Constants
+import { generateAdName } from './constants/hardcodedAdValues';
 
 // Animation variants
 const containerVariants = {
@@ -53,12 +59,13 @@ const cardVariants = {
 
 function App() {
   const [currentStep, setCurrentStep] = useState(1);
-  const [locations, setLocations] = useState<Location[]>([]);
+  const [locations, setLocations] = useState<LocationWithConfig[]>([]);
   const [templates, setTemplates] = useState<AdTemplate[]>([]);
   const [selectedLocationIds, setSelectedLocationIds] = useState<string[]>([]);
   const [excludedLocationIds, setExcludedLocationIds] = useState<string[]>([]);
   const [useExclusionMode, setUseExclusionMode] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [configurationFilter, setConfigurationFilter] = useState<'all' | 'configured' | 'not-configured'>('all');
   const [generationJob, setGenerationJob] = useState<GenerationJob | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
@@ -68,6 +75,8 @@ function App() {
   const [showFirstAccessWizard, setShowFirstAccessWizard] = useState(false);
   const [hasReviewed, setHasReviewed] = useState(false);
   const [hasGenerated, setHasGenerated] = useState(false);
+  const [showLocationConfigModal, setShowLocationConfigModal] = useState(false);
+  const [selectedLocationToConfigure, setSelectedLocationToConfigure] = useState<LocationWithConfig | null>(null);
 
   const [campaignConfig, setCampaignConfig] = useState<CampaignConfiguration>({
     prefix: 'EWC',
@@ -92,14 +101,12 @@ function App() {
       setIsLoading(true);
       try {
         const [locationsResponse, templatesResponse] = await Promise.all([
-          mockApi.getLocations(1, 1000),
+          supabaseLocationService.getLocationsWithConfigs(),
           mockApi.getTemplates()
         ]);
 
-        if (locationsResponse.success && locationsResponse.data) {
-          setLocations(locationsResponse.data.items);
-          setSelectedLocationIds(locationsResponse.data.items.map(loc => loc.id));
-        }
+        setLocations(locationsResponse);
+        setSelectedLocationIds(locationsResponse.map((loc: LocationWithConfig) => loc.id));
 
         if (templatesResponse.success && templatesResponse.data) {
           setTemplates(templatesResponse.data);
@@ -119,16 +126,15 @@ function App() {
     loadData();
   }, []);
 
-  // Initialize with default ad
+  // Initialize with default ad using hard-coded template values
   useEffect(() => {
     if (templates.length > 0 && campaignConfig.ads.length === 0) {
       const defaultAd: AdConfiguration = {
         id: 'ad-1',
-        name: 'Ad 1',
+        name: generateAdName('Template'), // Auto-generated using reference template
         templateId: templates[0]?.id || '',
-        landingPage: 'www.waxcenter.com',
         radius: '+4m',
-        caption: 'Hello World',
+        caption: 'You learn something new everyday', // Fixed from reference template
         additionalNotes: '',
         scheduledDate: '',
         status: 'Paused'
@@ -163,14 +169,21 @@ function App() {
 
   // Smart location filtering
   const filteredLocations = useMemo(() => {
-    if (!searchQuery.trim()) return locations;
-    const query = searchQuery.toLowerCase();
-    return locations.filter(location =>
-      location.name.toLowerCase().includes(query) ||
-      location.city.toLowerCase().includes(query) ||
-      location.state.toLowerCase().includes(query)
-    );
-  }, [locations, searchQuery]);
+    return locations.filter(location => {
+      // Search filter
+      const searchMatch = !searchQuery.trim() || 
+        location.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        location.city.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        location.state.toLowerCase().includes(searchQuery.toLowerCase());
+
+      // Configuration filter
+      const configMatch = configurationFilter === 'all' || 
+        (configurationFilter === 'configured' && location.config) ||
+        (configurationFilter === 'not-configured' && !location.config);
+
+      return searchMatch && configMatch;
+    });
+  }, [locations, searchQuery, configurationFilter]);
 
   // Calculate effective selected locations
   const effectiveSelectedLocations = useMemo(() => {
@@ -234,7 +247,6 @@ function App() {
       id: `ad-${Date.now()}`,
       name: `Ad ${campaignConfig.ads.length + 1}`,
       templateId: templates[0]?.id || '',
-      landingPage: 'www.waxcenter.com',
       radius: '+4m',
       caption: 'Hello World',
       additionalNotes: '',
@@ -251,12 +263,7 @@ function App() {
     }));
   };
 
-  const updateAd = (adId: string, updates: Partial<AdConfiguration>) => {
-    setCampaignConfig(prev => ({
-      ...prev,
-      ads: prev.ads.map(ad => ad.id === adId ? { ...ad, ...updates } : ad)
-    }));
-  };
+
 
   const handleTemplateCreation = async (templateData: CreateTemplateRequest) => {
     setIsCreatingTemplate(true);
@@ -282,10 +289,10 @@ function App() {
         effectiveSelectedLocations.map(loc => loc.id),
         campaignConfig.ads.map(ad => ad.templateId),
         {
-          format: 'excel',
+          format: 'csv',
           includeHeaders: true,
-          customFields: ['landingPage', 'radius', 'caption', 'additionalNotes', 'scheduledDate', 'status'],
-          fileName: `${campaignConfig.prefix}_${campaignConfig.platform}_${campaignConfig.month}${campaignConfig.day}_AllCampaigns.xlsx`,
+          customFields: ['radius', 'caption', 'additionalNotes', 'scheduledDate', 'status'],
+          fileName: `${campaignConfig.prefix}_${campaignConfig.platform}_${campaignConfig.month}${campaignConfig.day}_AllCampaigns.csv`,
           campaign: campaignConfig
         }
       );
@@ -416,6 +423,50 @@ function App() {
                     />
                   </div>
 
+                  {/* Configuration Filter */}
+                  <div className="mb-6">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-sm font-medium text-gray-700">Filter by configuration:</span>
+                    </div>
+                    <div className="flex gap-2 flex-wrap">
+                      <button
+                        onClick={() => setConfigurationFilter('all')}
+                        className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
+                          configurationFilter === 'all'
+                            ? 'bg-blue-500 text-white shadow-md'
+                            : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-blue-300'
+                        }`}
+                      >
+                        All Locations ({locations.length})
+                      </button>
+                      <button
+                        onClick={() => setConfigurationFilter('configured')}
+                        className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
+                          configurationFilter === 'configured'
+                            ? 'bg-green-500 text-white shadow-md'
+                            : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-green-300'
+                        }`}
+                      >
+                        Configured ({locations.filter(l => l.config).length})
+                      </button>
+                      <button
+                        onClick={() => setConfigurationFilter('not-configured')}
+                        className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
+                          configurationFilter === 'not-configured'
+                            ? 'bg-orange-500 text-white shadow-md'
+                            : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-orange-300'
+                        }`}
+                      >
+                        Not Configured ({locations.filter(l => !l.config).length})
+                      </button>
+                    </div>
+                    {(searchQuery || configurationFilter !== 'all') && (
+                      <div className="mt-2 text-sm text-gray-500">
+                        Showing {filteredLocations.length} of {locations.length} locations
+                      </div>
+                    )}
+                  </div>
+
                   {/* Exclusion Mode Toggle */}
                   <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
                     <label className="flex items-center gap-3 cursor-pointer text-sm font-medium text-blue-800">
@@ -475,12 +526,83 @@ function App() {
                                 <CheckCircleIcon className="w-3 h-3 text-white" />
                               )}
                             </div>
-                            <div className="font-medium text-gray-800">{location.name}</div>
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2">
+                                <div className="font-medium text-gray-800">{location.name}</div>
+                                {location.config && (
+                                  <span className="inline-flex items-center px-2 py-1 text-xs bg-green-100 text-green-700 rounded-full">
+                                    <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                    </svg>
+                                    Configured
+                                  </span>
+                                )}
+                              </div>
+                              <div className="text-xs text-gray-500 mt-1">
+                                {location.city}, {location.state} • {location.phoneNumber}
+                                {location.config && location.config.budget && (
+                                  <span className="ml-2 text-blue-600 font-medium">
+                                    Budget: ${location.config.budget.toFixed(2)}
+                                  </span>
+                                )}
+                              </div>
+                              {location.config && location.config.notes && (
+                                <div className="text-xs text-gray-400 mt-1 italic truncate">
+                                  "{location.config.notes}"
+                                </div>
+                              )}
+                            </div>
                           </div>
-                          <div className="text-gray-600 text-xs flex items-center gap-2">
-                            <span>{location.city}, {location.state}</span>
-                            <span className="text-gray-400">•</span>
-                            <span>{location.zipCode}</span>
+                          <div className="flex items-center gap-3">
+                            <div className="text-gray-600 text-xs flex flex-col gap-1">
+                              <div className="flex items-center gap-2">
+                                <span>{location.city}, {location.state}</span>
+                              </div>
+                              <div className="flex items-center gap-2 text-indigo-600 font-mono">
+                                {location.config ? (
+                                  <>
+                                    {location.config.primaryLat && location.config.primaryLng ? (
+                                      <>
+                                        <span>{location.config.primaryLat.toFixed(4)}, {location.config.primaryLng.toFixed(4)}</span>
+                                        {location.config.radiusMiles && (
+                                          <>
+                                            <span className="text-gray-400">•</span>
+                                            <span className="text-orange-600">{location.config.radiusMiles}mi</span>
+                                          </>
+                                        )}
+                                        {location.config.coordinateList && location.config.coordinateList.length > 0 && (
+                                          <>
+                                            <span className="text-gray-400">•</span>
+                                            <span className="text-green-600">+{location.config.coordinateList.length} points</span>
+                                          </>
+                                        )}
+                                      </>
+                                    ) : (
+                                      <>
+                                        <span>{location.coordinates.lat.toFixed(4)}, {location.coordinates.lng.toFixed(4)}</span>
+                                        <span className="text-gray-400">• default</span>
+                                      </>
+                                    )}
+                                  </>
+                                ) : (
+                                  <>
+                                    <span>{location.coordinates.lat.toFixed(4)}, {location.coordinates.lng.toFixed(4)}</span>
+                                    <span className="text-gray-400">• unconfigured</span>
+                                  </>
+                                )}
+                              </div>
+                            </div>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedLocationToConfigure(location);
+                                setShowLocationConfigModal(true);
+                              }}
+                              className="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg transition-colors duration-200"
+                              title="Configure location settings"
+                            >
+                              <CogIcon className="w-4 h-4" />
+                            </button>
                           </div>
                         </motion.div>
                       );
@@ -678,50 +800,53 @@ function App() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                           <div className="space-y-2">
                             <label className="block font-semibold text-gray-700 text-sm">
-                              Ad Name
+                              Ad Name <span className="text-gray-500 text-xs">(Auto-generated)</span>
                             </label>
                             <input
                               type="text"
                               value={ad.name}
-                              onChange={(e) => updateAd(ad.id, { name: e.target.value })}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none transition-all duration-200"
-                            />
-                          </div>
-
-                          {/* TEMPORARILY COMMENTED OUT - Templates Section */}
-                          {/* <div className="space-y-2">
-                            <label className="block font-semibold text-gray-700 text-sm">
-                              Template
-                            </label>
-                            <TemplateSelector
-                              templates={templates}
-                              selectedTemplateId={ad.templateId}
-                              onTemplateSelect={(templateId: string) => updateAd(ad.id, { templateId })}
-                              onCreateTemplate={() => setShowTemplateCreationModal(true)}
-                            />
-                          </div> */}
-
-                          <div className="space-y-2">
-                            <label className="block font-semibold text-gray-700 text-sm">
-                              Landing Page
-                            </label>
-                            <input
-                              type="text"
-                              value={ad.landingPage}
-                              onChange={(e) => updateAd(ad.id, { landingPage: e.target.value })}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none transition-all duration-200"
+                              readOnly
+                              className="w-full px-3 py-2 border border-gray-200 rounded-lg bg-gray-50 text-gray-600 cursor-not-allowed"
+                              title="This field is auto-generated based on the reference template and location"
                             />
                           </div>
 
                           <div className="space-y-2">
                             <label className="block font-semibold text-gray-700 text-sm">
-                              Caption
+                              Title <span className="text-gray-500 text-xs">(Fixed from template)</span>
                             </label>
                             <input
                               type="text"
-                              value={ad.caption}
-                              onChange={(e) => updateAd(ad.id, { caption: e.target.value })}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none transition-all duration-200"
+                              value="Get your First Wax Free"
+                              readOnly
+                              className="w-full px-3 py-2 border border-gray-200 rounded-lg bg-gray-50 text-gray-600 cursor-not-allowed"
+                              title="This field uses the fixed value from the reference template"
+                            />
+                          </div>
+
+                          <div className="space-y-2">
+                            <label className="block font-semibold text-gray-700 text-sm">
+                              Caption <span className="text-gray-500 text-xs">(Fixed from template)</span>
+                            </label>
+                            <input
+                              type="text"
+                              value="You learn something new everyday"
+                              readOnly
+                              className="w-full px-3 py-2 border border-gray-200 rounded-lg bg-gray-50 text-gray-600 cursor-not-allowed"
+                              title="This field uses the fixed value from the reference template"
+                            />
+                          </div>
+
+                          <div className="space-y-2">
+                            <label className="block font-semibold text-gray-700 text-sm">
+                              Call to Action <span className="text-gray-500 text-xs">(Fixed from template)</span>
+                            </label>
+                            <input
+                              type="text"
+                              value="BOOK_TRAVEL"
+                              readOnly
+                              className="w-full px-3 py-2 border border-gray-200 rounded-lg bg-gray-50 text-gray-600 cursor-not-allowed"
+                              title="This field uses the fixed value from the reference template"
                             />
                           </div>
                         </div>
@@ -830,7 +955,7 @@ function App() {
                       <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500"></div>
                       <DocumentDuplicateIcon className="w-8 h-8 text-white/80 mx-auto mb-2" />
                       <div className="text-4xl font-extrabold text-white mb-1 leading-none">{stats.totalFiles}</div>
-                      <div className="text-white/80 font-medium text-sm uppercase tracking-wider">Excel File</div>
+                      <div className="text-white/80 font-medium text-sm uppercase tracking-wider">CSV File</div>
                     </motion.div>
                   </div>
 
@@ -841,10 +966,10 @@ function App() {
                     </h3>
                     <div className="space-y-3">
                       {[
-                        `${stats.totalFiles} comprehensive Excel file containing all campaigns`,
+                        `${stats.totalFiles} comprehensive CSV file containing all campaigns`,
                         `${stats.totalCampaigns.toLocaleString()} total Meta campaign configurations`,
                         'Complete 73-column campaign import format',
-                        `File name: ${campaignConfig.prefix}_${campaignConfig.platform}_${campaignConfig.month}${campaignConfig.day}_AllCampaigns.xlsx`,
+                        `File name: ${campaignConfig.prefix}_${campaignConfig.platform}_${campaignConfig.month}${campaignConfig.day}_AllCampaigns.csv`,
                         'Location-specific targeting coordinates and demographics',
                         'All ad variations organized in a single file',
                         'Ready for Meta Ads Manager bulk import'
@@ -925,7 +1050,7 @@ function App() {
                   <div className="bg-gray-50 border border-gray-200 rounded-xl p-6 mb-8">
                     <div className="text-sm font-semibold text-gray-700 mb-2">Generated File:</div>
                     <div className="font-mono text-sm text-gray-600 break-all">
-                      {generationJob.options?.fileName || 'Campaign_Export.xlsx'}
+                      {generationJob.options?.fileName || 'Campaign_Export.csv'}
                     </div>
                   </div>
 
@@ -942,11 +1067,23 @@ function App() {
                     </button>
 
                     <button
-                      onClick={() => {
-                        const link = document.createElement('a');
-                        link.href = generationJob.downloadUrl || '#';
-                        link.download = generationJob.options?.fileName || 'Campaign_Export.xlsx';
-                        link.click();
+                      onClick={async () => {
+                        try {
+                          // Download the file using the mock API
+                          const response = await mockApi.downloadGeneratedFile(generationJob.id);
+                          if (response.success && response.data) {
+                            const url = URL.createObjectURL(response.data);
+                            const link = document.createElement('a');
+                            link.href = url;
+                            link.download = generationJob.options?.fileName || 'Campaign_Export.csv';
+                            link.click();
+                            URL.revokeObjectURL(url);
+                          } else {
+                            console.error('Failed to download file:', response.error);
+                          }
+                        } catch (error) {
+                          console.error('Download error:', error);
+                        }
                       }}
                       className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold rounded-xl shadow-lg transition-all duration-200 hover:from-green-600 hover:to-green-700 hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 text-lg"
                     >
@@ -1032,6 +1169,26 @@ function App() {
           localStorage.setItem('hasSeenTour', 'true');
         }}
       />
+
+      {selectedLocationToConfigure && (
+        <LocationConfigModal
+          isOpen={showLocationConfigModal}
+          onClose={() => {
+            setShowLocationConfigModal(false);
+            setSelectedLocationToConfigure(null);
+          }}
+          location={selectedLocationToConfigure}
+          config={selectedLocationToConfigure.config}
+          onSave={(updatedConfig: LocationConfig) => {
+            // Update the location in the locations array
+            setLocations(prev => prev.map(loc => 
+              loc.id === updatedConfig.locationId ? { ...loc, config: updatedConfig } : loc
+            ));
+            setShowLocationConfigModal(false);
+            setSelectedLocationToConfigure(null);
+          }}
+        />
+      )}
     </div>
   );
 }

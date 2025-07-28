@@ -89,6 +89,59 @@ export interface LocationSummary {
   locationPrime: string; // Using code as locationPrime for radius calculation
 }
 
+// Location Configuration Models
+export interface LocationConfig {
+  id: string;
+  locationId: string;
+  userId?: string | null;
+  budget?: number | null;
+  customSettings?: Record<string, unknown> | null;
+  notes?: string | null;
+  isActive: boolean;
+  
+  // New targeting fields
+  primaryLat?: number | null;
+  primaryLng?: number | null;
+  radiusMiles?: number | null;
+  coordinateList?: Array<{ lat: number; lng: number; radius?: number }> | null;
+  landingPageUrl?: string | null;
+  
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface LocationWithConfig extends LocationSummary {
+  config?: LocationConfig;
+}
+
+export interface CreateLocationConfigRequest {
+  locationId: string;
+  budget?: number;
+  customSettings?: Record<string, unknown>;
+  notes?: string;
+  
+  // New targeting fields
+  primaryLat?: number;
+  primaryLng?: number;
+  radiusMiles?: number;
+  coordinateList?: Array<{ lat: number; lng: number; radius?: number }>;
+  landingPageUrl?: string;
+}
+
+export interface UpdateLocationConfigRequest {
+  budget?: number;
+  customSettings?: Record<string, unknown>;
+  notes?: string;
+  isActive?: boolean;
+  
+  // New targeting fields
+  primaryLat?: number;
+  primaryLng?: number;
+  radiusMiles?: number;
+  coordinateList?: Array<{ lat: number; lng: number; radius?: number }>;
+  landingPageUrl?: string;
+}
+
 export interface LocationFilters {
   search?: string;
   states?: string[];
@@ -185,7 +238,6 @@ export interface AdConfiguration {
   id: string;
   name: string;
   templateId: string;
-  landingPage: string;
   radius: string; // e.g., "CORP+4m"
   caption: string;
   additionalNotes: string;
@@ -198,6 +250,122 @@ export interface AdConfiguration {
   };
 }
 
+// Campaign Management Models
+export interface Campaign {
+  id: string;
+  userId?: string | null;
+  name: string;
+  platform: string;
+  objective: string;
+  testType: string;
+  duration: string;
+  budget: number;
+  bidStrategy: string;
+  startDate?: string | null;
+  endDate?: string | null;
+  defaultRadiusMiles: number;
+  status: 'Draft' | 'Active' | 'Paused' | 'Completed';
+  configuration?: Record<string, unknown> | null;
+  notes?: string | null;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CampaignLocation {
+  id: string;
+  campaignId: string;
+  locationId: string;
+  locationBudget?: number | null;
+  locationRadiusMiles?: number | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface CampaignWithLocations extends Campaign {
+  locations: Array<CampaignLocation & { location: LocationSummary }>;
+}
+
+export interface CreateCampaignRequest {
+  name: string;
+  platform?: string;
+  objective?: string;
+  testType?: string;
+  duration?: string;
+  budget: number;
+  bidStrategy?: string;
+  startDate?: string;
+  endDate?: string;
+  defaultRadiusMiles?: number;
+  configuration?: Record<string, unknown>;
+  notes?: string;
+}
+
+export interface UpdateCampaignRequest {
+  name?: string;
+  platform?: string;
+  objective?: string;
+  testType?: string;
+  duration?: string;
+  budget?: number;
+  bidStrategy?: string;
+  startDate?: string;
+  endDate?: string;
+  defaultRadiusMiles?: number;
+  status?: 'Draft' | 'Active' | 'Paused' | 'Completed';
+  configuration?: Record<string, unknown>;
+  notes?: string;
+  isActive?: boolean;
+}
+
+export interface CreateCampaignLocationRequest {
+  campaignId: string;
+  locationId: string;
+  locationBudget?: number;
+  locationRadiusMiles?: number;
+}
+
+export interface UpdateCampaignLocationRequest {
+  locationBudget?: number;
+  locationRadiusMiles?: number;
+  isActive?: boolean;
+}
+
+// Enhanced Location targeting types
+export interface LocationTargeting {
+  type: 'radius' | 'coordinates' | 'both';
+  primaryCoordinate?: {
+    lat: number;
+    lng: number;
+  };
+  radiusMiles?: number;
+  coordinateList?: Array<{ lat: number; lng: number; radius?: number }>;
+}
+
+export interface LocationConfigForm {
+  budget?: number;
+  notes?: string;
+  targeting?: LocationTargeting;
+  landingPageUrl?: string;
+}
+
+// Campaign Form Types
+export interface CampaignForm {
+  name: string;
+  platform: string;
+  objective: string;
+  testType: string;
+  duration: string;
+  budget: number;
+  bidStrategy: string;
+  startDate?: string;
+  endDate?: string;
+  defaultRadiusMiles: number;
+  notes?: string;
+  selectedLocationIds: string[];
+}
+
+// Campaign Configuration - Enhanced from existing type
 export interface CampaignConfiguration {
   prefix: string; // Base prefix, e.g., "EWC"
   platform: string; // e.g., "Meta"
@@ -213,6 +381,9 @@ export interface CampaignConfiguration {
   endDate: string; // e.g., "07/26/2025 11:59:00 pm"
   ads: AdConfiguration[];
   radius: number; // Default radius in miles, e.g., 5
+  
+  // Enhanced with database campaign id
+  campaignId?: string;
 }
 
 // Objective autocomplete types

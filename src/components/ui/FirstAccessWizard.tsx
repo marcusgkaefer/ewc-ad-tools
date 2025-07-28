@@ -38,7 +38,7 @@ const wizardSteps = [
   {
     id: 4,
     title: 'Generate & Export',
-    description: 'Export everything as Facebook/Meta ready Excel files. Complete 73-column format for bulk import.',
+    description: 'Export everything as Facebook/Meta ready CSV files. Complete 73-column format for bulk import.',
     icon: ChartBarIcon
   }
 ];
