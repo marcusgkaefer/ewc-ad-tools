@@ -8,21 +8,21 @@ This is the frontend application for the Ad Creation tool built with React, Type
 
 The application supports using different data sources for location information:
 
-#### `VITE_USE_EWC_CENTERS_JSON`
+#### `VITE_USE_ARTEMIS_GROUP`
 
 Set this environment variable to `true` to use the EWC centers JSON file as the location data source instead of the Supabase database.
 
 ```bash
 # Use EWC centers from JSON file
-VITE_USE_EWC_CENTERS_JSON=true
+VITE_USE_ARTEMIS_GROUP=true
 
 # Use Supabase database (default behavior)
-VITE_USE_EWC_CENTERS_JSON=false
+VITE_USE_ARTEMIS_GROUP=false
 # or omit the variable entirely
 ```
 
 **How it works:**
-- When `VITE_USE_EWC_CENTERS_JSON=true`, the application loads location data from `/artemis_wax_group.json` in the public folder
+- When `VITE_USE_ARTEMIS_GROUP=true`, the application loads location data from `/artemis_wax_group.json` in the public folder
 - Location configurations (budgets, targeting settings, etc.) are still managed through the Supabase `locations_configs` table
 - This allows you to use a static JSON file for location data while maintaining dynamic configuration capabilities
 - The JSON file contains comprehensive location information including addresses, coordinates, working hours, and contact details

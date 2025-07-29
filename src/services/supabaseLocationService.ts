@@ -56,7 +56,7 @@ class SupabaseLocationService {
 
   // Check if we should use EWC centers JSON file
   private shouldUseEwcCentersJson(): boolean {
-    return import.meta.env.VITE_USE_EWC_CENTERS_JSON === 'true';
+    return import.meta.env.VITE_USE_ARTEMIS_GROUP === 'true';
   }
 
   // Load EWC centers from JSON file with caching
