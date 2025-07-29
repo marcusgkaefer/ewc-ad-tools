@@ -56,14 +56,7 @@ class SupabaseLocationService {
 
   // Check if we should use EWC centers JSON file
   private shouldUseEwcCentersJson(): boolean {
-    const envValue = import.meta.env.VITE_USE_EWC_CENTERS_JSON;
-    const shouldUse = envValue === 'true';
-    console.log('🔍 Environment check:', {
-      envValue,
-      shouldUse,
-      allEnvVars: import.meta.env
-    });
-    return shouldUse;
+    return import.meta.env.VITE_USE_EWC_CENTERS_JSON === 'true';
   }
 
   // Load EWC centers from JSON file with caching
@@ -81,7 +74,6 @@ class SupabaseLocationService {
     // Start loading
     this.ewcCentersLoading = (async () => {
       try {
-        console.log('🏢 Loading EWC centers from JSON file...');
         const response = await fetch('/artemis_wax_group.json');
         
         if (!response.ok) {
@@ -89,7 +81,6 @@ class SupabaseLocationService {
         }
 
         const data = await response.json() as { centers: Location[] };
-        console.log('🏢 Loaded EWC centers from JSON:', data.centers?.length || 0);
         
         if (!data.centers || !Array.isArray(data.centers)) {
           throw new Error('Invalid JSON structure: centers array not found');
@@ -246,7 +237,6 @@ class SupabaseLocationService {
   // Location management
   async getAllLocations(): Promise<LocationSummary[]> {
     if (this.shouldUseEwcCentersJson()) {
-      console.log('🏢 Using EWC centers from JSON file');
       return await this.getEwcCentersLocations();
     }
 

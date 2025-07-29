@@ -357,10 +357,8 @@ export function CampaignModal({
 
             {/* Platform */}
             <div>
-              <label htmlFor="platform" className="block text-sm font-medium text-gray-700 mb-2">
-                Platform
-              </label>
               <Select
+                label="Platform"
                 value={platform}
                 onChange={setPlatform}
                 options={PLATFORM_OPTIONS}
@@ -370,10 +368,8 @@ export function CampaignModal({
 
             {/* Objective */}
             <div>
-              <label htmlFor="objective" className="block text-sm font-medium text-gray-700 mb-2">
-                Objective
-              </label>
               <Select
+                label="Objective"
                 value={objective}
                 onChange={setObjective}
                 options={OBJECTIVE_OPTIONS}
@@ -383,10 +379,8 @@ export function CampaignModal({
 
             {/* Test Type */}
             <div>
-              <label htmlFor="testType" className="block text-sm font-medium text-gray-700 mb-2">
-                Test Type
-              </label>
               <Select
+                label="Test Type"
                 value={testType}
                 onChange={setTestType}
                 options={TEST_TYPE_OPTIONS}
@@ -396,10 +390,8 @@ export function CampaignModal({
 
             {/* Duration */}
             <div>
-              <label htmlFor="duration" className="block text-sm font-medium text-gray-700 mb-2">
-                Duration
-              </label>
               <Select
+                label="Duration"
                 value={duration}
                 onChange={setDuration}
                 options={DURATION_OPTIONS}
@@ -450,10 +442,8 @@ export function CampaignModal({
 
             {/* Bid Strategy */}
             <div>
-              <label htmlFor="bidStrategy" className="block text-sm font-medium text-gray-700 mb-2">
-                Bid Strategy
-              </label>
               <Select
+                label="Bid Strategy"
                 value={bidStrategy}
                 onChange={setBidStrategy}
                 options={BID_STRATEGY_OPTIONS}
@@ -464,10 +454,8 @@ export function CampaignModal({
             {/* Status (only for edit mode) */}
             {campaign && (
               <div>
-                <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-2">
-                  Status
-                </label>
                 <Select
+                  label="Status"
                   value={status}
                   onChange={(value: string) => setStatus(value as 'Draft' | 'Active' | 'Paused' | 'Completed')}
                   options={STATUS_OPTIONS}
