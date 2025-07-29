@@ -63,7 +63,7 @@ export function LocationConfigModal({
       setCoordinateList([]);
     }
     setError(null);
-  }, [config, isOpen]);
+  }, [config, isOpen, location.coordinates.lat, location.coordinates.lng]);
 
   if (!isOpen) return null;
 

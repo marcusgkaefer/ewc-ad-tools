@@ -1,32 +1,39 @@
-# Ad Creation App
+# Ad Creation Frontend
 
-A modern React application for creating and managing advertising campaigns across multiple locations with configurable settings and budget management.
+This is the frontend application for the Ad Creation tool built with React, TypeScript, and Vite.
 
-## Features
+## Environment Variables
 
-- **Location Management**: Load and manage locations from Supabase database
-- **Configurable Locations**: Set custom budgets and notes for each location
-- **Template-Based Ad Generation**: Create ads using predefined templates
-- **Batch Operations**: Select and configure multiple locations at once
-- **Real-time Preview**: See generated ads before exporting
-- **Export Capabilities**: Download campaign data in various formats
+### Location Data Source Configuration
 
-## Tech Stack
+The application supports using different data sources for location information:
 
-- **Frontend**: React 18 with TypeScript
-- **Styling**: Tailwind CSS with custom design system
-- **Database**: Supabase (PostgreSQL)
-- **State Management**: React hooks and context
-- **Build Tool**: Vite
-- **Icons**: Heroicons
+#### `VITE_USE_EWC_CENTERS_JSON`
 
-## Prerequisites
+Set this environment variable to `true` to use the EWC centers JSON file as the location data source instead of the Supabase database.
 
-- Node.js 18+ 
-- npm or yarn
-- Supabase account and project
+```bash
+# Use EWC centers from JSON file
+VITE_USE_EWC_CENTERS_JSON=true
 
-## Setup Instructions
+# Use Supabase database (default behavior)
+VITE_USE_EWC_CENTERS_JSON=false
+# or omit the variable entirely
+```
+
+**How it works:**
+- When `VITE_USE_EWC_CENTERS_JSON=true`, the application loads location data from `/artemis_wax_group.json` in the public folder
+- Location configurations (budgets, targeting settings, etc.) are still managed through the Supabase `locations_configs` table
+- This allows you to use a static JSON file for location data while maintaining dynamic configuration capabilities
+- The JSON file contains comprehensive location information including addresses, coordinates, working hours, and contact details
+
+**Use cases:**
+- Testing with a specific set of locations
+- Working offline or with limited database access
+- Using pre-approved location data for specific campaigns
+- Development and staging environments
+
+## Getting Started
 
 ### 1. Clone and Install
 

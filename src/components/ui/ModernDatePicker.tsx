@@ -69,7 +69,7 @@ const ModernDatePicker: React.FC<ModernDatePickerProps> = ({
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const isDateDisabled = (_date: Date) => {
-    // Can add custom logic here for disabled dates
+    // Currently no dates are disabled - can be extended for custom logic
     return false;
   };
 
@@ -119,24 +119,24 @@ const ModernDatePicker: React.FC<ModernDatePickerProps> = ({
           onMouseEnter={() => !disabled && setHoveredDate(date)}
           onMouseLeave={() => setHoveredDate(null)}
           disabled={disabled}
-          className={`w-10 h-10 flex items-center justify-center border-none rounded-lg text-sm font-medium cursor-pointer transition-all duration-200 relative overflow-hidden ${
-            isSelected 
-              ? 'bg-blue-500 text-white' 
-              : isHovered
-                ? 'bg-blue-100 text-blue-700'
-                : isTodayDate
-                  ? 'bg-purple-100 text-purple-700'
-                  : 'bg-transparent text-gray-700'
-          } ${
-            disabled ? 'cursor-not-allowed text-gray-300' : ''
-          }`}
+                className={`w-10 h-10 flex items-center justify-center border-none rounded-xl text-sm font-medium cursor-pointer transition-all duration-300 relative overflow-hidden ${
+              isSelected 
+                ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/25' 
+                : isHovered
+                  ? 'bg-primary-100 text-primary-700'
+                  : isTodayDate
+                    ? 'bg-accent-100 text-accent-700'
+                    : 'bg-transparent text-neutral-700'
+            } ${
+              disabled ? 'cursor-not-allowed text-neutral-300' : ''
+            }`}
           whileHover={!disabled ? { scale: 1.05 } : {}}
           whileTap={!disabled ? { scale: 0.95 } : {}}
         >
           {/* Pulse animation for today */}
           {isTodayDate && !isSelected && (
             <motion.div
-              className="absolute inset-0 bg-purple-200 rounded-lg"
+              className="absolute inset-0 bg-accent-200 rounded-xl"
               animate={{
                 scale: [1, 1.2, 1],
                 opacity: [0.3, 0.6, 0.3]
@@ -159,7 +159,7 @@ const ModernDatePicker: React.FC<ModernDatePickerProps> = ({
   return (
     <div ref={containerRef} className={`relative ${className}`}>
       {label && (
-        <label className="block font-semibold text-gray-700 mb-2 text-sm uppercase tracking-wide">
+        <label className="block font-semibold text-neutral-700 mb-3 text-sm uppercase tracking-wide">
           {label}
         </label>
       )}
@@ -167,19 +167,19 @@ const ModernDatePicker: React.FC<ModernDatePickerProps> = ({
       <motion.button
         onClick={() => !disabled && setIsOpen(!isOpen)}
         disabled={disabled}
-        className={`w-full px-4 py-3 flex items-center justify-between bg-white border-2 rounded-lg text-base text-gray-700 cursor-pointer transition-all duration-200 focus:outline-none ${
+        className={`w-full px-6 py-4 flex items-center justify-between bg-white/90 backdrop-blur-xl border-2 rounded-2xl text-base text-neutral-700 cursor-pointer transition-all duration-300 focus:outline-none ${
           disabled ? 'cursor-not-allowed opacity-60' : ''
         } ${
-          isOpen ? 'border-blue-300 shadow-lg' : 'border-gray-200'
+          isOpen ? 'border-primary-500 shadow-lg' : 'border-neutral-200 hover:border-primary-300 hover:bg-white'
         }`}
         whileHover={!disabled ? { 
-          borderColor: '#93c5fd',
-          boxShadow: '0 0 0 3px rgba(59, 130, 246, 0.1)'
+          borderColor: '#f5a0a0',
+          boxShadow: '0 0 0 3px rgba(139, 0, 0, 0.1)'
         } : {}}
         whileTap={!disabled ? { scale: 0.99 } : {}}
       >
         <div className="flex items-center gap-2">
-          <CalendarDaysIcon className="w-5 h-5 text-blue-500" />
+          <CalendarDaysIcon className="w-5 h-5 text-primary-500" />
           <span>
             {selectedDate ? formatDisplayDate(selectedDate) : placeholder}
           </span>
@@ -189,7 +189,7 @@ const ModernDatePicker: React.FC<ModernDatePickerProps> = ({
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ duration: 0.2 }}
         >
-          <ChevronRightIcon className="w-5 h-5 text-gray-400" />
+          <ChevronRightIcon className="w-5 h-5 text-neutral-400" />
         </motion.div>
       </motion.button>
 
@@ -200,20 +200,20 @@ const ModernDatePicker: React.FC<ModernDatePickerProps> = ({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="absolute top-full left-0 right-0 z-50 mt-1 bg-white backdrop-blur-lg border-2 border-blue-300 rounded-xl shadow-2xl overflow-hidden"
+            className="absolute top-full left-0 right-0 z-50 mt-2 bg-white/95 backdrop-blur-xl border-2 border-primary-300 rounded-3xl shadow-elegant overflow-hidden"
           >
             {/* Calendar Header */}
-            <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-gray-50">
+            <div className="flex items-center justify-between p-4 border-b border-neutral-200 bg-neutral-50">
               <motion.button
                 onClick={() => navigateMonth('prev')}
-                className="p-2 text-gray-600 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 hover:text-gray-800 focus:outline-none"
+                className="p-2 text-neutral-600 bg-white rounded-xl border border-neutral-200 hover:bg-neutral-50 hover:text-neutral-800 focus:outline-none"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
                 <ChevronRightIcon className="w-4 h-4 rotate-180" />
               </motion.button>
               
-              <h3 className="text-lg font-semibold text-gray-800">
+              <h3 className="text-lg font-semibold text-neutral-800">
                 {currentMonth.toLocaleDateString('en-US', { 
                   month: 'long', 
                   year: 'numeric' 
@@ -222,7 +222,7 @@ const ModernDatePicker: React.FC<ModernDatePickerProps> = ({
               
               <motion.button
                 onClick={() => navigateMonth('next')}
-                className="p-2 text-gray-600 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 hover:text-gray-800 focus:outline-none"
+                className="p-2 text-neutral-600 bg-white rounded-xl border border-neutral-200 hover:bg-neutral-50 hover:text-neutral-800 focus:outline-none"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -237,7 +237,7 @@ const ModernDatePicker: React.FC<ModernDatePickerProps> = ({
                 {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
                   <div
                     key={day}
-                    className="h-8 flex items-center justify-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    className="h-8 flex items-center justify-center text-xs font-medium text-neutral-500 uppercase tracking-wider"
                   >
                     {day}
                   </div>
@@ -251,14 +251,14 @@ const ModernDatePicker: React.FC<ModernDatePickerProps> = ({
             </div>
 
             {/* Quick actions */}
-            <div className="p-4 border-t border-gray-200 bg-gray-50">
+            <div className="p-4 border-t border-neutral-200 bg-neutral-50">
               <div className="flex justify-between">
                 <motion.button
                   onClick={() => {
                     onChange(new Date());
                     setIsOpen(false);
                   }}
-                  className="px-4 py-2 text-sm text-blue-600 bg-blue-50 rounded-lg border border-blue-200 hover:bg-blue-100 focus:outline-none"
+                  className="px-4 py-2 text-sm text-primary-600 bg-primary-50 rounded-xl border border-primary-200 hover:bg-primary-100 focus:outline-none"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -267,7 +267,7 @@ const ModernDatePicker: React.FC<ModernDatePickerProps> = ({
                 
                 <motion.button
                   onClick={() => setIsOpen(false)}
-                  className="px-4 py-2 text-sm text-gray-600 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 focus:outline-none"
+                  className="px-4 py-2 text-sm text-neutral-600 bg-white rounded-xl border border-neutral-200 hover:bg-neutral-50 focus:outline-none"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >

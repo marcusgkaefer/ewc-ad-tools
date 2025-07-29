@@ -47,7 +47,7 @@ const ProgressSteps: React.FC<ProgressStepsProps> = ({
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="bg-transparent rounded-2xl p-6 mb-12"
+      className="bg-white/90 backdrop-blur-xl border border-neutral-200 rounded-3xl p-8 mb-12 shadow-professional"
     >
       {/* Steps Row */}
       <div className="flex justify-between items-center gap-2 max-w-4xl mx-auto">
@@ -69,12 +69,12 @@ const ProgressSteps: React.FC<ProgressStepsProps> = ({
               whileTap={isClickable ? { scale: 0.95 } : {}}
             >
               {/* Step Icon Circle */}
-              <div className={`w-10 h-10 rounded-full border-2 flex items-center justify-center transition-all duration-300 relative overflow-hidden mb-2 ${
+              <div className={`w-12 h-12 rounded-full border-2 flex items-center justify-center transition-all duration-300 relative overflow-hidden mb-3 shadow-lg ${
                 isActive 
-                  ? 'bg-gradient-to-br from-blue-500 to-purple-500 border-blue-300'
+                  ? 'bg-gradient-to-br from-primary-500 to-primary-600 border-primary-300 shadow-primary-500/25'
                   : isCompleted
-                  ? 'bg-green-500 border-green-300'
-                  : 'bg-white/40 border-white/50'
+                  ? 'bg-gradient-to-br from-success-500 to-success-600 border-success-300 shadow-success-500/25'
+                  : 'bg-gradient-to-br from-neutral-200 to-neutral-300 border-neutral-300 shadow-neutral-300/25'
               }`}>
                 {/* Animated background pattern for active */}
                 {isActive && (
@@ -94,9 +94,11 @@ const ProgressSteps: React.FC<ProgressStepsProps> = ({
 
                 {/* Icon or Check */}
                 {isCompleted && !isActive ? (
-                  <CheckCircleIconSolid className="w-5 h-5 text-white" />
+                  <CheckCircleIconSolid className="w-6 h-6 text-white" />
                 ) : (
-                  <Icon className="w-5 h-5 text-white" />
+                  <Icon className={`w-6 h-6 ${
+                    isActive || isCompleted ? 'text-white' : 'text-neutral-500'
+                  }`} />
                 )}
               </div>
 
@@ -104,14 +106,20 @@ const ProgressSteps: React.FC<ProgressStepsProps> = ({
               <div className="text-center min-h-[40px] flex flex-col justify-center">
                 <h4 className={`text-sm font-semibold mb-0.5 leading-tight ${
                   isActive 
-                    ? 'text-white' 
+                    ? 'text-primary-600' 
                     : isCompleted 
-                    ? 'text-white' 
-                    : 'text-white'
+                    ? 'text-success-600' 
+                    : 'text-neutral-500'
                 }`}>
                   {step.title}
                 </h4>
-                <p className="text-xs text-white/80 leading-tight">
+                <p className={`text-xs leading-tight ${
+                  isActive 
+                    ? 'text-primary-500' 
+                    : isCompleted 
+                    ? 'text-success-500' 
+                    : 'text-neutral-400'
+                }`}>
                   {step.description}
                 </p>
               </div>

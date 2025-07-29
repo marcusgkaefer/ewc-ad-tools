@@ -20,8 +20,6 @@ import { mockApi } from './services/mockApi';
 import { supabaseLocationService } from './services/supabaseLocationService';
 import { defaultObjectives } from './data/mockData';
 import ModernDatePicker from './components/ui/ModernDatePicker';
-// TEMPORARILY COMMENTED OUT
-// import TemplateSelector from './components/ui/TemplateSelector';
 import TemplateCreationModal from './components/ui/TemplateCreationModal';
 import { LocationConfigModal } from './components/ui/LocationConfigModal';
 import FilePreview from './components/ui/FilePreview';
@@ -350,23 +348,23 @@ function App() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-500 via-purple-600 to-blue-500 bg-size-[400%_400%] animate-gradient-shift flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-accent-50 bg-size-[400%_400%] animate-gradient-shift flex items-center justify-center">
         <motion.div
-          className="bg-white/95 border border-white/20 rounded-2xl p-8 shadow-xl max-w-sm mx-auto text-center"
+          className="card-premium rounded-3xl p-10 shadow-elegant max-w-sm mx-auto text-center"
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.6, ease: 'easeOut' }}
+          transition={{ duration: 0.8, ease: 'easeOut' }}
         >
           <motion.div
-            className="w-20 h-20 rounded-full mx-auto mb-6 bg-gradient-to-r from-blue-500 to-purple-500"
+            className="w-20 h-20 rounded-full mx-auto mb-6 bg-gradient-to-r from-primary-500 to-primary-600 shadow-lg shadow-primary-500/30"
             animate={{ rotate: 360 }}
             transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
           />
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">
+          <h2 className="text-2xl font-bold text-neutral-800 mb-2">
             Loading Campaign Creator
           </h2>
-          <p className="text-gray-600">
-            Preparing your creative workspace...
+          <p className="text-neutral-600">
+            Preparing your professional workspace...
           </p>
         </motion.div>
       </div>
@@ -374,7 +372,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-500 via-purple-600 to-blue-500 bg-size-[400%_400%] animate-gradient-shift">
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-accent-50 bg-size-[400%_400%] animate-gradient-shift">
       <div className="flex-1 p-6 relative z-10 pt-24">
         <motion.div
           variants={containerVariants}
@@ -402,12 +400,12 @@ function App() {
                 exit="exit"
                 className="max-w-4xl mx-auto"
               >
-                <div className="bg-white/95 border border-white/20 rounded-2xl p-8 shadow-xl transition-shadow duration-200 hover:shadow-2xl">
+                <div className="card-premium rounded-3xl p-10 shadow-elegant transition-all duration-300 hover:shadow-3xl">
                   <div className="mb-8">
-                    <h2 className="text-3xl font-extrabold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-500 bg-clip-text text-transparent mb-4">
+                    <h2 className="text-3xl font-extrabold text-gradient-professional mb-4">
                       Select Target Locations
                     </h2>
-                    <p className="text-gray-600 text-lg">
+                    <p className="text-neutral-600 text-lg">
                       Choose the locations where your campaigns will run. You can select individual locations or use exclusion mode.
                     </p>
                   </div>
@@ -419,42 +417,42 @@ function App() {
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       placeholder="Search locations by name, city, or state..."
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl text-base transition-all duration-200 bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-100 focus:-translate-y-0.5 focus:outline-none"
+                      className="w-full px-6 py-4 border-2 border-neutral-200 rounded-2xl text-base bg-white/90 backdrop-blur-xl transition-all duration-300 focus:border-primary-500 focus:ring-4 focus:ring-primary-100 focus:-translate-y-0.5 focus:outline-none hover:bg-white"
                     />
                   </div>
 
                   {/* Configuration Filter */}
                   <div className="mb-6">
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="text-sm font-medium text-gray-700">Filter by configuration:</span>
+                      <span className="text-sm font-medium text-neutral-700">Filter by configuration:</span>
                     </div>
                     <div className="flex gap-2 flex-wrap">
                       <button
                         onClick={() => setConfigurationFilter('all')}
-                        className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
+                        className={`px-4 py-2 text-sm font-medium rounded-xl transition-all duration-300 ${
                           configurationFilter === 'all'
-                            ? 'bg-blue-500 text-white shadow-md'
-                            : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-blue-300'
+                            ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/25'
+                            : 'bg-white/90 backdrop-blur-xl text-neutral-700 border-2 border-neutral-200 hover:border-primary-300 hover:bg-white'
                         }`}
                       >
                         All Locations ({locations.length})
                       </button>
                       <button
                         onClick={() => setConfigurationFilter('configured')}
-                        className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
+                        className={`px-4 py-2 text-sm font-medium rounded-xl transition-all duration-300 ${
                           configurationFilter === 'configured'
-                            ? 'bg-green-500 text-white shadow-md'
-                            : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-green-300'
+                            ? 'bg-success-500 text-white shadow-lg shadow-success-500/25'
+                            : 'bg-white/90 backdrop-blur-xl text-neutral-700 border-2 border-neutral-200 hover:border-success-300 hover:bg-white'
                         }`}
                       >
                         Configured ({locations.filter(l => l.config).length})
                       </button>
                       <button
                         onClick={() => setConfigurationFilter('not-configured')}
-                        className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
+                        className={`px-4 py-2 text-sm font-medium rounded-xl transition-all duration-300 ${
                           configurationFilter === 'not-configured'
-                            ? 'bg-orange-500 text-white shadow-md'
-                            : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-orange-300'
+                            ? 'bg-warning-500 text-white shadow-lg shadow-warning-500/25'
+                            : 'bg-white/90 backdrop-blur-xl text-neutral-700 border-2 border-neutral-200 hover:border-warning-300 hover:bg-white'
                         }`}
                       >
                         Not Configured ({locations.filter(l => !l.config).length})
@@ -468,13 +466,13 @@ function App() {
                   </div>
 
                   {/* Exclusion Mode Toggle */}
-                  <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
-                    <label className="flex items-center gap-3 cursor-pointer text-sm font-medium text-blue-800">
+                  <div className="mb-6 p-4 bg-primary-50 border border-primary-200 rounded-2xl">
+                    <label className="flex items-center gap-3 cursor-pointer text-sm font-medium text-primary-800">
                       <input
                         type="checkbox"
                         checked={useExclusionMode}
                         onChange={(e) => setUseExclusionMode(e.target.checked)}
-                        className="w-4 h-4 accent-blue-500 rounded"
+                        className="w-4 h-4 accent-primary-500 rounded"
                       />
                       Use exclusion mode (select locations to exclude instead)
                     </label>
@@ -484,14 +482,14 @@ function App() {
                   <div className="flex gap-4 mb-6 flex-wrap">
                     <button
                       onClick={selectAllLocations}
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-white text-gray-700 font-semibold rounded-lg border-2 border-gray-200 shadow-md transition-all duration-200 hover:border-blue-500 hover:text-blue-600 hover:-translate-y-0.5 hover:shadow-lg text-sm"
+                      className="inline-flex items-center gap-2 px-6 py-3 bg-white/90 backdrop-blur-xl text-neutral-700 font-semibold rounded-xl border border-neutral-200 shadow-lg shadow-black/5 transition-all duration-300 hover:bg-white hover:border-primary-300 hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 text-sm"
                     >
                       <CheckCircleIcon className="w-4 h-4" />
                       Select All
                     </button>
                     <button
                       onClick={clearAllLocations}
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-white text-gray-700 font-semibold rounded-lg border-2 border-gray-200 shadow-md transition-all duration-200 hover:border-red-500 hover:text-red-600 hover:-translate-y-0.5 hover:shadow-lg text-sm"
+                      className="inline-flex items-center gap-2 px-6 py-3 bg-white/90 backdrop-blur-xl text-neutral-700 font-semibold rounded-xl border border-neutral-200 shadow-lg shadow-black/5 transition-all duration-300 hover:bg-white hover:border-error-300 hover:text-error-600 hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-error-500 focus:ring-offset-2 text-sm"
                     >
                       <XMarkIcon className="w-4 h-4" />
                       Clear All
@@ -499,7 +497,7 @@ function App() {
                   </div>
 
                   {/* Locations List */}
-                  <div className="max-h-96 overflow-y-auto border border-gray-200 rounded-xl bg-white shadow-inner">
+                  <div className="max-h-96 overflow-y-auto border border-neutral-200 rounded-2xl bg-white/95 backdrop-blur-xl shadow-professional">
                     {filteredLocations.map((location, index) => {
                       const isSelected = useExclusionMode 
                         ? !excludedLocationIds.includes(location.id)
@@ -512,15 +510,15 @@ function App() {
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: index * 0.02 }}
                           onClick={() => toggleLocationSelection(location.id)}
-                          className={`flex items-center justify-between py-3 px-4 cursor-pointer transition-all duration-200 text-sm hover:bg-blue-50 ${
-                            index !== filteredLocations.length - 1 ? 'border-b border-gray-100' : ''
-                          } ${isSelected ? 'bg-blue-50' : ''}`}
+                          className={`flex items-center justify-between py-3 px-4 cursor-pointer transition-all duration-300 text-sm hover:bg-primary-50 ${
+                            index !== filteredLocations.length - 1 ? 'border-b border-neutral-100' : ''
+                          } ${isSelected ? 'bg-primary-50' : ''}`}
                         >
                           <div className="flex items-center gap-3 flex-1">
-                            <div className={`w-4 h-4 rounded border-2 transition-all duration-200 flex items-center justify-center ${
+                            <div className={`w-4 h-4 rounded border-2 transition-all duration-300 flex items-center justify-center ${
                               isSelected 
-                                ? 'border-blue-500 bg-blue-500' 
-                                : 'border-gray-300'
+                                ? 'border-primary-500 bg-primary-500' 
+                                : 'border-neutral-300'
                             }`}>
                               {isSelected && (
                                 <CheckCircleIcon className="w-3 h-3 text-white" />
@@ -528,9 +526,9 @@ function App() {
                             </div>
                             <div className="flex-1">
                               <div className="flex items-center gap-2">
-                                <div className="font-medium text-gray-800">{location.name}</div>
+                                <div className="font-medium text-neutral-800">{location.name}</div>
                                 {location.config && (
-                                  <span className="inline-flex items-center px-2 py-1 text-xs bg-green-100 text-green-700 rounded-full">
+                                  <span className="inline-flex items-center px-2 py-1 text-xs bg-success-100 text-success-700 rounded-full">
                                     <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                       <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                                     </svg>
@@ -538,27 +536,27 @@ function App() {
                                   </span>
                                 )}
                               </div>
-                              <div className="text-xs text-gray-500 mt-1">
+                              <div className="text-xs text-neutral-500 mt-1">
                                 {location.city}, {location.state} • {location.phoneNumber}
                                 {location.config && location.config.budget && (
-                                  <span className="ml-2 text-blue-600 font-medium">
+                                  <span className="ml-2 text-primary-600 font-medium">
                                     Budget: ${location.config.budget.toFixed(2)}
                                   </span>
                                 )}
                               </div>
                               {location.config && location.config.notes && (
-                                <div className="text-xs text-gray-400 mt-1 italic truncate">
+                                <div className="text-xs text-neutral-400 mt-1 italic truncate">
                                   "{location.config.notes}"
                                 </div>
                               )}
                             </div>
                           </div>
                           <div className="flex items-center gap-3">
-                            <div className="text-gray-600 text-xs flex flex-col gap-1">
+                            <div className="text-neutral-600 text-xs flex flex-col gap-1">
                               <div className="flex items-center gap-2">
                                 <span>{location.city}, {location.state}</span>
                               </div>
-                              <div className="flex items-center gap-2 text-indigo-600 font-mono">
+                              <div className="flex items-center gap-2 text-accent-600 font-mono">
                                 {location.config ? (
                                   <>
                                     {location.config.primaryLat && location.config.primaryLng ? (
@@ -566,28 +564,28 @@ function App() {
                                         <span>{location.config.primaryLat.toFixed(4)}, {location.config.primaryLng.toFixed(4)}</span>
                                         {location.config.radiusMiles && (
                                           <>
-                                            <span className="text-gray-400">•</span>
-                                            <span className="text-orange-600">{location.config.radiusMiles}mi</span>
+                                            <span className="text-neutral-400">•</span>
+                                            <span className="text-warning-600">{location.config.radiusMiles}mi</span>
                                           </>
                                         )}
                                         {location.config.coordinateList && location.config.coordinateList.length > 0 && (
                                           <>
-                                            <span className="text-gray-400">•</span>
-                                            <span className="text-green-600">+{location.config.coordinateList.length} points</span>
+                                            <span className="text-neutral-400">•</span>
+                                            <span className="text-success-600">+{location.config.coordinateList.length} points</span>
                                           </>
                                         )}
                                       </>
                                     ) : (
                                       <>
                                         <span>{location.coordinates.lat.toFixed(4)}, {location.coordinates.lng.toFixed(4)}</span>
-                                        <span className="text-gray-400">• default</span>
+                                        <span className="text-neutral-400">• default</span>
                                       </>
                                     )}
                                   </>
                                 ) : (
                                   <>
                                     <span>{location.coordinates.lat.toFixed(4)}, {location.coordinates.lng.toFixed(4)}</span>
-                                    <span className="text-gray-400">• unconfigured</span>
+                                    <span className="text-neutral-400">• unconfigured</span>
                                   </>
                                 )}
                               </div>
@@ -598,7 +596,7 @@ function App() {
                                 setSelectedLocationToConfigure(location);
                                 setShowLocationConfigModal(true);
                               }}
-                              className="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg transition-colors duration-200"
+                              className="p-2 text-primary-600 hover:text-primary-800 hover:bg-primary-50 rounded-lg transition-colors duration-300"
                               title="Configure location settings"
                             >
                               <CogIcon className="w-4 h-4" />
@@ -610,11 +608,11 @@ function App() {
                   </div>
 
                   {/* Selection Summary */}
-                  <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-xl">
-                    <div className="text-sm font-semibold text-blue-800 mb-1">
+                  <div className="mt-6 p-4 bg-gradient-to-r from-primary-50 to-accent-50 border border-primary-200 rounded-2xl">
+                    <div className="text-sm font-semibold text-primary-800 mb-1">
                       {useExclusionMode ? 'Exclusion Mode:' : 'Selection Mode:'}
                     </div>
-                    <div className="text-sm text-blue-700">
+                    <div className="text-sm text-primary-700">
                       {effectiveSelectedLocations.length} locations selected for campaigns
                     </div>
                   </div>
@@ -622,7 +620,7 @@ function App() {
                   {/* Continue Button */}
                   <div className="flex justify-end mt-8">
                     <button
-                      className={`inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-xl shadow-lg transition-all duration-200 hover:from-blue-600 hover:to-blue-700 hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-lg ${
+                      className={`inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-primary-500 to-primary-600 text-white font-semibold rounded-2xl shadow-lg shadow-primary-500/25 transition-all duration-300 hover:from-primary-600 hover:to-primary-700 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary-500/30 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 text-lg ${
                         effectiveSelectedLocations.length === 0 ? 'opacity-50 cursor-not-allowed' : ''
                       }`}
                       onClick={() => setCurrentStep(2)}
@@ -645,32 +643,32 @@ function App() {
                 exit="exit"
                 className="max-w-4xl mx-auto"
               >
-                <div className="bg-white/95 border border-white/20 rounded-2xl p-8 shadow-xl transition-shadow duration-200 hover:shadow-2xl">
+                <div className="card-premium rounded-3xl p-10 shadow-elegant transition-all duration-300 hover:shadow-3xl">
                   <div className="mb-8">
-                    <h2 className="text-3xl font-extrabold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-500 bg-clip-text text-transparent mb-4">
+                    <h2 className="text-3xl font-extrabold text-gradient-professional mb-4">
                       Campaign Configuration
                     </h2>
-                    <p className="text-gray-600 text-lg">
+                    <p className="text-neutral-600 text-lg">
                       Set up your Meta campaign parameters. These settings will be applied to all generated campaigns.
                     </p>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                     <div className="space-y-2">
-                      <label className="block font-semibold text-gray-700 text-sm uppercase tracking-wide">
+                      <label className="block font-semibold text-neutral-700 text-sm uppercase tracking-wide">
                         Campaign Prefix
                       </label>
                       <input
                         type="text"
                         value={campaignConfig.prefix}
                         onChange={(e) => setCampaignConfig(prev => ({ ...prev, prefix: e.target.value }))}
-                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl text-base transition-all duration-200 bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-100 focus:-translate-y-0.5 focus:outline-none"
+                        className="w-full px-6 py-4 border-2 border-neutral-200 rounded-2xl text-base bg-white/90 backdrop-blur-xl transition-all duration-300 focus:border-primary-500 focus:ring-4 focus:ring-primary-100 focus:-translate-y-0.5 focus:outline-none hover:bg-white"
                         placeholder="EWC_Meta_"
                       />
                     </div>
                     
                     <div className="space-y-2">
-                      <label className="block font-semibold text-gray-700 text-sm uppercase tracking-wide">
+                      <label className="block font-semibold text-neutral-700 text-sm uppercase tracking-wide">
                         Platform
                       </label>
                       <Select
@@ -686,7 +684,7 @@ function App() {
                     </div>
 
                     <div className="space-y-2">
-                      <label className="block font-semibold text-gray-700 text-sm uppercase tracking-wide">
+                      <label className="block font-semibold text-neutral-700 text-sm uppercase tracking-wide">
                         Campaign Date
                       </label>
                       <ModernDatePicker
@@ -698,7 +696,7 @@ function App() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                     <div className="space-y-2">
-                      <label className="block font-semibold text-gray-700 text-sm uppercase tracking-wide">
+                      <label className="block font-semibold text-neutral-700 text-sm uppercase tracking-wide">
                         Campaign Objective
                       </label>
                       <Select
@@ -710,7 +708,7 @@ function App() {
                     </div>
 
                     <div className="space-y-2">
-                      <label className="block font-semibold text-gray-700 text-sm uppercase tracking-wide">
+                      <label className="block font-semibold text-neutral-700 text-sm uppercase tracking-wide">
                         Budget per Campaign ($)
                       </label>
                       <input
@@ -718,7 +716,7 @@ function App() {
                         step="0.01"
                         value={campaignConfig.budget}
                         onChange={(e) => setCampaignConfig(prev => ({ ...prev, budget: parseFloat(e.target.value) }))}
-                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl text-base transition-all duration-200 bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-100 focus:-translate-y-0.5 focus:outline-none"
+                        className="w-full px-6 py-4 border-2 border-neutral-200 rounded-2xl text-base bg-white/90 backdrop-blur-xl transition-all duration-300 focus:border-primary-500 focus:ring-4 focus:ring-primary-100 focus:-translate-y-0.5 focus:outline-none hover:bg-white"
                         placeholder="92.69"
                       />
                     </div>
@@ -728,14 +726,14 @@ function App() {
                   <div className="flex justify-between mt-8">
                     <button
                       onClick={() => setCurrentStep(1)}
-                      className="inline-flex items-center gap-2 px-6 py-3 bg-white text-gray-700 font-semibold rounded-lg border-2 border-gray-200 shadow-md transition-all duration-200 hover:border-gray-400 hover:-translate-y-0.5 hover:shadow-lg"
+                      className="inline-flex items-center gap-2 px-6 py-3 bg-white/90 backdrop-blur-xl text-neutral-700 font-semibold rounded-xl border border-neutral-200 shadow-lg shadow-black/5 transition-all duration-300 hover:bg-white hover:border-neutral-300 hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:ring-offset-2"
                     >
                       <ArrowRightIcon className="w-4 h-4 rotate-180" />
                       Back to Locations
                     </button>
                     <button
                       onClick={() => setCurrentStep(3)}
-                      className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-xl shadow-lg transition-all duration-200 hover:from-blue-600 hover:to-blue-700 hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-lg"
+                      className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-primary-500 to-primary-600 text-white font-semibold rounded-2xl shadow-lg shadow-primary-500/25 transition-all duration-300 hover:from-primary-600 hover:to-primary-700 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary-500/30 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 text-lg"
                     >
                       Continue to Ads
                       <ArrowRightIcon className="w-5 h-5" />
@@ -754,12 +752,12 @@ function App() {
                 exit="exit"
                 className="max-w-6xl mx-auto"
               >
-                <div className="bg-white/95 border border-white/20 rounded-2xl p-8 shadow-xl transition-shadow duration-200 hover:shadow-2xl">
+                <div className="card-premium rounded-3xl p-10 shadow-elegant transition-all duration-300 hover:shadow-3xl">
                   <div className="mb-8">
-                    <h2 className="text-3xl font-extrabold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-500 bg-clip-text text-transparent mb-4">
+                    <h2 className="text-3xl font-extrabold text-gradient-professional mb-4">
                       Ad Configuration
                     </h2>
-                    <p className="text-gray-600 text-lg">
+                    <p className="text-neutral-600 text-lg">
                       Create multiple ad variations for your campaigns. Each ad will be deployed to all selected locations.
                     </p>
                   </div>
@@ -768,7 +766,7 @@ function App() {
                   <div className="mb-6">
                     <button
                       onClick={addNewAd}
-                      className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold rounded-xl shadow-lg transition-all duration-200 hover:from-green-600 hover:to-green-700 hover:-translate-y-0.5 hover:shadow-xl"
+                      className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-success-500 to-success-600 text-white font-semibold rounded-2xl shadow-lg shadow-success-500/25 transition-all duration-300 hover:from-success-600 hover:to-success-700 hover:-translate-y-1 hover:shadow-xl hover:shadow-success-500/30 focus:outline-none focus:ring-2 focus:ring-success-500 focus:ring-offset-2"
                     >
                       <PlusIcon className="w-5 h-5" />
                       Add New Ad
@@ -778,24 +776,24 @@ function App() {
                   {/* Ads List */}
                   <div className="space-y-6 mb-8">
                     {campaignConfig.ads.map((ad, index) => (
-                      <motion.div
-                        key={ad.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.1 }}
-                        className="bg-white/70 border-2 border-gray-200 rounded-2xl p-6 transition-all duration-200 hover:shadow-lg hover:border-blue-300"
-                      >
-                        <div className="flex justify-between items-start mb-6">
-                          <h3 className="text-xl font-semibold text-gray-800">
-                            {ad.name}
-                          </h3>
-                          <button
-                            onClick={() => removeAd(ad.id)}
-                            className="inline-flex items-center gap-1 px-3 py-1 text-sm bg-white text-gray-700 rounded-lg border border-gray-200 hover:border-red-500 hover:text-red-600 transition-all duration-200"
-                          >
-                            <TrashIcon className="w-4 h-4" />
-                          </button>
-                        </div>
+                                              <motion.div
+                          key={ad.id}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: index * 0.1 }}
+                          className="bg-white/90 backdrop-blur-xl border border-neutral-200 rounded-3xl p-8 shadow-professional transition-all duration-300 hover:shadow-elegant hover:border-primary-300"
+                        >
+                          <div className="flex justify-between items-start mb-6">
+                            <h3 className="text-xl font-semibold text-neutral-800">
+                              {ad.name}
+                            </h3>
+                            <button
+                              onClick={() => removeAd(ad.id)}
+                              className="inline-flex items-center gap-1 px-3 py-1 text-sm bg-white/90 backdrop-blur-xl text-neutral-700 rounded-xl border border-neutral-200 shadow-lg shadow-black/5 hover:border-error-500 hover:text-error-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-error-500 focus:ring-offset-2"
+                            >
+                              <TrashIcon className="w-4 h-4" />
+                            </button>
+                          </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                           <div className="space-y-2">
@@ -850,17 +848,6 @@ function App() {
                             />
                           </div>
                         </div>
-
-                        {/* TEMPORARILY COMMENTED OUT - Template Preview */}
-                        {/* {templates.find(t => t.id === ad.templateId) && (
-                          <div className="mt-6 p-4 bg-gradient-to-r from-gray-50 to-blue-50 border border-gray-200 rounded-xl">
-                            <div className="text-sm font-semibold text-gray-700 mb-2">Template Preview:</div>
-                            <div className="text-sm space-y-1">
-                              <div><strong>Headline:</strong> {templates.find(t => t.id === ad.templateId)?.fields.headline}</div>
-                              <div><strong>Description:</strong> {templates.find(t => t.id === ad.templateId)?.fields.description}</div>
-                            </div>
-                          </div>
-                        )} */}
                       </motion.div>
                     ))}
                   </div>
@@ -869,14 +856,14 @@ function App() {
                   <div className="flex justify-between mt-8">
                     <button
                       onClick={() => setCurrentStep(2)}
-                      className="inline-flex items-center gap-2 px-6 py-3 bg-white text-gray-700 font-semibold rounded-lg border-2 border-gray-200 shadow-md transition-all duration-200 hover:border-gray-400 hover:-translate-y-0.5 hover:shadow-lg"
+                      className="inline-flex items-center gap-2 px-6 py-3 bg-white/90 backdrop-blur-xl text-neutral-700 font-semibold rounded-xl border border-neutral-200 shadow-lg shadow-black/5 transition-all duration-300 hover:bg-white hover:border-neutral-300 hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:ring-offset-2"
                     >
                       <ArrowRightIcon className="w-4 h-4 rotate-180" />
                       Back to Campaigns
                     </button>
                     <button
                       onClick={() => setCurrentStep(4)}
-                      className={`inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-xl shadow-lg transition-all duration-200 hover:from-blue-600 hover:to-blue-700 hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-lg ${
+                      className={`inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-primary-500 to-primary-600 text-white font-semibold rounded-2xl shadow-lg shadow-primary-500/25 transition-all duration-300 hover:from-primary-600 hover:to-primary-700 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary-500/30 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 text-lg ${
                         campaignConfig.ads.length === 0 ? 'opacity-50 cursor-not-allowed' : ''
                       }`}
                       disabled={campaignConfig.ads.length === 0}
@@ -898,12 +885,12 @@ function App() {
                 exit="exit"
                 className="max-w-6xl mx-auto"
               >
-                <div className="bg-white/95 border border-white/20 rounded-2xl p-8 shadow-xl transition-shadow duration-200 hover:shadow-2xl">
+                <div className="card-premium rounded-3xl p-10 shadow-elegant transition-all duration-300 hover:shadow-3xl">
                   <div className="mb-8">
-                    <h2 className="text-3xl font-extrabold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-500 bg-clip-text text-transparent mb-4">
+                    <h2 className="text-3xl font-extrabold text-gradient-professional mb-4">
                       Review & Generate
                     </h2>
-                    <p className="text-gray-600 text-lg">
+                    <p className="text-neutral-600 text-lg">
                       Review your campaign configuration before generating the final export file.
                     </p>
                   </div>
@@ -911,57 +898,57 @@ function App() {
                   {/* Statistics Grid */}
                   <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mb-12">
                     <motion.div 
-                      className="bg-gradient-to-br from-white/20 to-white/10 border border-white/20 rounded-2xl p-8 text-center relative overflow-hidden"
+                      className="bg-gradient-to-br from-primary-50/80 to-white/90 backdrop-blur-xl border border-primary-200 rounded-3xl p-8 text-center relative overflow-hidden shadow-professional"
                       initial={{ scale: 0, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
                       transition={{ type: "spring", stiffness: 200, delay: 0.1 }}
                     >
-                      <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500"></div>
-                      <MapPinIcon className="w-8 h-8 text-white/80 mx-auto mb-2" />
-                      <div className="text-4xl font-extrabold text-white mb-1 leading-none">{stats.selectedLocations}</div>
-                      <div className="text-white/80 font-medium text-sm uppercase tracking-wider">Locations</div>
+                      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary-500 to-accent-500 rounded-t-3xl"></div>
+                      <MapPinIcon className="w-8 h-8 text-primary-600 mx-auto mb-3" />
+                      <div className="text-4xl font-extrabold text-neutral-800 mb-1 leading-none">{stats.selectedLocations}</div>
+                      <div className="text-neutral-600 font-medium text-sm uppercase tracking-wider">Locations</div>
                     </motion.div>
                     
                     <motion.div 
-                      className="bg-gradient-to-br from-white/20 to-white/10 border border-white/20 rounded-2xl p-8 text-center relative overflow-hidden"
+                      className="bg-gradient-to-br from-accent-50/80 to-white/90 backdrop-blur-xl border border-accent-200 rounded-3xl p-8 text-center relative overflow-hidden shadow-professional"
                       initial={{ scale: 0, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
                       transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
                     >
-                      <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500"></div>
-                      <DocumentIcon className="w-8 h-8 text-white/80 mx-auto mb-2" />
-                      <div className="text-4xl font-extrabold text-white mb-1 leading-none">{stats.totalAds}</div>
-                      <div className="text-white/80 font-medium text-sm uppercase tracking-wider">Ad Variations</div>
+                      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-accent-500 to-primary-500 rounded-t-3xl"></div>
+                      <DocumentIcon className="w-8 h-8 text-accent-600 mx-auto mb-3" />
+                      <div className="text-4xl font-extrabold text-neutral-800 mb-1 leading-none">{stats.totalAds}</div>
+                      <div className="text-neutral-600 font-medium text-sm uppercase tracking-wider">Ad Variations</div>
                     </motion.div>
                     
                     <motion.div 
-                      className="bg-gradient-to-br from-white/20 to-white/10 border border-white/20 rounded-2xl p-8 text-center relative overflow-hidden"
+                      className="bg-gradient-to-br from-success-50/80 to-white/90 backdrop-blur-xl border border-success-200 rounded-3xl p-8 text-center relative overflow-hidden shadow-professional"
                       initial={{ scale: 0, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
                       transition={{ type: "spring", stiffness: 200, delay: 0.3 }}
                     >
-                      <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500"></div>
-                      <ChartBarIcon className="w-8 h-8 text-white/80 mx-auto mb-2" />
-                      <div className="text-4xl font-extrabold text-white mb-1 leading-none">{stats.totalCampaigns.toLocaleString()}</div>
-                      <div className="text-white/80 font-medium text-sm uppercase tracking-wider">Total Campaigns</div>
+                      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-success-500 to-primary-500 rounded-t-3xl"></div>
+                      <ChartBarIcon className="w-8 h-8 text-success-600 mx-auto mb-3" />
+                      <div className="text-4xl font-extrabold text-neutral-800 mb-1 leading-none">{stats.totalCampaigns.toLocaleString()}</div>
+                      <div className="text-neutral-600 font-medium text-sm uppercase tracking-wider">Total Campaigns</div>
                     </motion.div>
                     
                     <motion.div 
-                      className="bg-gradient-to-br from-white/20 to-white/10 border border-white/20 rounded-2xl p-8 text-center relative overflow-hidden"
+                      className="bg-gradient-to-br from-info-50/80 to-white/90 backdrop-blur-xl border border-info-200 rounded-3xl p-8 text-center relative overflow-hidden shadow-professional"
                       initial={{ scale: 0, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
                       transition={{ type: "spring", stiffness: 200, delay: 0.4 }}
                     >
-                      <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500"></div>
-                      <DocumentDuplicateIcon className="w-8 h-8 text-white/80 mx-auto mb-2" />
-                      <div className="text-4xl font-extrabold text-white mb-1 leading-none">{stats.totalFiles}</div>
-                      <div className="text-white/80 font-medium text-sm uppercase tracking-wider">CSV File</div>
+                      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-info-500 to-accent-500 rounded-t-3xl"></div>
+                      <DocumentDuplicateIcon className="w-8 h-8 text-info-600 mx-auto mb-3" />
+                      <div className="text-4xl font-extrabold text-neutral-800 mb-1 leading-none">{stats.totalFiles}</div>
+                      <div className="text-neutral-600 font-medium text-sm uppercase tracking-wider">CSV File</div>
                     </motion.div>
                   </div>
 
                   {/* What will be generated */}
-                  <div className="bg-white/50 border border-gray-200 rounded-2xl p-6 mb-8">
-                    <h3 className="text-xl font-bold text-gray-800 mb-4">
+                  <div className="bg-white/90 backdrop-blur-xl border border-neutral-200 rounded-3xl p-8 mb-8 shadow-professional">
+                    <h3 className="text-xl font-bold text-neutral-800 mb-4">
                       What will be generated:
                     </h3>
                     <div className="space-y-3">
@@ -981,8 +968,8 @@ function App() {
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: index * 0.1 }}
                         >
-                          <CheckCircleIcon className="w-5 h-5 text-green-500 flex-shrink-0" />
-                          <span className="text-gray-700">{item}</span>
+                          <CheckCircleIcon className="w-5 h-5 text-success-500 flex-shrink-0" />
+                          <span className="text-neutral-700">{item}</span>
                         </motion.div>
                       ))}
                     </div>
@@ -993,7 +980,7 @@ function App() {
                     <div className="flex gap-4">
                       <button
                         onClick={() => setCurrentStep(3)}
-                        className="inline-flex items-center gap-2 px-6 py-3 bg-white text-gray-700 font-semibold rounded-lg border-2 border-gray-200 shadow-md transition-all duration-200 hover:border-gray-400 hover:-translate-y-0.5 hover:shadow-lg"
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-white/90 backdrop-blur-xl text-neutral-700 font-semibold rounded-xl border border-neutral-200 shadow-lg shadow-black/5 transition-all duration-300 hover:bg-white hover:border-neutral-300 hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:ring-offset-2"
                       >
                         <ArrowRightIcon className="w-4 h-4 rotate-180" />
                         Back to Ads
@@ -1001,7 +988,7 @@ function App() {
                       
                       <button
                         onClick={() => setShowFilePreview(true)}
-                        className="inline-flex items-center gap-2 px-6 py-3 bg-white text-gray-700 font-semibold rounded-lg border-2 border-gray-200 shadow-md transition-all duration-200 hover:border-blue-500 hover:text-blue-600 hover:-translate-y-0.5 hover:shadow-lg"
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-white/90 backdrop-blur-xl text-neutral-700 font-semibold rounded-xl border border-neutral-200 shadow-lg shadow-black/5 transition-all duration-300 hover:bg-white hover:border-primary-300 hover:text-primary-600 hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
                       >
                         <EyeIcon className="w-4 h-4" />
                         Preview Data
@@ -1010,7 +997,7 @@ function App() {
 
                     <button
                       onClick={generateCampaigns}
-                      className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold rounded-xl shadow-lg transition-all duration-200 hover:from-green-600 hover:to-green-700 hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 text-lg"
+                      className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-success-500 to-success-600 text-white font-semibold rounded-2xl shadow-lg shadow-success-500/25 transition-all duration-300 hover:from-success-600 hover:to-success-700 hover:-translate-y-1 hover:shadow-xl hover:shadow-success-500/30 focus:outline-none focus:ring-2 focus:ring-success-500 focus:ring-offset-2 text-lg"
                     >
                       <SparklesIcon className="w-5 h-5" />
                       Generate Campaigns
@@ -1029,27 +1016,27 @@ function App() {
                 exit="exit"
                 className="max-w-2xl mx-auto"
               >
-                <div className="bg-white/95 border border-white/20 rounded-2xl p-8 shadow-xl transition-shadow duration-200 hover:shadow-2xl text-center">
+                <div className="card-premium rounded-3xl p-10 shadow-elegant transition-all duration-300 hover:shadow-3xl text-center">
                   <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ type: "spring", stiffness: 200, delay: 0.3 }}
-                    className="w-24 h-24 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-6"
+                    className="w-24 h-24 bg-gradient-to-r from-success-500 to-success-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-success-500/30"
                   >
                     <CheckCircleIcon className="w-12 h-12 text-white" />
                   </motion.div>
 
-                  <h2 className="text-3xl font-extrabold bg-gradient-to-r from-green-600 to-green-500 bg-clip-text text-transparent mb-4">
+                  <h2 className="text-3xl font-extrabold bg-gradient-to-r from-success-600 to-success-500 bg-clip-text text-transparent mb-4">
                     Campaigns Generated Successfully!
                   </h2>
                   
-                  <p className="text-gray-600 text-lg mb-8">
+                  <p className="text-neutral-600 text-lg mb-8">
                     Your campaign file has been generated and is ready for download.
                   </p>
 
-                  <div className="bg-gray-50 border border-gray-200 rounded-xl p-6 mb-8">
-                    <div className="text-sm font-semibold text-gray-700 mb-2">Generated File:</div>
-                    <div className="font-mono text-sm text-gray-600 break-all">
+                  <div className="bg-neutral-50 border border-neutral-200 rounded-2xl p-6 mb-8">
+                    <div className="text-sm font-semibold text-neutral-700 mb-2">Generated File:</div>
+                    <div className="font-mono text-sm text-neutral-600 break-all">
                       {generationJob.options?.fileName || 'Campaign_Export.csv'}
                     </div>
                   </div>
@@ -1061,7 +1048,7 @@ function App() {
                         setCurrentStep(1);
                         setGenerationJob(null);
                       }}
-                      className="inline-flex items-center gap-2 px-6 py-3 bg-white text-gray-700 font-semibold rounded-lg border-2 border-gray-200 shadow-md transition-all duration-200 hover:border-gray-400 hover:-translate-y-0.5 hover:shadow-lg"
+                      className="inline-flex items-center gap-2 px-6 py-3 bg-white/90 backdrop-blur-xl text-neutral-700 font-semibold rounded-xl border border-neutral-200 shadow-lg shadow-black/5 transition-all duration-300 hover:bg-white hover:border-neutral-300 hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:ring-offset-2"
                     >
                       Create New Campaign
                     </button>
@@ -1085,7 +1072,7 @@ function App() {
                           console.error('Download error:', error);
                         }
                       }}
-                      className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold rounded-xl shadow-lg transition-all duration-200 hover:from-green-600 hover:to-green-700 hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 text-lg"
+                      className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-success-500 to-success-600 text-white font-semibold rounded-2xl shadow-lg shadow-success-500/25 transition-all duration-300 hover:from-success-600 hover:to-success-700 hover:-translate-y-1 hover:shadow-xl hover:shadow-success-500/30 focus:outline-none focus:ring-2 focus:ring-success-500 focus:ring-offset-2 text-lg"
                     >
                       <DownloadIcon className="w-5 h-5" />
                       Download File
@@ -1102,13 +1089,13 @@ function App() {
               initial={{ opacity: 0, x: 300 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 300 }}
-              className="fixed top-24 right-6 w-80 bg-white/95 border border-white/20 rounded-2xl p-6 shadow-xl z-40"
+              className="fixed top-24 right-6 w-80 card-premium rounded-3xl p-6 shadow-elegant z-40"
             >
               <div className="flex justify-between items-center mb-6">
-                <h3 className="text-lg font-bold text-gray-800">Quick Settings</h3>
+                <h3 className="text-lg font-bold text-neutral-800">Quick Settings</h3>
                 <button
                   onClick={() => setShowSettings(false)}
-                  className="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-all duration-200"
+                  className="w-8 h-8 flex items-center justify-center text-neutral-500 hover:text-neutral-700 hover:bg-neutral-100 rounded-lg transition-all duration-300"
                 >
                   <XMarkIcon className="w-5 h-5" />
                 </button>
@@ -1123,7 +1110,7 @@ function App() {
                     setCurrentStep(1);
                     setShowSettings(false);
                   }}
-                  className="w-full inline-flex items-center gap-2 px-4 py-3 bg-white text-gray-700 font-semibold rounded-lg border-2 border-gray-200 shadow-md transition-all duration-200 hover:border-red-500 hover:text-red-600 text-sm"
+                  className="w-full inline-flex items-center gap-2 px-4 py-3 bg-white/90 backdrop-blur-xl text-neutral-700 font-semibold rounded-xl border border-neutral-200 shadow-lg shadow-black/5 transition-all duration-300 hover:bg-white hover:border-error-500 hover:text-error-600 focus:outline-none focus:ring-2 focus:ring-error-500 focus:ring-offset-2 text-sm"
                 >
                   Reset All Selections
                 </button>
@@ -1133,7 +1120,7 @@ function App() {
                     setShowFirstAccessWizard(true);
                     setShowSettings(false);
                   }}
-                  className="w-full inline-flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-purple-500 to-purple-600 text-white font-semibold rounded-lg shadow-md transition-all duration-200 hover:from-purple-600 hover:to-purple-700 text-sm"
+                  className="w-full inline-flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-primary-500 to-primary-600 text-white font-semibold rounded-xl shadow-lg shadow-primary-500/25 transition-all duration-300 hover:from-primary-600 hover:to-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 text-sm"
                 >
                   <PlayIcon className="w-4 h-4" />
                   Take Tour

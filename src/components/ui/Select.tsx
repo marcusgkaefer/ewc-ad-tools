@@ -1,30 +1,34 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ChevronDownIcon, CheckIcon } from '@heroicons/react/24/outline';
+import type { KeyboardEvent } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ChevronDownIcon, CheckIcon } from '@heroicons/react/24/solid';
 
-interface SelectOption {
+export interface Option {
   value: string;
   label: string;
   disabled?: boolean;
 }
 
 interface SelectProps {
+  label: string;
   value: string;
   onChange: (value: string) => void;
-  options: SelectOption[];
+  options: Option[];
   placeholder?: string;
-  label?: string;
   disabled?: boolean;
   className?: string;
+  error?: string;
 }
 
 const Select: React.FC<SelectProps> = ({
+  label,
   value,
   onChange,
   options,
-  placeholder = "Select an option...",
-  label,
+  placeholder = 'Choose an option...',
   disabled = false,
-  className = ""
+  className = '',
+  error,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
@@ -47,44 +51,52 @@ const Select: React.FC<SelectProps> = ({
 
   useEffect(() => {
     if (isOpen && highlightedIndex >= 0 && optionsRef.current) {
-      const highlightedElement = optionsRef.current.children[highlightedIndex] as HTMLElement;
-      if (highlightedElement) {
-        highlightedElement.scrollIntoView({ block: 'nearest' });
+      const optionElements = optionsRef.current.children;
+      const highlightedOption = optionElements[highlightedIndex] as HTMLElement;
+      if (highlightedOption) {
+        highlightedOption.scrollIntoView({ block: 'nearest' });
       }
     }
   }, [highlightedIndex, isOpen]);
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (event: KeyboardEvent) => {
     if (disabled) return;
 
-    switch (e.key) {
+    switch (event.key) {
+      case 'Enter':
+      case ' ':
+        event.preventDefault();
+        if (isOpen && highlightedIndex >= 0) {
+          const selectedOption = options[highlightedIndex];
+          if (!selectedOption.disabled) {
+            onChange(selectedOption.value);
+            setIsOpen(false);
+            setHighlightedIndex(-1);
+          }
+        } else {
+          setIsOpen(!isOpen);
+        }
+        break;
       case 'ArrowDown':
-        e.preventDefault();
+        event.preventDefault();
         if (!isOpen) {
           setIsOpen(true);
         } else {
           setHighlightedIndex(prev => {
-            const nextIndex = prev < options.length - 1 ? prev + 1 : prev;
-            return options[nextIndex]?.disabled ? nextIndex : nextIndex;
+            const nextIndex = prev < options.length - 1 ? prev + 1 : 0;
+            return options[nextIndex].disabled ? nextIndex + 1 : nextIndex;
           });
         }
         break;
       case 'ArrowUp':
-        e.preventDefault();
-        if (isOpen) {
-          setHighlightedIndex(prev => {
-            const nextIndex = prev > 0 ? prev - 1 : prev;
-            return options[nextIndex]?.disabled ? nextIndex : nextIndex;
-          });
-        }
-        break;
-      case 'Enter':
-      case ' ':
-        e.preventDefault();
+        event.preventDefault();
         if (!isOpen) {
           setIsOpen(true);
-        } else if (highlightedIndex >= 0 && !options[highlightedIndex]?.disabled) {
-          handleOptionClick(options[highlightedIndex]);
+        } else {
+          setHighlightedIndex(prev => {
+            const nextIndex = prev > 0 ? prev - 1 : options.length - 1;
+            return options[nextIndex].disabled ? nextIndex - 1 : nextIndex;
+          });
         }
         break;
       case 'Escape':
@@ -94,7 +106,7 @@ const Select: React.FC<SelectProps> = ({
     }
   };
 
-  const handleOptionClick = (option: SelectOption) => {
+  const handleOptionClick = (option: Option) => {
     if (!option.disabled) {
       onChange(option.value);
       setIsOpen(false);
@@ -103,76 +115,94 @@ const Select: React.FC<SelectProps> = ({
   };
 
   return (
-    <div className={`space-y-2 ${className}`}>
+    <div className={`relative ${className}`} ref={selectRef}>
       {label && (
-        <label className="block font-semibold text-gray-700 mb-2 text-sm uppercase tracking-wide">
+        <label className="block font-semibold text-neutral-700 mb-3 text-sm uppercase tracking-wide">
           {label}
         </label>
       )}
-      <div
-        ref={selectRef}
-        className="relative w-full"
-      >
-        <div
-          className={`flex items-center justify-between px-4 py-3 transition-all duration-200 text-base min-h-[48px] rounded-lg border-2 cursor-pointer focus:outline-none ${
-            disabled 
-              ? 'bg-gray-50 border-gray-200 cursor-not-allowed opacity-60' 
-              : `bg-white border-gray-300 hover:border-gray-400 ${
-                  isOpen ? 'border-blue-500 shadow-lg' : ''
-                }`
-          }`}
+      
+      <div className="relative">
+        <button
+          type="button"
           onClick={() => !disabled && setIsOpen(!isOpen)}
           onKeyDown={handleKeyDown}
-          tabIndex={disabled ? -1 : 0}
+          disabled={disabled}
+          className={`w-full px-6 py-4 text-left border-2 rounded-2xl text-base bg-white/90 backdrop-blur-xl font-medium transition-all duration-300 focus:outline-none ${
+            disabled
+              ? 'bg-neutral-100 text-neutral-400 cursor-not-allowed border-neutral-200'
+              : error
+              ? 'border-error-500 focus:border-error-600 focus:ring-4 focus:ring-error-100'
+              : isOpen 
+              ? 'border-primary-500 shadow-lg' 
+              : 'border-neutral-200 hover:border-primary-300 hover:bg-white focus:border-primary-500 focus:ring-4 focus:ring-primary-100'
+          }`}
         >
-          <span className={`overflow-hidden text-ellipsis whitespace-nowrap ${
-            selectedOption ? 'text-gray-800 font-medium' : 'text-gray-500 font-normal'
-          }`}>
-            {selectedOption ? selectedOption.label : placeholder}
-          </span>
-          <ChevronDownIcon
-            className={`w-5 h-5 text-gray-500 flex-shrink-0 ml-2 transition-transform duration-200 ${
-              isOpen ? 'rotate-180' : 'rotate-0'
-            }`}
-          />
-        </div>
-
-        {isOpen && (
-          <div
-            ref={optionsRef}
-            className="absolute top-full left-0 right-0 z-50 mt-1 bg-white backdrop-blur-lg border-2 border-blue-500 rounded-lg shadow-2xl max-h-60 overflow-y-auto animate-dropdownSlide"
-          >
-            {options.map((option, index) => (
-              <div
-                key={option.value}
-                className={`flex items-center justify-between px-4 py-3 transition-all duration-150 border-b border-gray-100 last:border-b-0 ${
-                  option.disabled 
-                    ? 'cursor-not-allowed opacity-50' 
-                    : 'cursor-pointer'
-                } ${
-                  highlightedIndex === index ? 'bg-blue-50' :
-                  option.value === value ? 'bg-blue-100' : 'bg-transparent'
-                } ${
-                  !option.disabled ? 'hover:bg-blue-50' : ''
-                }`}
-                onClick={() => handleOptionClick(option)}
-                onMouseEnter={() => !option.disabled && setHighlightedIndex(index)}
-              >
-                <span className={`overflow-hidden text-ellipsis whitespace-nowrap ${
-                  option.disabled ? 'text-gray-400' : 'text-gray-800'
-                } ${
-                  option.value === value ? 'font-semibold' : 'font-normal'
-                }`}>
-                  {option.label}
-                </span>
-                {option.value === value && (
-                  <CheckIcon className="w-4 h-4 text-blue-600 flex-shrink-0" />
-                )}
-              </div>
-            ))}
+          <div className="flex items-center justify-between">
+            <span className={selectedOption ? 'text-neutral-800' : 'text-neutral-400'}>
+              {selectedOption ? selectedOption.label : placeholder}
+            </span>
+            <motion.div
+              animate={{ rotate: isOpen ? 180 : 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              <ChevronDownIcon className="w-5 h-5 text-neutral-500" />
+            </motion.div>
           </div>
-        )}
+        </button>
+
+        {/* Dropdown */}
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: -10, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -10, scale: 0.95 }}
+              transition={{ duration: 0.15 }}
+              className="absolute top-full left-0 right-0 z-50 mt-2 bg-white/95 backdrop-blur-xl border-2 border-primary-500 rounded-2xl shadow-elegant max-h-60 overflow-y-auto"
+              ref={optionsRef}
+            >
+              {options.map((option, index) => (
+                <button
+                  key={option.value}
+                  type="button"
+                  className={`w-full px-6 py-3 text-left text-base transition-all duration-200 first:rounded-t-2xl last:rounded-b-2xl border-none ${
+                    option.disabled
+                      ? 'text-neutral-300 cursor-not-allowed bg-neutral-50'
+                      : highlightedIndex === index
+                      ? 'bg-primary-50 text-primary-700'
+                      : option.value === value
+                      ? 'bg-primary-100 text-primary-800'
+                      : 'bg-transparent text-neutral-700 hover:bg-primary-50'
+                  } ${
+                    !option.disabled ? 'hover:bg-primary-50' : ''
+                  }`}
+                  onClick={() => handleOptionClick(option)}
+                  onMouseEnter={() => !option.disabled && setHighlightedIndex(index)}
+                  disabled={option.disabled}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="font-medium">{option.label}</span>
+                    {option.value === value && (
+                      <CheckIcon className="w-4 h-4 text-primary-600 flex-shrink-0" />
+                    )}
+                  </div>
+                </button>
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
+
+      {error && (
+        <motion.p
+          initial={{ opacity: 0, y: -5 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mt-2 text-sm text-error-600"
+        >
+          {error}
+        </motion.p>
+      )}
     </div>
   );
 };

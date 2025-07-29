@@ -51,14 +51,212 @@ export const convertToLocationSummary = (location: Location): LocationSummary =>
 };
 
 class SupabaseLocationService {
+  private ewcCentersCache: Location[] | null = null;
+  private ewcCentersLoading: Promise<Location[]> | null = null;
+
+  // Check if we should use EWC centers JSON file
+  private shouldUseEwcCentersJson(): boolean {
+    const envValue = import.meta.env.VITE_USE_EWC_CENTERS_JSON;
+    const shouldUse = envValue === 'true';
+    console.log('🔍 Environment check:', {
+      envValue,
+      shouldUse,
+      allEnvVars: import.meta.env
+    });
+    return shouldUse;
+  }
+
+  // Load EWC centers from JSON file with caching
+  private async loadEwcCenters(): Promise<Location[]> {
+    // Return cached data if available
+    if (this.ewcCentersCache) {
+      return this.ewcCentersCache;
+    }
+
+    // Return existing loading promise if already loading
+    if (this.ewcCentersLoading) {
+      return this.ewcCentersLoading;
+    }
+
+    // Start loading
+    this.ewcCentersLoading = (async () => {
+      try {
+        console.log('🏢 Loading EWC centers from JSON file...');
+        const response = await fetch('/artemis_wax_group.json');
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json() as { centers: Location[] };
+        console.log('🏢 Loaded EWC centers from JSON:', data.centers?.length || 0);
+        
+        if (!data.centers || !Array.isArray(data.centers)) {
+          throw new Error('Invalid JSON structure: centers array not found');
+        }
+
+        // Cache the result
+        this.ewcCentersCache = data.centers;
+        return this.ewcCentersCache;
+      } catch (error) {
+        console.error('❌ Failed to load EWC centers from JSON:', error);
+        // Reset loading promise to allow retry
+        this.ewcCentersLoading = null;
+        throw error;
+      }
+    })();
+
+    return this.ewcCentersLoading;
+  }
+
+  // Get locations from EWC centers JSON file
+  private async getEwcCentersLocations(): Promise<LocationSummary[]> {
+    try {
+      const locations = await this.loadEwcCenters();
+      return locations
+        .filter((location: Location) => location.code !== 'CORP') // Filter out corporate location
+        .map(convertToLocationSummary)
+        .sort((a: LocationSummary, b: LocationSummary) => a.name.localeCompare(b.name));
+    } catch (error) {
+      console.error('Error loading EWC centers from JSON:', error);
+      return [];
+    }
+  }
+
+  // Get a location by ID from EWC centers JSON file
+  private async getEwcCenterById(id: string): Promise<Location | null> {
+    try {
+      const locations = await this.loadEwcCenters();
+      return locations.find((location: Location) => location.id === id) || null;
+    } catch (error) {
+      console.error('Error finding EWC center by ID:', error);
+      return null;
+    }
+  }
+
+  // Search locations in EWC centers JSON file
+  private async searchEwcCenters(filters: LocationFilters): Promise<LocationSummary[]> {
+    try {
+      let locations = await this.loadEwcCenters();
+      
+      // Filter out corporate location
+      locations = locations.filter((location: Location) => location.code !== 'CORP');
+
+      // Apply search filter
+      if (filters.search) {
+        const searchTerm = filters.search.toLowerCase();
+        locations = locations.filter((location: Location) => 
+          location.name?.toLowerCase().includes(searchTerm) ||
+          location.display_name?.toLowerCase().includes(searchTerm) ||
+          location.address_info?.city?.toLowerCase().includes(searchTerm)
+        );
+      }
+
+      // Apply state filter
+      if (filters.states && filters.states.length > 0) {
+        locations = locations.filter((location: Location) => 
+          filters.states!.includes(location.state?.short_name || '')
+        );
+      }
+
+      // Apply city filter
+      if (filters.cities && filters.cities.length > 0) {
+        locations = locations.filter((location: Location) => 
+          filters.cities!.includes(location.address_info?.city || '')
+        );
+      }
+
+      // Apply zip code filter
+      if (filters.zipCodes && filters.zipCodes.length > 0) {
+        locations = locations.filter((location: Location) => 
+          filters.zipCodes!.includes(location.address_info?.zip_code || '')
+        );
+      }
+
+      return locations
+        .map(convertToLocationSummary)
+        .sort((a: LocationSummary, b: LocationSummary) => a.name.localeCompare(b.name));
+    } catch (error) {
+      console.error('Error searching EWC centers:', error);
+      return [];
+    }
+  }
+
+  // Get locations by state from EWC centers JSON file
+  private async getEwcCentersByState(state: string): Promise<LocationSummary[]> {
+    try {
+      const locations = await this.loadEwcCenters();
+      return locations
+        .filter((location: Location) => 
+          location.code !== 'CORP' && 
+          location.state?.short_name === state
+        )
+        .map(convertToLocationSummary)
+        .sort((a: LocationSummary, b: LocationSummary) => a.name.localeCompare(b.name));
+    } catch (error) {
+      console.error('Error getting EWC centers by state:', error);
+      return [];
+    }
+  }
+
+  // Get unique states from EWC centers JSON file
+  private async getEwcCentersUniqueStates(): Promise<string[]> {
+    try {
+      const locations = await this.loadEwcCenters();
+      const states = [...new Set(
+        locations
+          .filter((location: Location) => location.code !== 'CORP')
+          .map((location: Location) => location.state?.short_name)
+          .filter(Boolean)
+      )] as string[];
+      return states.sort();
+    } catch (error) {
+      console.error('Error getting unique states from EWC centers:', error);
+      return [];
+    }
+  }
+
+  // Get unique cities from EWC centers JSON file
+  private async getEwcCentersUniqueCities(state?: string): Promise<string[]> {
+    try {
+      let locations = await this.loadEwcCenters();
+      
+      // Filter out corporate location
+      locations = locations.filter((location: Location) => location.code !== 'CORP');
+
+      // Filter by state if provided
+      if (state) {
+        locations = locations.filter((location: Location) => 
+          location.state?.short_name === state
+        );
+      }
+
+      const cities = [...new Set(
+        locations
+          .map((location: Location) => location.address_info?.city)
+          .filter(Boolean)
+      )] as string[];
+      return cities.sort();
+    } catch (error) {
+      console.error('Error getting unique cities from EWC centers:', error);
+      return [];
+    }
+  }
+
   // Location management
   async getAllLocations(): Promise<LocationSummary[]> {
+    if (this.shouldUseEwcCentersJson()) {
+      console.log('🏢 Using EWC centers from JSON file');
+      return await this.getEwcCentersLocations();
+    }
+
     try {
       const { data, error } = await supabase
         .from('locations')
         .select('*')
         .neq('code', 'CORP') // Filter out corporate location
-        .order('name');
+        .order('name')
+        .limit(10000); // Override default 1000 row limit
 
       if (error) {
         console.error('Error fetching locations:', error);
@@ -73,6 +271,10 @@ class SupabaseLocationService {
   }
 
   async getLocationById(id: string): Promise<Location | null> {
+    if (this.shouldUseEwcCentersJson()) {
+      return await this.getEwcCenterById(id);
+    }
+
     try {
       const { data, error } = await supabase
         .from('locations')
@@ -96,6 +298,10 @@ class SupabaseLocationService {
   }
 
   async searchLocations(filters: LocationFilters): Promise<LocationSummary[]> {
+    if (this.shouldUseEwcCentersJson()) {
+      return await this.searchEwcCenters(filters);
+    }
+
     try {
       let query = supabase
         .from('locations')
@@ -123,7 +329,7 @@ class SupabaseLocationService {
         query = query.in('address_info->>zip_code', filters.zipCodes);
       }
 
-      const { data, error } = await query.order('name');
+      const { data, error } = await query.order('name').limit(10000); // Override default 1000 row limit
 
       if (error) {
         console.error('Error searching locations:', error);
@@ -138,13 +344,18 @@ class SupabaseLocationService {
   }
 
   async getLocationsByState(state: string): Promise<LocationSummary[]> {
+    if (this.shouldUseEwcCentersJson()) {
+      return await this.getEwcCentersByState(state);
+    }
+
     try {
       const { data, error } = await supabase
         .from('locations')
         .select('*')
         .eq('state->>short_name', state)
         .neq('code', 'CORP')
-        .order('name');
+        .order('name')
+        .limit(10000); // Override default 1000 row limit
 
       if (error) {
         console.error('Error fetching locations by state:', error);
@@ -159,11 +370,16 @@ class SupabaseLocationService {
   }
 
   async getUniqueStates(): Promise<string[]> {
+    if (this.shouldUseEwcCentersJson()) {
+      return await this.getEwcCentersUniqueStates();
+    }
+
     try {
       const { data, error } = await supabase
         .from('locations')
         .select('state')
-        .neq('code', 'CORP');
+        .neq('code', 'CORP')
+        .limit(10000); // Override default 1000 row limit
 
       if (error) {
         console.error('Error fetching unique states:', error);
@@ -179,6 +395,10 @@ class SupabaseLocationService {
   }
 
   async getUniqueCities(state?: string): Promise<string[]> {
+    if (this.shouldUseEwcCentersJson()) {
+      return await this.getEwcCentersUniqueCities(state);
+    }
+
     try {
       let query = supabase
         .from('locations')
@@ -189,7 +409,7 @@ class SupabaseLocationService {
         query = query.eq('state->>short_name', state);
       }
 
-      const { data, error } = await query;
+      const { data, error } = await query.limit(10000); // Override default 1000 row limit
 
       if (error) {
         console.error('Error fetching unique cities:', error);
@@ -334,10 +554,10 @@ class SupabaseLocationService {
 
   async getLocationsWithConfigs(userId?: string): Promise<LocationWithConfig[]> {
     try {
-      // Get all locations
+      // Get all locations (from JSON or database based on environment variable)
       const locations = await this.getAllLocations();
 
-      // Get all configs for the user
+      // Get all configs for the user (always from database)
       let configQuery = supabase
         .from('location_configs')
         .select('*');
@@ -348,7 +568,7 @@ class SupabaseLocationService {
         configQuery = configQuery.is('user_id', null);
       }
 
-      const { data: configs, error: configError } = await configQuery;
+      const { data: configs, error: configError } = await configQuery.limit(10000); // Override default 1000 row limit
 
       if (configError) {
         console.error('Error fetching location configs:', configError);

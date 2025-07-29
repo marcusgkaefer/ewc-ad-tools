@@ -1,77 +1,92 @@
-# Campaign Creator Studio - Design System
+# Campaign Creator Studio - Professional Design System
 
 ## Overview
 
-The Campaign Creator Studio Design System is built to deliver an award-winning user experience that combines cutting-edge aesthetics with intuitive functionality. This design system focuses on creating campaigns through a delightful, interactive workflow that guides users seamlessly from concept to completion.
+The Campaign Creator Studio Design System delivers a sophisticated, professional user experience inspired by European Wax Center's elegant branding. This design system combines refined aesthetics with intuitive functionality, creating campaigns through a delightful, premium workflow that guides users seamlessly from concept to completion.
 
 ## Design Philosophy
 
 ### Core Principles
 
-1. **Intuitive Elegance**: Every interface element should be both beautiful and purposeful
-2. **Contextual Guidance**: Users should never feel lost or confused about next steps
-3. **Responsive Excellence**: The experience should be flawless across all devices and screen sizes
-4. **Performance-First**: Smooth animations and fast loading times are non-negotiable
+1. **Professional Elegance**: Every interface element should exude sophistication and purpose
+2. **Contextual Guidance**: Users should feel confident and informed at every step
+3. **Responsive Excellence**: Flawless experience across all devices and screen sizes
+4. **Performance-First**: Smooth animations and instant loading times
 5. **Accessibility**: Inclusive design that works for everyone
+6. **Brand Cohesion**: Consistent with premium service industry standards
 
 ### Visual Language
 
-- **Modern Glassmorphism**: Clean, transparent surfaces with subtle depth
-- **Dynamic Gradients**: Animated backgrounds that create visual interest
-- **Micro-interactions**: Delightful animations that provide feedback
-- **Progressive Disclosure**: Information revealed when needed, not all at once
-- **Smart Spacing**: Consistent rhythm and breathing room throughout
+- **Refined Glassmorphism**: Subtle transparency with sophisticated depth and premium materials
+- **Sophisticated Gradients**: Elegant transitions that enhance without overwhelming
+- **Purposeful Micro-interactions**: Smooth animations that provide premium feedback
+- **Progressive Disclosure**: Information revealed elegantly when needed
+- **Premium Spacing**: Generous whitespace that breathes luxury
 
 ## Color Palette
 
-### Primary Colors (Blue Scale)
+### Primary Colors (EWC-Inspired Burgundy/Wine)
 ```tailwind
-bg-blue-50        /* Light blue backgrounds */
-bg-blue-100       /* Subtle highlights */
-bg-blue-200       /* Soft accents */
-bg-blue-300       /* Interactive elements */
-bg-blue-400       /* Hover states */
-bg-blue-500       /* Main brand color */
-bg-blue-600       /* Active states */
-bg-blue-700       /* Text on light backgrounds */
-bg-blue-800       /* Dark mode elements */
-bg-blue-900       /* High contrast text */
+bg-primary-50        /* Light wine/rose backgrounds */
+bg-primary-100       /* Subtle burgundy highlights */
+bg-primary-200       /* Soft wine accents */
+bg-primary-300       /* Interactive elements */
+bg-primary-400       /* Hover states */
+bg-primary-500       /* Main brand color - Deep burgundy */
+bg-primary-600       /* Active states */
+bg-primary-700       /* Text on light backgrounds */
+bg-primary-800       /* Dark mode elements */
+bg-primary-900       /* High contrast text */
 ```
 
-### Secondary Colors (Purple Scale)
+### Secondary Colors (Elegant Gray Scale)
 ```tailwind
-bg-purple-50      /* Light purple backgrounds */
-bg-purple-100     /* Subtle highlights */
-bg-purple-200     /* Soft accents */
-bg-purple-300     /* Interactive elements */
-bg-purple-400     /* Hover states */
-bg-purple-500     /* Accent brand color */
-bg-purple-600     /* Active states */
-bg-purple-700     /* Text on light backgrounds */
-bg-purple-800     /* Dark mode elements */
-bg-purple-900     /* High contrast text */
+bg-secondary-50      /* Pure white backgrounds */
+bg-secondary-100     /* Soft pearl highlights */
+bg-secondary-200     /* Subtle gray accents */
+bg-secondary-300     /* Interactive elements */
+bg-secondary-400     /* Hover states */
+bg-secondary-500     /* Mid-tone gray */
+bg-secondary-600     /* Active states */
+bg-secondary-700     /* Professional text */
+bg-secondary-800     /* Dark elements */
+bg-secondary-900     /* High contrast text */
+```
+
+### Accent Colors (Professional Support)
+```tailwind
+bg-accent-50         /* Light champagne backgrounds */
+bg-accent-100        /* Gold highlights */
+bg-accent-200        /* Warm accents */
+bg-accent-300        /* Interactive warmth */
+bg-accent-400        /* Hover warmth */
+bg-accent-500        /* Warm gold accent */
+bg-accent-600        /* Active warmth */
+bg-accent-700        /* Text on light backgrounds */
+bg-accent-800        /* Dark mode accents */
+bg-accent-900        /* High contrast accent */
 ```
 
 ### Semantic Colors
 ```tailwind
-bg-green-500      /* Success states */
-bg-yellow-500     /* Warning states */
-bg-red-500        /* Error states */
-bg-blue-500       /* Information states */
+bg-success-500       /* Success states - Refined green */
+bg-warning-500       /* Warning states - Elegant amber */
+bg-error-500         /* Error states - Sophisticated red */
+bg-info-500          /* Information states - Professional blue */
 ```
 
-### Neutral Colors
+### Professional Neutrals
 ```tailwind
-bg-gray-50        /* Page backgrounds */
-bg-gray-100       /* Card backgrounds */
-bg-gray-200       /* Borders */
-bg-gray-300       /* Disabled states */
-bg-gray-400       /* Placeholder text */
-bg-gray-500       /* Secondary text */
-bg-gray-600       /* Primary text */
-bg-gray-700       /* Headings */
-bg-gray-800       /* High contrast text */
-bg-gray-900       /* Maximum contrast */
+bg-neutral-50        /* Page backgrounds - Pure white */
+bg-neutral-100       /* Card backgrounds - Off white */
+bg-neutral-200       /* Subtle borders */
+bg-neutral-300       /* Disabled states */
+bg-neutral-400       /* Placeholder text */
+bg-neutral-500       /* Secondary text */
+bg-neutral-600       /* Primary text */
+bg-neutral-700       /* Headings */
+bg-neutral-800       /* High contrast text */
+bg-neutral-900       /* Maximum contrast */
 ```
 
 ## Typography
@@ -490,6 +505,74 @@ Live dashboard metrics with Tailwind styling:
     <div className="text-white/80 font-medium text-sm uppercase tracking-wider">Locations</div>
   </div>
 </div>
+```
+
+## Enhanced Professional Components
+
+### Refined Glassmorphism Cards
+```tailwind
+<div className="bg-white/90 backdrop-blur-2xl border border-white/30 rounded-3xl p-8 shadow-2xl shadow-black/5 transition-all duration-300 hover:shadow-3xl hover:bg-white/95">
+```
+
+### Professional Gradient Backgrounds
+```tailwind
+/* Main background - Sophisticated wine gradient */
+bg-gradient-to-br from-primary-50 via-white to-accent-50
+
+/* Premium overlays */
+bg-gradient-to-r from-primary-500/90 to-primary-600/90
+```
+
+### Elevated Button System
+
+#### Primary Button (EWC Style)
+```tailwind
+<button className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-primary-500 to-primary-600 text-white font-semibold rounded-2xl shadow-lg shadow-primary-500/25 transition-all duration-300 hover:from-primary-600 hover:to-primary-700 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary-500/30 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
+```
+
+#### Secondary Button (Professional)
+```tailwind
+<button className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white/90 backdrop-blur-xl text-primary-700 font-semibold rounded-xl border border-primary-200 shadow-lg shadow-black/5 transition-all duration-300 hover:bg-white hover:border-primary-300 hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
+```
+
+### Premium Form Elements
+
+#### Professional Input Fields
+```tailwind
+<input className="w-full px-6 py-4 border-2 border-neutral-200 rounded-2xl text-base bg-white/90 backdrop-blur-xl transition-all duration-300 focus:border-primary-500 focus:ring-4 focus:ring-primary-100 focus:-translate-y-0.5 focus:outline-none hover:bg-white">
+```
+
+#### Elegant Labels
+```tailwind
+<label className="block font-semibold text-neutral-700 mb-3 text-sm uppercase tracking-wide">
+```
+
+## Professional Animation System
+
+### Sophisticated Micro-interactions
+All interactive elements include refined animations:
+
+```tailwind
+/* Premium hover effects */
+hover:-translate-y-1 hover:shadow-xl hover:shadow-primary-500/20
+
+/* Professional focus states */
+focus:ring-4 focus:ring-primary-100 focus:border-primary-500
+
+/* Elegant loading states */
+animate-pulse-slow
+
+/* Smooth state changes */
+transition-all duration-300 ease-out
+```
+
+### Professional Animation Classes
+```tailwind
+animate-fade-in-elegant    /* Smooth fade in */
+animate-slide-up-premium   /* Elegant slide up */
+animate-scale-in-smooth    /* Refined scale in */
+animate-glow-gentle        /* Subtle glow effect */
+animate-float-soft         /* Gentle floating */
 ```
 
 This design system ensures consistency, maintainability, and an award-winning user experience across the entire Campaign Creator Studio application using Tailwind CSS. 

@@ -19,11 +19,18 @@
   }
   
   body {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #667eea 100%);
+    /* Professional EWC-inspired gradient background */
+    background: linear-gradient(135deg, 
+      #fdf2f2 0%,     /* Light wine/rose */
+      #ffffff 25%,    /* Pure white */
+      #fffbeb 50%,    /* Light champagne */
+      #ffffff 75%,    /* Pure white */
+      #fce7e7 100%    /* Subtle burgundy */
+    );
     background-size: 400% 400%;
-    animation: gradientShift 15s ease infinite;
+    animation: gradientShift 20s ease infinite;
     min-height: 100vh;
-    color: #1f2937;
+    color: #334155;  /* Professional text color */
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -31,7 +38,9 @@
   
   @keyframes gradientShift {
     0%, 100% { background-position: 0% 50%; }
+    25% { background-position: 25% 50%; }
     50% { background-position: 100% 50%; }
+    75% { background-position: 75% 50%; }
   }
 }
 
@@ -41,11 +50,66 @@
   }
   
   .animate-gradient-shift {
-    animation: gradientShift 15s ease infinite;
+    animation: gradientShift 20s ease infinite;
   }
   
   .animate-scale-in {
     animation: scaleIn 0.3s ease-out;
+  }
+  
+  .animate-fade-in-elegant {
+    animation: fadeInElegant 0.8s ease-out;
+  }
+  
+  .animate-slide-up-premium {
+    animation: slideUpPremium 0.8s ease-out;
+  }
+  
+  .animate-scale-in-smooth {
+    animation: scaleInSmooth 0.6s ease-out;
+  }
+  
+  .animate-glow-gentle {
+    animation: glowGentle 3s ease-in-out infinite;
+  }
+  
+  .animate-float-soft {
+    animation: floatSoft 6s ease-in-out infinite;
+  }
+  
+  /* Professional glassmorphism utility */
+  .glass-professional {
+    background: rgba(255, 255, 255, 0.90);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.30);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+  }
+  
+  /* Premium card style */
+  .card-premium {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.20);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.08);
+  }
+  
+  /* Professional button gradient */
+  .btn-primary-professional {
+    background: linear-gradient(135deg, #8B0000 0%, #7a0000 100%);
+    box-shadow: 0 8px 25px rgba(139, 0, 0, 0.25);
+  }
+  
+  .btn-primary-professional:hover {
+    background: linear-gradient(135deg, #7a0000 0%, #6b0000 100%);
+    box-shadow: 0 12px 35px rgba(139, 0, 0, 0.30);
+  }
+  
+  /* Elegant text gradient */
+  .text-gradient-professional {
+    background: linear-gradient(135deg, #8B0000 0%, #d4af37 50%, #8B0000 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
   
   @keyframes scaleIn {
@@ -58,6 +122,86 @@
       transform: scale(1) translateY(0);
     }
   }
+  
+  @keyframes fadeInElegant {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes slideUpPremium {
+    0% {
+      opacity: 0;
+      transform: translateY(40px) scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  
+  @keyframes scaleInSmooth {
+    0% {
+      opacity: 0;
+      transform: scale(0.85) translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+  
+  @keyframes glowGentle {
+    0%, 100% {
+      box-shadow: 0 0 20px rgba(139, 0, 0, 0.1);
+    }
+    50% {
+      box-shadow: 0 0 40px rgba(139, 0, 0, 0.2);
+    }
+  }
+  
+  @keyframes floatSoft {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
 }
 
-/* Clean minimal styles - everything else handled by Tailwind */
+/* Professional minimal styles with enhanced accessibility */
+::selection {
+  background-color: rgba(139, 0, 0, 0.2);
+  color: #334155;
+}
+
+/* Smooth focus transitions */
+*:focus {
+  transition: all 0.3s ease-out;
+}
+
+/* Enhanced scrollbar styling for webkit browsers */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(139, 0, 0, 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 0, 0, 0.5);
+}
