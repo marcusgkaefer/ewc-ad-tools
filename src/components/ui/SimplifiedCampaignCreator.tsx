@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ChevronDownIcon,
@@ -154,7 +154,10 @@ const LocationItem: React.FC<LocationItemProps> = ({
   onConfigure
 }) => {
   return (
-    <div className="flex items-center justify-between py-3 px-4 border-b border-wax-gray-100 transition-all duration-200 hover:bg-wax-gray-50">
+    <div 
+      className="flex items-center justify-between py-3 px-4 border-b border-wax-gray-100 transition-all duration-200 hover:bg-wax-gray-50 cursor-pointer"
+      onDoubleClick={onConfigure}
+    >
       <div className="flex items-center gap-3 flex-1">
         <div
           className={`w-5 h-5 rounded border-2 transition-all duration-200 flex items-center justify-center cursor-pointer ${
@@ -280,6 +283,7 @@ const SimplifiedCampaignCreator: React.FC = () => {
   
   const [generatedFiles, setGeneratedFiles] = useState<GeneratedFile[]>([]);
   const [showFilesList, setShowFilesList] = useState(false);
+  const generatedFilesRef = useRef<HTMLDivElement>(null);
 
   // Load locations
   useEffect(() => {
@@ -526,6 +530,7 @@ const SimplifiedCampaignCreator: React.FC = () => {
             className="bg-white rounded-2xl shadow-wax-sm border border-wax-gray-200"
           >
             <div className="px-6 py-4 border-b border-wax-gray-100 flex items-center justify-between">
+              {/* Location Selection Header */}
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 bg-wax-red-100 rounded-lg flex items-center justify-center">
                   <MapPinIcon className="w-4 h-4 text-wax-red-600" />
@@ -535,11 +540,8 @@ const SimplifiedCampaignCreator: React.FC = () => {
                   <p className="text-sm text-wax-gray-500">{selectedLocations.length} of {locations.length} selected</p>
                 </div>
               </div>
+
               <div className="flex items-center gap-3">
-                {selectedLocations.length > 0 && (
-                  <CheckCircleIcon className="w-5 h-5 text-green-500" />
-                )}
-                <div className="flex items-center gap-3">
                                       <button
                       onClick={() => {
                         setPreviewGeneratedFile(null); // Ensure we're not in file preview mode
@@ -567,7 +569,19 @@ const SimplifiedCampaignCreator: React.FC = () => {
                    </button>
                    {generatedFiles.length > 0 && (
                      <button
-                       onClick={() => setShowFilesList(!showFilesList)}
+                       onClick={() => {
+                         const newShowFilesList = !showFilesList;
+                         setShowFilesList(newShowFilesList);
+                         // Smooth scroll to generated files section when showing
+                         if (newShowFilesList) {
+                           setTimeout(() => {
+                             generatedFilesRef.current?.scrollIntoView({ 
+                               behavior: 'smooth', 
+                               block: 'start' 
+                             });
+                           }, 100); // Small delay to ensure the element is rendered
+                         }
+                       }}
                        className="inline-flex items-center gap-2 px-4 py-2 text-wax-gray-600 font-medium rounded-lg transition-all duration-200 hover:text-blue-600 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                      >
                        <DocumentArrowDownIcon className="w-4 h-4" />
@@ -586,11 +600,10 @@ const SimplifiedCampaignCreator: React.FC = () => {
                     )}
                     Export
                   </button>
-                </div>
               </div>
             </div>
             <div className="px-6 py-6">
-              {/* Search and Bulk Actions */}
+              {/* Search and Filters */}
               <div className="space-y-4 mb-6">
                 <div className="relative">
                   <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-wax-gray-400" />
@@ -603,55 +616,57 @@ const SimplifiedCampaignCreator: React.FC = () => {
                   />
                 </div>
 
-                {/* Configuration Filter */}
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => setConfigFilter('all')}
-                    className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 ${
-                      configFilter === 'all'
-                        ? 'bg-wax-red-600 text-white'
-                        : 'bg-white text-wax-gray-600 border-2 border-wax-gray-200 hover:border-wax-red-300'
-                    }`}
-                  >
-                    All
-                  </button>
-                  <button
-                    onClick={() => setConfigFilter('configured')}
-                    className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 ${
-                      configFilter === 'configured'
-                        ? 'bg-wax-red-600 text-white'
-                        : 'bg-white text-wax-gray-600 border-2 border-wax-gray-200 hover:border-wax-red-300'
-                    }`}
-                  >
-                    Configured
-                  </button>
-                  <button
-                    onClick={() => setConfigFilter('not-configured')}
-                    className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 ${
-                      configFilter === 'not-configured'
-                        ? 'bg-wax-red-600 text-white'
-                        : 'bg-white text-wax-gray-600 border-2 border-wax-gray-200 hover:border-wax-red-300'
-                    }`}
-                  >
-                    Not Configured
-                  </button>
-                </div>
+                {/* Filters and Actions */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center bg-wax-gray-100 rounded-xl p-1">
+                    <button
+                      onClick={() => setConfigFilter('all')}
+                      className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
+                        configFilter === 'all'
+                          ? 'bg-white text-wax-red-600 shadow-sm'
+                          : 'text-wax-gray-600 hover:text-wax-gray-800'
+                      }`}
+                    >
+                      All
+                    </button>
+                    <button
+                      onClick={() => setConfigFilter('configured')}
+                      className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
+                        configFilter === 'configured'
+                          ? 'bg-white text-wax-red-600 shadow-sm'
+                          : 'text-wax-gray-600 hover:text-wax-gray-800'
+                      }`}
+                    >
+                      Configured
+                    </button>
+                    <button
+                      onClick={() => setConfigFilter('not-configured')}
+                      className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
+                        configFilter === 'not-configured'
+                          ? 'bg-white text-wax-red-600 shadow-sm'
+                          : 'text-wax-gray-600 hover:text-wax-gray-800'
+                      }`}
+                    >
+                      Not Configured
+                    </button>
+                  </div>
 
-                <div className="flex gap-3">
-                  <button
-                    onClick={selectAllLocations}
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-white text-wax-gray-700 font-medium rounded-lg border-2 border-wax-gray-200 shadow-wax-sm transition-all duration-200 hover:border-wax-red-300 hover:text-wax-red-600 focus:outline-none focus:ring-2 focus:ring-wax-red-500 focus:ring-offset-2 text-sm"
-                  >
-                    <CheckCircleIcon className="w-4 h-4" />
-                    Select All
-                  </button>
-                  <button
-                    onClick={clearAllSelections}
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-white text-wax-gray-700 font-medium rounded-lg border-2 border-wax-gray-200 shadow-wax-sm transition-all duration-200 hover:border-wax-red-300 hover:text-wax-red-600 focus:outline-none focus:ring-2 focus:ring-wax-red-500 focus:ring-offset-2 text-sm"
-                  >
-                    <XCircleIcon className="w-4 h-4" />
-                    Clear All
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={selectAllLocations}
+                      className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-wax-gray-600 rounded-lg transition-all duration-200 hover:text-wax-red-600 focus:outline-none focus:ring-2 focus:ring-wax-red-500 focus:ring-offset-2"
+                    >
+                      <CheckCircleIcon className="w-4 h-4" />
+                      Select All
+                    </button>
+                    <button
+                      onClick={clearAllSelections}
+                      className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-wax-gray-600 rounded-lg transition-all duration-200 hover:text-wax-red-600 focus:outline-none focus:ring-2 focus:ring-wax-red-500 focus:ring-offset-2"
+                    >
+                      <XCircleIcon className="w-4 h-4" />
+                      Clear All
+                    </button>
+                  </div>
                 </div>
               </div>
 
@@ -701,6 +716,7 @@ const SimplifiedCampaignCreator: React.FC = () => {
            {/* Generated Files List */}
            {showFilesList && generatedFiles.length > 0 && (
              <motion.div
+               ref={generatedFilesRef}
                initial={{ opacity: 0, y: 20 }}
                animate={{ opacity: 1, y: 0 }}
                transition={{ duration: 0.3 }}

@@ -107,6 +107,12 @@ function App() {
           mockApi.getTemplates()
         ]);
 
+        console.log('App.tsx - Initial locations loaded:', locationsResponse.map(l => ({ 
+          id: l.id, 
+          name: l.name, 
+          hasConfig: !!l.config,
+          config: l.config 
+        })));
         setLocations(locationsResponse);
         setSelectedLocationIds(locationsResponse.map((loc: LocationWithConfig) => loc.id));
 
@@ -352,7 +358,7 @@ function App() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-accent-50 bg-size-[400%_400%] animate-gradient-shift flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-primary-200/20 bg-size-[400%_400%] animate-gradient-shift flex items-center justify-center">
         <motion.div
           className="card-premium rounded-3xl p-10 shadow-elegant max-w-sm mx-auto text-center"
           initial={{ scale: 0.8, opacity: 0 }}
@@ -376,7 +382,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-accent-50 bg-size-[400%_400%] animate-gradient-shift">
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-primary-200/20 bg-size-[400%_400%] animate-gradient-shift">
       <div className="flex-1 p-6 relative z-10 pt-24">
         <motion.div
           variants={containerVariants}
@@ -1182,10 +1188,41 @@ function App() {
           }}
           location={selectedLocationToConfigure}
           onSave={(updatedConfig: LocationConfig) => {
+            console.log('App.tsx - Saving location config:', updatedConfig);
+            console.log('App.tsx - Current locations before update:', locations.map(l => ({ id: l.id, name: l.name, hasConfig: !!l.config })));
+            
             // Update the location in the locations array
-            setLocations(prev => prev.map(loc => 
-              loc.id === updatedConfig.locationId ? { ...loc, config: updatedConfig } : loc
-            ));
+            setLocations(prev => {
+              console.log('App.tsx - Looking for location ID:', updatedConfig.locationId);
+              console.log('App.tsx - Available location IDs:', prev.map(l => l.id));
+              
+              const updated = prev.map(loc => {
+                if (loc.id === updatedConfig.locationId) {
+                  console.log('App.tsx - MATCH! Updating location:', loc.name, 'with config:', updatedConfig);
+                  return { ...loc, config: updatedConfig };
+                } else {
+                  return loc;
+                }
+              });
+              
+              const updatedLocation = updated.find(l => l.id === updatedConfig.locationId);
+              console.log('App.tsx - Final updated location:', updatedLocation);
+              
+              // Fallback: if no location was updated, try to find by selectedLocationToConfigure
+              if (!updatedLocation && selectedLocationToConfigure) {
+                console.log('App.tsx - No direct match found, trying fallback with selectedLocationToConfigure:', selectedLocationToConfigure.id);
+                return prev.map(loc => {
+                  if (loc.id === selectedLocationToConfigure.id) {
+                    console.log('App.tsx - FALLBACK MATCH! Updating location:', loc.name);
+                    return { ...loc, config: updatedConfig };
+                  } else {
+                    return loc;
+                  }
+                });
+              }
+              
+              return updated;
+            });
             setShowLocationConfigModal(false);
             setSelectedLocationToConfigure(null);
           }}

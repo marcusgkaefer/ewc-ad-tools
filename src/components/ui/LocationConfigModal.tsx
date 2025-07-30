@@ -30,6 +30,14 @@ const LocationConfigModal: React.FC<LocationConfigModalProps> = ({
 
   // Load config when location changes
   useEffect(() => {
+    console.log('LocationConfigModal - Location changed:', {
+      location,
+      hasLocation: !!location,
+      locationId: location?.id,
+      hasConfig: !!location?.config,
+      config: location?.config
+    });
+    
     if (location?.config) {
       setConfig({
         budget: location.config.budget || 100,
@@ -67,28 +75,27 @@ const LocationConfigModal: React.FC<LocationConfigModalProps> = ({
       // Save to Supabase
       if (location.config) {
         // Update existing config
-        await supabaseLocationService.updateLocationConfig(location.id, {
+        updatedConfig = await supabaseLocationService.updateLocationConfig(location.id, {
           budget: config.budget,
           radiusMiles: config.radius,
           isActive: true
         });
-        updatedConfig = {
-          ...location.config,
-          budget: config.budget,
-          radiusMiles: config.radius,
-          isActive: true
-        };
       } else {
         // Create new config
-        const newConfig = await supabaseLocationService.createLocationConfig({
+        updatedConfig = await supabaseLocationService.createLocationConfig({
           locationId: location.id,
           budget: config.budget,
           radiusMiles: config.radius
         });
-        updatedConfig = newConfig;
       }
 
       // Call parent callback with updated config
+      console.log('LocationConfigModal - About to save config:', {
+        locationId: location.id,
+        updatedConfig,
+        hasConfig: !!updatedConfig,
+        configLocationId: updatedConfig?.locationId
+      });
       onSave(updatedConfig);
       onClose();
     } catch (err) {
@@ -102,8 +109,19 @@ const LocationConfigModal: React.FC<LocationConfigModalProps> = ({
   if (!isOpen || !location) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-2xl shadow-wax-2xl max-w-lg w-full overflow-hidden">
+    <div 
+      className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+      onClick={(e) => {
+        // Close modal when clicking on overlay, but not when loading
+        if (e.target === e.currentTarget && !isLoading) {
+          onClose();
+        }
+      }}
+    >
+      <div 
+        className="bg-white rounded-2xl shadow-wax-2xl max-w-lg w-full overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header */}
         <div className="px-6 py-4 border-b border-wax-gray-200 flex items-center justify-between">
           <div className="flex items-center gap-3">

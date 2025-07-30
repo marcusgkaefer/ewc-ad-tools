@@ -448,17 +448,26 @@ class SupabaseLocationService {
         query = query.is('user_id', null);
       }
 
-      const { data, error } = await query.single();
+      // Use order by and limit to handle multiple rows gracefully
+      const { data, error } = await query
+        .order('updated_at', { ascending: false })
+        .limit(1);
 
       if (error) {
-        if (error.code === 'PGRST116') {
-          return null; // No configuration found
-        }
         console.error('Error fetching location config:', error);
         throw new Error(`Failed to fetch location config: ${error.message}`);
       }
 
-      return this.convertToLocationConfig(data);
+      if (!data || data.length === 0) {
+        return null; // No configuration found
+      }
+
+      // If there are multiple rows, log a warning and use the most recent one
+      if (data.length > 1) {
+        console.warn(`Multiple location configs found for locationId: ${locationId}, using most recent`);
+      }
+
+      return this.convertToLocationConfig(data[0]);
     } catch (error) {
       console.error('Error in getLocationConfig:', error);
       throw error;
@@ -467,6 +476,23 @@ class SupabaseLocationService {
 
   async createLocationConfig(request: CreateLocationConfigRequest, userId?: string): Promise<LocationConfig> {
     try {
+      // First check if a config already exists
+      const existingConfig = await this.getLocationConfig(request.locationId, userId);
+      if (existingConfig) {
+        console.warn(`Location config already exists for locationId: ${request.locationId}, updating instead`);
+        return await this.updateLocationConfig(request.locationId, {
+          budget: request.budget,
+          radiusMiles: request.radiusMiles,
+          customSettings: request.customSettings,
+          notes: request.notes,
+          primaryLat: request.primaryLat,
+          primaryLng: request.primaryLng,
+          coordinateList: request.coordinateList,
+          landingPageUrl: request.landingPageUrl,
+          isActive: true
+        }, userId);
+      }
+
       const { data, error } = await supabase
         .from('location_configs')
         .insert({
@@ -480,16 +506,23 @@ class SupabaseLocationService {
           radius_miles: request.radiusMiles || null,
           coordinate_list: request.coordinateList || null,
           landing_page_url: request.landingPageUrl || null,
+          is_active: true, // Explicitly set to true for new configs
         })
-        .select()
-        .single();
+        .select();
 
       if (error) {
         console.error('Error creating location config:', error);
         throw new Error(`Failed to create location config: ${error.message}`);
       }
 
-      return this.convertToLocationConfig(data);
+      if (!data || data.length === 0) {
+        throw new Error('Failed to create location config: no data returned');
+      }
+
+      console.log('createLocationConfig - Raw data from DB:', data[0]);
+      const converted = this.convertToLocationConfig(data[0]);
+      console.log('createLocationConfig - Converted config:', converted);
+      return converted;
     } catch (error) {
       console.error('Error in createLocationConfig:', error);
       throw error;
@@ -523,14 +556,26 @@ class SupabaseLocationService {
         query = query.is('user_id', null);
       }
 
-      const { data, error } = await query.select().single();
+      const { data, error } = await query.select();
 
       if (error) {
         console.error('Error updating location config:', error);
         throw new Error(`Failed to update location config: ${error.message}`);
       }
 
-      return this.convertToLocationConfig(data);
+      if (!data || data.length === 0) {
+        throw new Error('No location config found to update');
+      }
+
+      // If multiple configs were updated, log a warning and return the first one
+      if (data.length > 1) {
+        console.warn(`Updated ${data.length} location configs for locationId: ${locationId}, returning first one`);
+      }
+
+      console.log('updateLocationConfig - Raw data from DB:', data[0]);
+      const converted = this.convertToLocationConfig(data[0]);
+      console.log('updateLocationConfig - Converted config:', converted);
+      return converted;
     } catch (error) {
       console.error('Error in updateLocationConfig:', error);
       throw error;
@@ -621,14 +666,14 @@ class SupabaseLocationService {
   // Helper method to convert raw database response to LocationConfig
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private convertToLocationConfig(data: any): LocationConfig {
-    return {
+    const config = {
       id: data.id,
       locationId: data.location_id,
       userId: data.user_id,
       budget: data.budget,
       customSettings: data.custom_settings,
       notes: data.notes,
-      isActive: data.is_active,
+      isActive: data.is_active !== false, // Default to true if null/undefined
       primaryLat: data.primary_lat,
       primaryLng: data.primary_lng,
       radiusMiles: data.radius_miles,
@@ -637,6 +682,12 @@ class SupabaseLocationService {
       createdAt: data.created_at,
       updatedAt: data.updated_at,
     };
+    
+    console.log('convertToLocationConfig - Input data:', data);
+    console.log('convertToLocationConfig - Output config:', config);
+    console.log('convertToLocationConfig - Config is truthy:', !!config);
+    
+    return config;
   }
 }
 
