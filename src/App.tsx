@@ -78,7 +78,7 @@ function App() {
   const [hasGenerated, setHasGenerated] = useState(false);
   const [showLocationConfigModal, setShowLocationConfigModal] = useState(false);
   const [selectedLocationToConfigure, setSelectedLocationToConfigure] = useState<LocationWithConfig | null>(null);
-  const [useSimplifiedVersion, setUseSimplifiedVersion] = useState(false);
+  const [useSimplifiedVersion, setUseSimplifiedVersion] = useState(true);
 
   const [campaignConfig, setCampaignConfig] = useState<CampaignConfiguration>({
     prefix: 'EWC',
@@ -1181,7 +1181,6 @@ function App() {
             setSelectedLocationToConfigure(null);
           }}
           location={selectedLocationToConfigure}
-          config={selectedLocationToConfigure.config}
           onSave={(updatedConfig: LocationConfig) => {
             // Update the location in the locations array
             setLocations(prev => prev.map(loc => 

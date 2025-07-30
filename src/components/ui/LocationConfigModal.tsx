@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { XMarkIcon, MapPinIcon, CogIcon } from '@heroicons/react/24/outline';
-import type { LocationWithConfig } from '../../types';
+import type { LocationWithConfig, LocationConfig } from '../../types';
 import { supabaseLocationService } from '../../services/supabaseLocationService';
 
 interface LocationConfiguration {
@@ -12,7 +12,7 @@ interface LocationConfigModalProps {
   isOpen: boolean;
   onClose: () => void;
   location: LocationWithConfig | null;
-  onSave: () => void;
+  onSave: (updatedConfig: LocationConfig) => void;
 }
 
 const LocationConfigModal: React.FC<LocationConfigModalProps> = ({
@@ -62,6 +62,8 @@ const LocationConfigModal: React.FC<LocationConfigModalProps> = ({
         return;
       }
 
+      let updatedConfig: LocationConfig;
+
       // Save to Supabase
       if (location.config) {
         // Update existing config
@@ -70,17 +72,24 @@ const LocationConfigModal: React.FC<LocationConfigModalProps> = ({
           radiusMiles: config.radius,
           isActive: true
         });
+        updatedConfig = {
+          ...location.config,
+          budget: config.budget,
+          radiusMiles: config.radius,
+          isActive: true
+        };
       } else {
         // Create new config
-        await supabaseLocationService.createLocationConfig({
+        const newConfig = await supabaseLocationService.createLocationConfig({
           locationId: location.id,
           budget: config.budget,
           radiusMiles: config.radius
         });
+        updatedConfig = newConfig;
       }
 
-      // Call parent callback
-      onSave();
+      // Call parent callback with updated config
+      onSave(updatedConfig);
       onClose();
     } catch (err) {
       console.error('Error saving location config:', err);

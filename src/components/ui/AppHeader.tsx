@@ -59,7 +59,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
                   }`}
                 >
                   <Cog6ToothIcon className="w-4 h-4" />
-                  Default
+                  Legacy
                 </button>
                 <button
                   onClick={() => !useSimplifiedVersion && onVersionToggle()}

@@ -7,12 +7,9 @@ import {
   ExclamationTriangleIcon,
   CheckCircleIcon,
   ArrowPathIcon,
-  EyeIcon,
-  PencilIcon,
   CloudArrowUpIcon,
   DocumentArrowDownIcon,
-  MagnifyingGlassIcon,
-  AdjustmentsHorizontalIcon
+  MagnifyingGlassIcon
 } from '@heroicons/react/24/outline';
 
 interface FileComparisonModalProps {
