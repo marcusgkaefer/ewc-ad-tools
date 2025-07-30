@@ -70,6 +70,7 @@ export interface Location {
   culture_code_at_center?: string;
   is_fbe_enabled?: boolean;
   is_hc_call_center?: boolean;
+  landing_page_url?: string; // Center Landing Page URL
 }
 
 // Helper properties for easier access
@@ -87,6 +88,7 @@ export interface LocationSummary {
     lng: number;
   };
   locationPrime: string; // Using code as locationPrime for radius calculation
+  landing_page_url?: string; // Center Landing Page URL
 }
 
 // Location Configuration Models

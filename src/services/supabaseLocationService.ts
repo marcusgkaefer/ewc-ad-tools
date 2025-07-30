@@ -48,6 +48,7 @@ export const convertToLocationSummary = (location: Location): LocationSummary =>
       lng: locationCoords.longitude || 0,
     },
     locationPrime: location.code || 'UNKNOWN', // Using code as locationPrime for radius calculation
+    landing_page_url: location.landing_page_url || undefined, // Center Landing Page URL
   };
 };
 

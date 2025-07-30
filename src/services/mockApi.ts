@@ -21,6 +21,7 @@ import {
 } from '../data/mockData';
 import { supabaseLocationService } from './supabaseLocationService';
 import { REFERENCE_AD_TEMPLATE, generateAdName, generateCampaignName, generateAdSetName } from '../constants/hardcodedAdValues';
+import Papa from 'papaparse';
 
 // Simulate network delay
 const delay = (ms: number = 500) => new Promise(resolve => setTimeout(resolve, ms));
@@ -506,19 +507,41 @@ class MockApiService {
       'Permalink', 'Use Page as Actor', 'Dynamic Creative Call to Action', 'Degrees of Freedom Type'
     ];
     
-    let csv = headers.join(',') + '\n';
     console.log('🔍 DEBUG: CSV headers created, length:', headers.length);
     
     const campaign = job.options.campaign;
     console.log('🔍 DEBUG: Campaign config:', campaign);
+    
+    // Prepare the interests data as a proper object that will be JSON.stringify'd
+    const interestsData = [{
+      interests: [
+        { id: "6002997877444", name: "Waxing" },
+        { id: "6003095705016", name: "Beauty & Fashion" },
+        { id: "6003152657675", name: "Wellness SPA" },
+        { id: "6003244295567", name: "Self care" },
+        { id: "6003251053061", name: "Shaving" },
+        { id: "6003393295343", name: "Health And Beauty" },
+        { id: "6003503807196", name: "European Wax Center" },
+        { id: "6003522953242", name: "Brazilian Waxing" },
+        { id: "6015279452180", name: "Bombshell Brazilian Waxing & Beauty Lounge" }
+      ]
+    }];
+
+    const attributionSpec = [{
+      event_type: "CLICK_THROUGH",
+      window_days: 1
+    }];
+    
+    const rows: string[][] = [];
     
     for (const location of locations) {
       for (const template of templates) {
         // Use hard-coded values from reference template instead of substitution
         const description = REFERENCE_AD_TEMPLATE.body;
         
-        // Use template's landing page URL or default fallback
-        const landingPageUrl = this.substituteVariables(template.fields.landingPageUrl, location) ||
+        // Use location's landing page URL, template's landing page URL, or default fallback
+        const landingPageUrl = location.landing_page_url ||
+                               this.substituteVariables(template.fields.landingPageUrl, location) ||
                                'https://waxcenter.com'; // Default fallback
         
         // Generate dynamic names using hard-coded reference template
@@ -556,19 +579,19 @@ class MockApiService {
           'tp:1035642271793092',
           'SCHEDULE',
           landingPageUrl,
-          `"(${location.coordinates.lat.toFixed(3)}, ${location.coordinates.lng.toFixed(3)}) +${campaign.radius}mi"`,
-          '"home, recent"',
-          '"Alaska US, Wyoming US"',
+          `(${location.coordinates.lat.toFixed(3)}, ${location.coordinates.lng.toFixed(3)}) +${campaign.radius}mi`,
+          'home, recent',
+          'Alaska US, Wyoming US',
           '',
           'Women',
           '18',
           '54',
           '120213927766160508:AUD-FBAllPriorServicedCustomers',
-          `"[{\\"interests\\":[{\\"id\\":\\"6002997877444\\",\\"name\\":\\"Waxing\\"},{\\"id\\":\\"6003095705016\\",\\"name\\":\\"Beauty & Fashion\\"},{\\"id\\":\\"6003152657675\\",\\"name\\":\\"Wellness SPA\\"},{\\"id\\":\\"6003244295567\\",\\"name\\":\\"Self care\\"},{\\"id\\":\\"6003251053061\\",\\"name\\":\\"Shaving\\"},{\\"id\\":\\"6003393295343\\",\\"name\\":\\"Health And Beauty\\"},{\\"id\\":\\"6003503807196\\",\\"name\\":\\"European Wax Center\\"},{\\"id\\":\\"6003522953242\\",\\"name\\":\\"Brazilian Waxing\\"},{\\"id\\":\\"6015279452180\\",\\"name\\":\\"Bombshell Brazilian Waxing & Beauty Lounge\\"}]}]"`,
-          '"custom_audience: Off, lookalike: Off"',
-          '"FACEBOOK_STANDARD, AN_STANDARD, FEED_RELAXED"',
+          JSON.stringify(interestsData), // This will be properly escaped by papaparse
+          'custom_audience: Off, lookalike: Off',
+          'FACEBOOK_STANDARD, AN_STANDARD, FEED_RELAXED',
           'OFFSITE_CONVERSIONS',
-          `"[{\\"event_type\\":\\"CLICK_THROUGH\\",\\"window_days\\":1}]"`,
+          JSON.stringify(attributionSpec), // This will be properly escaped by papaparse
           'IMPRESSIONS',
           'a:120228258706880508',
           'ACTIVE',
@@ -577,11 +600,11 @@ class MockApiService {
           adName,
           REFERENCE_AD_TEMPLATE.dynamicCreativeAdFormat,
           REFERENCE_AD_TEMPLATE.title, // Hard-coded title
-          '"Default, Default, Default, Default, audience_network classic, facebook biz_disco_feed, facebook facebook_reels, facebook facebook_reels_overlay, facebook feed, facebook instream_video, facebook marketplace, facebook right_hand_column, facebook search, facebook story, facebook video_feeds, instagram explore, instagram reels, instagram story, instagram stream, messenger story"',
+          'Default, Default, Default, Default, audience_network classic, facebook biz_disco_feed, facebook facebook_reels, facebook facebook_reels_overlay, facebook feed, facebook instream_video, facebook marketplace, facebook right_hand_column, facebook search, facebook story, facebook video_feeds, instagram explore, instagram reels, instagram story, instagram stream, messenger story',
           description,
-          '"Default, Default, Default, Default, audience_network classic, facebook biz_disco_feed, facebook facebook_reels, facebook facebook_reels_overlay, facebook feed, facebook instream_video, facebook marketplace, facebook right_hand_column, facebook search, facebook story, facebook video_feeds, instagram explore, instagram reels, instagram story, instagram stream, messenger story"',
+          'Default, Default, Default, Default, audience_network classic, facebook biz_disco_feed, facebook facebook_reels, facebook facebook_reels_overlay, facebook feed, facebook instream_video, facebook marketplace, facebook right_hand_column, facebook search, facebook story, facebook video_feeds, instagram explore, instagram reels, instagram story, instagram stream, messenger story',
           'waxcenter.com',
-          '"Default, Default, Default, Default, audience_network classic, facebook biz_disco_feed, facebook facebook_reels, facebook facebook_reels_overlay, facebook feed, facebook instream_video, facebook marketplace, facebook right_hand_column, facebook search, facebook story, facebook video_feeds, instagram explore, instagram reels, instagram story, instagram stream, messenger story"',
+          'Default, Default, Default, Default, audience_network classic, facebook biz_disco_feed, facebook facebook_reels, facebook facebook_reels_overlay, facebook feed, facebook instream_video, facebook marketplace, facebook right_hand_column, facebook search, facebook story, facebook video_feeds, instagram explore, instagram reels, instagram story, instagram stream, messenger story',
           'No',
           'tp:1035642271793092',
           '303541819130038:d28e1dc58e7fcc7ac6d3e309eac2d3ad',
@@ -593,9 +616,9 @@ class MockApiService {
           'Link Page Post Ad',
           'utm_source=facebook&utm_medium=cpc&utm_campaign={{campaign.name}}&utm_content={{ad.name}}&acadia_source=facebook&acadia_medium=cpc&utm_term={{adset.name}}&placement={{placement}}',
           'v:1794899587789121',
-          '"facebook biz_disco_feed, facebook facebook_reels_overlay, facebook feed, facebook instream_video, facebook marketplace, facebook video_feeds, instagram explore, instagram stream"',
+          'facebook biz_disco_feed, facebook facebook_reels_overlay, facebook feed, facebook instream_video, facebook marketplace, facebook video_feeds, instagram explore, instagram stream',
           'v:1243573153921320',
-          '"facebook facebook_reels, facebook right_hand_column, facebook search, facebook story, instagram reels, instagram story, messenger story"',
+          'facebook facebook_reels, facebook right_hand_column, facebook search, facebook story, instagram reels, instagram story, messenger story',
           'https://scontent-dfw5-2.xx.fbcdn.net/v/t15.13418-10/467256659_543283285137927_5402167441693162688_n.jpg?stp=dst-jpg_tt6&_nc_cat=102&ccb=1-7&_nc_sid=ace027&_nc_oc=Adl-w5-p4KgKcpfNbwFCMI8p2z8bvGQvk3O2EUHsARUHic1iLG7nej7NHJZf5vrcj-w&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-dfw5-2.xx&_nc_gid=DprWR9RBxU4CVd-KxeA7MA&oh=00_AfMi8ih1MsPowL9pJrKsL6C9UW1sfWFo4HOhjCFJSCvgkA&oe=685F93A7',
           'x:602557576501192',
           template.fields.callToAction,
@@ -607,14 +630,21 @@ class MockApiService {
           'USER_ENROLLED_AUTOFLOW'
         ];
         
-        csv += row.join(',') + '\n';
+        rows.push(row);
       }
     }
     
-    console.log('🔍 DEBUG: CSV generation complete. Total length:', csv.length, 'Lines:', csv.split('\n').length);
-    console.log('🔍 DEBUG: First 500 chars:', csv.substring(0, 500));
+    // Use papaparse to properly escape all values, including JSON
+    const csvOutput = Papa.unparse([headers, ...rows], {
+      quotes: true,     // Quote all fields
+      quoteChar: '"',   // Use double quotes
+      escapeChar: '"'   // Escape quotes by doubling them
+    });
     
-    return csv;
+    console.log('🔍 DEBUG: CSV generation complete. Total length:', csvOutput.length, 'Lines:', csvOutput.split('\n').length);
+    console.log('🔍 DEBUG: First 500 chars:', csvOutput.substring(0, 500));
+    
+    return csvOutput;
   }
 
   // Statistics endpoints

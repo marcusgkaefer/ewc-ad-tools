@@ -1,8 +1,15 @@
 import type { Location, AdTemplate, GeneratedAd, GenerationJob, ObjectiveOption, CreateTemplateRequest, LocationSummary } from '../types';
 
-// Cache for locations data
+// Cache for locations to avoid repeated fetches
 let locationsCache: LocationSummary[] | null = null;
 let locationsLoadingPromise: Promise<LocationSummary[]> | null = null;
+
+// Function to clear cache (useful when data updates)
+export const clearLocationsCache = () => {
+  locationsCache = null;
+  locationsLoadingPromise = null;
+  console.log('🔄 Location cache cleared');
+};
 
 // Convert Location from JSON to LocationSummary for easier use in UI
 export const convertToLocationSummary = (location: Location): LocationSummary => {
@@ -20,6 +27,7 @@ export const convertToLocationSummary = (location: Location): LocationSummary =>
       lng: location.location?.longitude || 0,
     },
     locationPrime: location.code || 'UNKNOWN', // Using code as locationPrime for radius calculation
+    landing_page_url: location.landing_page_url || undefined, // Center Landing Page URL
   };
 };
 
@@ -40,14 +48,14 @@ export const loadLocationsFromJson = async (): Promise<LocationSummary[]> => {
   // Start loading
   locationsLoadingPromise = (async () => {
     try {
-      console.log('🔍 DEBUG: Fetching locations from JSON file...');
-      const response = await fetch('/locations.json');
+      console.log('🔍 DEBUG: Fetching locations from Artemis Wax Group JSON file...');
+      const response = await fetch('/artemis_wax_group.json');
       
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const data = await response.json() as { data: Location[] };
+      const data = await response.json() as { centers: Location[] };
       console.log('🔍 DEBUG: Fetched locations data:', data);
       console.log('🔍 DEBUG: typeof data:', typeof data);
       console.log('🔍 DEBUG: data keys:', Object.keys(data || {}));
@@ -58,9 +66,9 @@ export const loadLocationsFromJson = async (): Promise<LocationSummary[]> => {
         return getMockLocations(); // Fallback to mock data
       }
       
-      console.log('🔍 DEBUG: data.data exists:', !!data.data);
+      console.log('🔍 DEBUG: data.centers exists:', !!data.centers);
       
-      const locations = data.data;
+      const locations = data.centers;
       console.log('🔍 DEBUG: Raw locations count:', locations ? locations.length : 0);
       
       if (!locations || !Array.isArray(locations)) {

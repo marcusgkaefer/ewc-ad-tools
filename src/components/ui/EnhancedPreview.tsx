@@ -53,7 +53,7 @@ const generatePreviewData = (
   
   locations.forEach(location => {
     campaign.ads.forEach(ad => {
-      const landingPage = location.config?.landingPageUrl || 'https://waxcenter.com';
+      const landingPage = location.landing_page_url || location.config?.landingPageUrl || 'https://waxcenter.com';
       const locationName = location.name.replace(/\s+/g, '');
       
       data.push({

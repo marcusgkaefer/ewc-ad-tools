@@ -193,6 +193,9 @@ const LocationConfigModal: React.FC<LocationConfigModalProps> = ({
                 <div><strong>Address:</strong> {location.address}</div>
                 <div><strong>City:</strong> {location.city}, {location.state} {location.zipCode}</div>
                 <div><strong>Coordinates:</strong> {location.coordinates.lat}, {location.coordinates.lng}</div>
+                {location.landing_page_url && (
+                  <div><strong>Landing Page:</strong> <a href={location.landing_page_url} target="_blank" rel="noopener noreferrer" className="text-wax-red-600 hover:underline">{location.landing_page_url}</a></div>
+                )}
               </div>
             </div>
           </div>

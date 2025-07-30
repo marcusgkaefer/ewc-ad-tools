@@ -46,8 +46,8 @@ const generatePreviewData = (
   
   locations.forEach(location => {
     ads.forEach(ad => {
-      // Use location's landing page URL from config, with fallback
-      const landingPage = location.config?.landingPageUrl || 'https://waxcenter.com';
+      // Use location's landing page URL from location model, config, or fallback
+      const landingPage = location.landing_page_url || location.config?.landingPageUrl || 'https://waxcenter.com';
       
       data.push({
         location,

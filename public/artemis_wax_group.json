@@ -150,7 +150,8 @@
       },
       "culture_code_at_center": "en-US",
       "is_fbe_enabled": false,
-      "is_hc_call_center": false
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/nj/garwood/garwood-0029.html"
     },
     {
       "id": "5d2167b1-ab9d-4163-b9a1-9444f9567ec6",
@@ -302,7 +303,8 @@
       },
       "culture_code_at_center": "en-US",
       "is_fbe_enabled": false,
-      "is_hc_call_center": false
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/nj/florhampark/florham-park-0038.html"
     },
     {
       "id": "1635e2fb-c367-49a9-a5dd-82b25222b3c0",
@@ -454,7 +456,8 @@
       },
       "culture_code_at_center": "en-US",
       "is_fbe_enabled": false,
-      "is_hc_call_center": false
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/nj/clifton/clifton-0023.html"
     },
     {
       "id": "0d46fc7b-1207-46d7-8815-115789a06f3e",
@@ -606,7 +609,8 @@
       },
       "culture_code_at_center": "en-US",
       "is_fbe_enabled": false,
-      "is_hc_call_center": false
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/ny/middletown/middletown-orange-plaza-1438.html"
     },
     {
       "id": "9404a3cc-eb1b-4589-b9dd-6ca05dda10c5",
@@ -758,7 +762,8 @@
       },
       "culture_code_at_center": "en-US",
       "is_fbe_enabled": false,
-      "is_hc_call_center": false
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/nj/shorthills/short-hills-"
     },
     {
       "id": "2c8ce42f-f2dd-4156-bf6e-682ea78c5ac2",
@@ -910,7 +915,8 @@
       },
       "culture_code_at_center": "en-US",
       "is_fbe_enabled": false,
-      "is_hc_call_center": false
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/nj/westwood/westwood-0083.html"
     },
     {
       "id": "4b902a15-7023-41d7-8b76-26bb3da26928",
@@ -1062,7 +1068,8 @@
       },
       "culture_code_at_center": "en-US",
       "is_fbe_enabled": false,
-      "is_hc_call_center": false
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/ga/atlanta/atlanta-toco-hills-0242.html"
     },
     {
       "id": "1b833ff5-4617-48b4-9478-093c7bca0db8",
@@ -1214,7 +1221,8 @@
       },
       "culture_code_at_center": "en-US",
       "is_fbe_enabled": false,
-      "is_hc_call_center": false
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/ct/fairfield/fairfield-0176.html"
     },
     {
       "id": "a13562dc-8003-49dd-a7c2-d287d30fe1f4",
@@ -1366,7 +1374,8 @@
       },
       "culture_code_at_center": "en-US",
       "is_fbe_enabled": false,
-      "is_hc_call_center": false
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/nj/voorhees/voorhees-ritz-center-1150.html"
     },
     {
       "id": "636ae913-1007-4e69-8de6-5a33bf393ac7",
@@ -1518,7 +1527,8 @@
       },
       "culture_code_at_center": "en-US",
       "is_fbe_enabled": false,
-      "is_hc_call_center": false
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/ct/shelton/shelton-fountain-square-1164.html"
     },
     {
       "id": "ba6835db-3409-41f4-b66c-86fe2e8ae1df",
@@ -1670,7 +1680,8 @@
       },
       "culture_code_at_center": "en-US",
       "is_fbe_enabled": false,
-      "is_hc_call_center": false
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/nj/wayne/wayne-the-yard-in-wayne-1478.html"
     },
     {
       "id": "e5c0ac9e-3c4e-4a05-bdb4-981e27e742cc",
@@ -1822,7 +1833,8 @@
       },
       "culture_code_at_center": "en-US",
       "is_fbe_enabled": false,
-      "is_hc_call_center": false
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/md/silverspring/white-oak-calverton-1070.html"
     },
     {
       "id": "cde35e09-c753-4629-9944-c99f63ab4f98",
@@ -1974,7 +1986,8 @@
       },
       "culture_code_at_center": "en-US",
       "is_fbe_enabled": false,
-      "is_hc_call_center": false
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/ma/boston/boston-south-end-0225.html"
     },
     {
       "id": "b4a2a7ca-c833-4bdc-8eab-867f755fc147",
@@ -2126,7 +2139,8 @@
       },
       "culture_code_at_center": "en-US",
       "is_fbe_enabled": false,
-      "is_hc_call_center": false
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/ny/newcity/new-city-0201.html"
     },
     {
       "id": "7fc8e44e-0788-4a27-9a3b-8b98049933d6",
@@ -2278,7 +2292,8 @@
       },
       "culture_code_at_center": "en-US",
       "is_fbe_enabled": false,
-      "is_hc_call_center": false
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/ga/atlanta/atlanta-brookhaven-0368.html"
     },
     {
       "id": "22d2c432-51f0-4677-b4d5-ca5d7a1ef75c",
@@ -2430,7 +2445,8 @@
       },
       "culture_code_at_center": "en-US",
       "is_fbe_enabled": false,
-      "is_hc_call_center": false
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/nj/mountlaurel/bikini-waxing-mount-laurel-0396.html"
     },
     {
       "id": "578c2e71-90b8-42be-9e28-cf0a9797e34a",
@@ -2582,7 +2598,8 @@
       },
       "culture_code_at_center": "en-US",
       "is_fbe_enabled": false,
-      "is_hc_call_center": false
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/nj/montclair/montclair-0146.html"
     },
     {
       "id": "673bb1dd-0c77-4bae-8a8e-8a3fae6e7af8",
@@ -2734,7 +2751,8 @@
       },
       "culture_code_at_center": "en-US",
       "is_fbe_enabled": false,
-      "is_hc_call_center": false
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/md/baltimore/baltimore-pikesville-0455.html"
     },
     {
       "id": "b68539b0-47e7-4db8-87ae-db2d8e23c219",
@@ -2886,7 +2904,8 @@
       },
       "culture_code_at_center": "en-US",
       "is_fbe_enabled": false,
-      "is_hc_call_center": false
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/pa/broomall/broomall-lawrence-park-0504.html"
     },
     {
       "id": "79a95634-5ade-47de-bc3a-fa9933d1de89",
@@ -3038,7 +3057,8 @@
       },
       "culture_code_at_center": "en-US",
       "is_fbe_enabled": false,
-      "is_hc_call_center": false
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/nj/totowa/totowa-0034.html"
     },
     {
       "id": "cc1e026c-0929-40d3-9a1e-4a2bca681417",
@@ -3190,7 +3210,8 @@
       },
       "culture_code_at_center": "en-US",
       "is_fbe_enabled": false,
-      "is_hc_call_center": false
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/nj/riveredge/river-edge-0129.html"
     },
     {
       "id": "56492004-2b9f-40c2-a935-ffb4203aec6a",
@@ -3342,7 +3363,8 @@
       },
       "culture_code_at_center": "en-US",
       "is_fbe_enabled": false,
-      "is_hc_call_center": false
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/md/columbia/columbia-the-metropolitan-0497.html"
     },
     {
       "id": "2342b7e9-c679-4c8f-a51b-38cd6b19aabc",
@@ -3494,7 +3516,8 @@
       },
       "culture_code_at_center": "en-US",
       "is_fbe_enabled": false,
-      "is_hc_call_center": false
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/ct/westhartford/west-hartford-0600.html"
     },
     {
       "id": "4cd04997-af5e-4163-82a3-ace98075892f",
@@ -3646,7 +3669,8 @@
       },
       "culture_code_at_center": "en-US",
       "is_fbe_enabled": false,
-      "is_hc_call_center": false
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/ct/danbury/danbury-0599.html"
     },
     {
       "id": "8838f549-c4d7-4fcb-875e-4bf261461ef6",
@@ -3798,7 +3822,8 @@
       },
       "culture_code_at_center": "en-US",
       "is_fbe_enabled": false,
-      "is_hc_call_center": false
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/pa/levittown/levittown-langhorne-square-0623.html"
     },
     {
       "id": "dadb9d2e-27c0-4e53-ae77-e162775295c8",
@@ -3950,7 +3975,8 @@
       },
       "culture_code_at_center": "en-US",
       "is_fbe_enabled": false,
-      "is_hc_call_center": false
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/ny/bronx/bronx-throgs-neck-0641.html"
     },
     {
       "id": "3069dbfa-d1ef-4b62-ad29-be87e8530ae6",
@@ -4102,7 +4128,8 @@
       },
       "culture_code_at_center": "en-US",
       "is_fbe_enabled": false,
-      "is_hc_call_center": false
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/ga/atlanta/atlanta-edgewood-0743.html"
     },
     {
       "id": "f0fb4b24-9794-472f-8d7f-b7e390967e5b",
@@ -4254,7 +4281,8 @@
       },
       "culture_code_at_center": "en-US",
       "is_fbe_enabled": false,
-      "is_hc_call_center": false
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/nj/teterboro/teterboro-0130.html"
     },
     {
       "id": "971bab66-1aad-4211-9dbc-6a66e7ea444a",
@@ -4406,7 +4434,8 @@
       },
       "culture_code_at_center": "en-US",
       "is_fbe_enabled": false,
-      "is_hc_call_center": false
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/nj/cinnaminson/cinnaminson-0625.html"
     },
     {
       "id": "9dc9a4ce-5fd7-44f8-b209-0fd5204111a9",
@@ -4558,7 +4587,8 @@
       },
       "culture_code_at_center": "en-US",
       "is_fbe_enabled": false,
-      "is_hc_call_center": false
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/md/rockville/rockville-0496.html"
     },
     {
       "id": "5fcf281f-4ad2-41cb-9f49-a0e0042e1de6",
@@ -4710,7 +4740,8 @@
       },
       "culture_code_at_center": "en-US",
       "is_fbe_enabled": false,
-      "is_hc_call_center": false
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/ga/atlanta/atlanta-buckhead-0435.html"
     },
     {
       "id": "21caa326-16df-439f-adc6-87ec1a847300",
@@ -4862,7 +4893,8 @@
       },
       "culture_code_at_center": "en-US",
       "is_fbe_enabled": false,
-      "is_hc_call_center": false
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/pa/newtown/newtown-0807.html"
     },
     {
       "id": "e7feafbf-f0de-4adc-89a2-757ab4ad7bbc",
@@ -5014,7 +5046,8 @@
       },
       "culture_code_at_center": "en-US",
       "is_fbe_enabled": false,
-      "is_hc_call_center": false
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/ma/northattleboro/north-attleboro-0900.html"
     },
     {
       "id": "b450e564-2a9b-48da-b632-b918e1fe5081",
@@ -5166,7 +5199,8 @@
       },
       "culture_code_at_center": "en-US",
       "is_fbe_enabled": false,
-      "is_hc_call_center": false
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/ma/dorchester/boston-south-bay-0227.html"
     },
     {
       "id": "13699a37-6ce3-4d86-ba80-5f49c2d68a06",
@@ -5318,7 +5352,8 @@
       },
       "culture_code_at_center": "en-US",
       "is_fbe_enabled": false,
-      "is_hc_call_center": false
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/ma/watertown/watertown-arsenal-yards-0889.html"
     },
     {
       "id": "5f108323-b8b0-4d54-b872-1cb1df57c948",
@@ -5470,7 +5505,8 @@
       },
       "culture_code_at_center": "en-US",
       "is_fbe_enabled": false,
-      "is_hc_call_center": false
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/md/rockville/rockville-fallsgrove-village-center-0782.html"
     },
     {
       "id": "a7ecdf19-f33d-4e59-ab07-5f36b7e81d43",
@@ -5622,7 +5658,8 @@
       },
       "culture_code_at_center": "en-US",
       "is_fbe_enabled": false,
-      "is_hc_call_center": false
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/md/ellicottcity/ellicott-city-turf-valley-towne-square-1071.html"
     },
     {
       "id": "c2686297-64f5-4cfc-b242-38a398f390be",
@@ -5774,7 +5811,8 @@
       },
       "culture_code_at_center": "en-US",
       "is_fbe_enabled": false,
-      "is_hc_call_center": false
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/ct/southington/southington-the-village-shops-1162.html"
     },
     {
       "id": "f55210b9-c8b1-4a83-a7ab-2469b345b7d1",
@@ -5926,7 +5964,8 @@
       },
       "culture_code_at_center": "en-US",
       "is_fbe_enabled": false,
-      "is_hc_call_center": false
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/pa/westchester/west-chester-marketplace-at-westtown-1144.html"
     },
     {
       "id": "4806ec52-bc7d-4504-bc99-67af7204b173",
@@ -6078,7 +6117,8 @@
       },
       "culture_code_at_center": "en-US",
       "is_fbe_enabled": false,
-      "is_hc_call_center": false
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/ga/peachtreecity/body-waxing-peachtree-city-the-avenue-1226.html"
     },
     {
       "id": "050820cb-1f4c-4008-b084-0e858da9f07a",
@@ -6230,7 +6270,8 @@
       },
       "culture_code_at_center": "en-US",
       "is_fbe_enabled": false,
-      "is_hc_call_center": false
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/pa/wynnewood/wynnewood-wynnewood-shopping-center-1147.html"
     },
     {
       "id": "576c35fc-29bc-407b-b961-5ee715848513",
@@ -6382,7 +6423,8 @@
       },
       "culture_code_at_center": "en-US",
       "is_fbe_enabled": false,
-      "is_hc_call_center": false
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/ga/newnan/newnan-ashley-park-shopping-center-1227.html"
     },
     {
       "id": "68d622cc-72da-41c0-85e4-06ac24aace25",
@@ -6534,7 +6576,8 @@
       },
       "culture_code_at_center": "en-US",
       "is_fbe_enabled": false,
-      "is_hc_call_center": false
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/ct/southbury/southbury-southbury-shopping-center-1163.html"
     },
     {
       "id": "b1e39e78-b2ff-4e38-b1b9-99e5ce86d3fb",
@@ -6686,7 +6729,8 @@
       },
       "culture_code_at_center": "en-US",
       "is_fbe_enabled": false,
-      "is_hc_call_center": false
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/pa/philadelphia/philadelphia-andorra-shopping-center-1145.html"
     }
   ],
   "error": null,
