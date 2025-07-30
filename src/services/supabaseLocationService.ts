@@ -1,4 +1,5 @@
 import { supabase } from '../lib/supabase';
+import { BUILD_CONFIG } from '../config/build-config';
 import type { 
   Location, 
   LocationSummary, 
@@ -54,9 +55,28 @@ class SupabaseLocationService {
   private ewcCentersCache: Location[] | null = null;
   private ewcCentersLoading: Promise<Location[]> | null = null;
 
-  // Check if we should use EWC centers JSON file
+  // Check if we should use EWC Artemis Group centers JSON file
   private shouldUseEwcCentersJson(): boolean {
-    return import.meta.env.VITE_USE_ARTEMIS_GROUP === 'true';
+    const envValue = import.meta.env.VITE_USE_ARTEMIS_GROUP;
+    console.log('🔍 VITE_USE_ARTEMIS_GROUP debug:', {
+      rawValue: envValue,
+      type: typeof envValue,
+      length: envValue ? envValue.length : 0,
+      trimmed: envValue ? envValue.trim() : null,
+      isExactlyTrue: envValue === 'true',
+      buildConfig: BUILD_CONFIG.USE_ARTEMIS_GROUP,
+      allEnvVars: import.meta.env
+    });
+    
+    // More flexible checking to handle common issues
+    const normalizedValue = String(envValue || '').toLowerCase().trim();
+    const fromEnv = normalizedValue === 'true' || normalizedValue === '1';
+    
+    // Use build config as fallback if env var is not set
+    const shouldUse = fromEnv || BUILD_CONFIG.USE_ARTEMIS_GROUP;
+    
+    console.log(`📊 Using ${shouldUse ? 'JSON file' : 'Supabase database'} for location data`);
+    return shouldUse;
   }
 
   // Load EWC centers from JSON file with caching

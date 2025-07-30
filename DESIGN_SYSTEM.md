@@ -1,8 +1,8 @@
-# Campaign Creator Studio - Professional Design System
+# Ad Tools Studio - Professional Design System
 
 ## Overview
 
-The Campaign Creator Studio Design System delivers a sophisticated, professional user experience inspired by European Wax Center's elegant branding. This design system combines refined aesthetics with intuitive functionality, creating campaigns through a delightful, premium workflow that guides users seamlessly from concept to completion.
+The Ad Tools Studio Design System delivers a sophisticated, professional user experience inspired by European Wax Center's elegant branding. This design system combines refined aesthetics with intuitive functionality, creating campaigns through a delightful, premium workflow that guides users seamlessly from concept to completion.
 
 ## Design Philosophy
 
@@ -313,7 +313,7 @@ animate-shimmer       /* Shimmer effect */
 ```tailwind
 <div className="text-center py-16 px-6 relative overflow-hidden">
   <h1 className="text-4xl lg:text-6xl font-extrabold mb-6 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-500 bg-clip-text text-transparent leading-tight tracking-tight drop-shadow-sm">
-    Campaign Creator Studio
+    Ad Tools Studio
   </h1>
   <p className="text-xl text-white/90 mb-12 max-w-2xl mx-auto font-normal">
     Create beautiful, effective ad campaigns with our intuitive tools
@@ -575,4 +575,4 @@ animate-glow-gentle        /* Subtle glow effect */
 animate-float-soft         /* Gentle floating */
 ```
 
-This design system ensures consistency, maintainability, and an award-winning user experience across the entire Campaign Creator Studio application using Tailwind CSS. 
+This design system ensures consistency, maintainability, and an award-winning user experience across the entire Ad Tools Studio application using Tailwind CSS. 

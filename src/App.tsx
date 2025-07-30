@@ -15,7 +15,7 @@ import {
   TrashIcon,
   DocumentIcon
 } from '@heroicons/react/24/solid';
-import { ArrowDownTrayIcon as DownloadIcon } from '@heroicons/react/24/outline';
+import { ArrowDownTrayIcon as DownloadIcon, DocumentArrowDownIcon } from '@heroicons/react/24/outline';
 import { mockApi } from './services/mockApi';
 import { supabaseLocationService } from './services/supabaseLocationService';
 import { defaultObjectives } from './data/mockData';
@@ -39,6 +39,9 @@ import type {
 
 // Constants
 import { generateAdName } from './constants/hardcodedAdValues';
+
+// Add import for the new simplified creator at the top
+import SimplifiedCampaignCreator from './components/ui/SimplifiedCampaignCreator';
 
 // Animation variants
 const containerVariants = {
@@ -75,6 +78,7 @@ function App() {
   const [hasGenerated, setHasGenerated] = useState(false);
   const [showLocationConfigModal, setShowLocationConfigModal] = useState(false);
   const [selectedLocationToConfigure, setSelectedLocationToConfigure] = useState<LocationWithConfig | null>(null);
+  const [useSimplifiedVersion, setUseSimplifiedVersion] = useState(false);
 
   const [campaignConfig, setCampaignConfig] = useState<CampaignConfiguration>({
     prefix: 'EWC',
@@ -361,7 +365,7 @@ function App() {
             transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
           />
           <h2 className="text-2xl font-bold text-neutral-800 mb-2">
-            Loading Campaign Creator
+            Loading Ad Tools
           </h2>
           <p className="text-neutral-600">
             Preparing your professional workspace...
@@ -380,402 +384,412 @@ function App() {
           animate="visible"
         >
           {/* App Header */}
-          <AppHeader onSettingsClick={() => setShowSettings(!showSettings)} />
-
-          {/* Progress Steps */}
-          <ProgressSteps
-            currentStep={currentStep}
-            steps={steps}
-            onStepClick={(stepId) => setCurrentStep(stepId)}
+          <AppHeader 
+            onSettingsClick={() => setShowSettings(!showSettings)} 
+            useSimplifiedVersion={useSimplifiedVersion}
+            onVersionToggle={() => setUseSimplifiedVersion(!useSimplifiedVersion)}
           />
+
+          {/* Progress Steps - only show in professional mode */}
+          {!useSimplifiedVersion && (
+            <ProgressSteps
+              currentStep={currentStep}
+              steps={steps}
+              onStepClick={(stepId) => setCurrentStep(stepId)}
+            />
+          )}
 
           {/* Main Content Area */}
           <AnimatePresence mode="wait">
-            {currentStep === 1 && (
-              <motion.div
-                key="locations"
-                variants={cardVariants}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-                className="max-w-4xl mx-auto"
-              >
-                <div className="card-premium rounded-3xl p-10 shadow-elegant transition-all duration-300 hover:shadow-3xl">
-                  <div className="mb-8">
-                    <h2 className="text-3xl font-extrabold text-gradient-professional mb-4">
-                      Select Target Locations
-                    </h2>
-                    <p className="text-neutral-600 text-lg">
-                      Choose the locations where your campaigns will run. You can select individual locations or use exclusion mode.
-                    </p>
-                  </div>
-
-                  {/* Location Search */}
-                  <div className="mb-6">
-                    <input
-                      type="text"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder="Search locations by name, city, or state..."
-                      className="w-full px-6 py-4 border-2 border-neutral-200 rounded-2xl text-base bg-white/90 backdrop-blur-xl transition-all duration-300 focus:border-primary-500 focus:ring-4 focus:ring-primary-100 focus:-translate-y-0.5 focus:outline-none hover:bg-white"
-                    />
-                  </div>
-
-                  {/* Configuration Filter */}
-                  <div className="mb-6">
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="text-sm font-medium text-neutral-700">Filter by configuration:</span>
-                    </div>
-                    <div className="flex gap-2 flex-wrap">
-                      <button
-                        onClick={() => setConfigurationFilter('all')}
-                        className={`px-4 py-2 text-sm font-medium rounded-xl transition-all duration-300 ${
-                          configurationFilter === 'all'
-                            ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/25'
-                            : 'bg-white/90 backdrop-blur-xl text-neutral-700 border-2 border-neutral-200 hover:border-primary-300 hover:bg-white'
-                        }`}
-                      >
-                        All Locations ({locations.length})
-                      </button>
-                      <button
-                        onClick={() => setConfigurationFilter('configured')}
-                        className={`px-4 py-2 text-sm font-medium rounded-xl transition-all duration-300 ${
-                          configurationFilter === 'configured'
-                            ? 'bg-success-500 text-white shadow-lg shadow-success-500/25'
-                            : 'bg-white/90 backdrop-blur-xl text-neutral-700 border-2 border-neutral-200 hover:border-success-300 hover:bg-white'
-                        }`}
-                      >
-                        Configured ({locations.filter(l => l.config).length})
-                      </button>
-                      <button
-                        onClick={() => setConfigurationFilter('not-configured')}
-                        className={`px-4 py-2 text-sm font-medium rounded-xl transition-all duration-300 ${
-                          configurationFilter === 'not-configured'
-                            ? 'bg-warning-500 text-white shadow-lg shadow-warning-500/25'
-                            : 'bg-white/90 backdrop-blur-xl text-neutral-700 border-2 border-neutral-200 hover:border-warning-300 hover:bg-white'
-                        }`}
-                      >
-                        Not Configured ({locations.filter(l => !l.config).length})
-                      </button>
-                    </div>
-                    {(searchQuery || configurationFilter !== 'all') && (
-                      <div className="mt-2 text-sm text-gray-500">
-                        Showing {filteredLocations.length} of {locations.length} locations
+            {useSimplifiedVersion ? (
+              <SimplifiedCampaignCreator />
+            ) : (
+              <>
+                {currentStep === 1 && (
+                  <motion.div
+                    key="locations"
+                    variants={cardVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    className="max-w-4xl mx-auto"
+                  >
+                    <div className="card-premium rounded-3xl p-10 shadow-elegant transition-all duration-300 hover:shadow-3xl">
+                      <div className="mb-8">
+                        <h2 className="text-3xl font-extrabold text-gradient-professional mb-4">
+                          Select Target Locations
+                        </h2>
+                        <p className="text-neutral-600 text-lg">
+                          Choose the locations where your campaigns will run. You can select individual locations or use exclusion mode.
+                        </p>
                       </div>
-                    )}
-                  </div>
 
-                  {/* Exclusion Mode Toggle */}
-                  <div className="mb-6 p-4 bg-primary-50 border border-primary-200 rounded-2xl">
-                    <label className="flex items-center gap-3 cursor-pointer text-sm font-medium text-primary-800">
-                      <input
-                        type="checkbox"
-                        checked={useExclusionMode}
-                        onChange={(e) => setUseExclusionMode(e.target.checked)}
-                        className="w-4 h-4 accent-primary-500 rounded"
-                      />
-                      Use exclusion mode (select locations to exclude instead)
-                    </label>
-                  </div>
+                      {/* Location Search */}
+                      <div className="mb-6">
+                        <input
+                          type="text"
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          placeholder="Search locations by name, city, or state..."
+                          className="w-full px-6 py-4 border-2 border-neutral-200 rounded-2xl text-base bg-white/90 backdrop-blur-xl transition-all duration-300 focus:border-primary-500 focus:ring-4 focus:ring-primary-100 focus:-translate-y-0.5 focus:outline-none hover:bg-white"
+                        />
+                      </div>
 
-                  {/* Bulk Actions */}
-                  <div className="flex gap-4 mb-6 flex-wrap">
-                    <button
-                      onClick={selectAllLocations}
-                      className="inline-flex items-center gap-2 px-6 py-3 bg-white/90 backdrop-blur-xl text-neutral-700 font-semibold rounded-xl border border-neutral-200 shadow-lg shadow-black/5 transition-all duration-300 hover:bg-white hover:border-primary-300 hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 text-sm"
-                    >
-                      <CheckCircleIcon className="w-4 h-4" />
-                      Select All
-                    </button>
-                    <button
-                      onClick={clearAllLocations}
-                      className="inline-flex items-center gap-2 px-6 py-3 bg-white/90 backdrop-blur-xl text-neutral-700 font-semibold rounded-xl border border-neutral-200 shadow-lg shadow-black/5 transition-all duration-300 hover:bg-white hover:border-error-300 hover:text-error-600 hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-error-500 focus:ring-offset-2 text-sm"
-                    >
-                      <XMarkIcon className="w-4 h-4" />
-                      Clear All
-                    </button>
-                  </div>
-
-                  {/* Locations List */}
-                  <div className="max-h-96 overflow-y-auto border border-neutral-200 rounded-2xl bg-white/95 backdrop-blur-xl shadow-professional">
-                    {filteredLocations.map((location, index) => {
-                      const isSelected = useExclusionMode 
-                        ? !excludedLocationIds.includes(location.id)
-                        : selectedLocationIds.includes(location.id);
-
-                      return (
-                        <motion.div
-                          key={location.id}
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: index * 0.02 }}
-                          onClick={() => toggleLocationSelection(location.id)}
-                          className={`flex items-center justify-between py-3 px-4 cursor-pointer transition-all duration-300 text-sm hover:bg-primary-50 ${
-                            index !== filteredLocations.length - 1 ? 'border-b border-neutral-100' : ''
-                          } ${isSelected ? 'bg-primary-50' : ''}`}
-                        >
-                          <div className="flex items-center gap-3 flex-1">
-                            <div className={`w-4 h-4 rounded border-2 transition-all duration-300 flex items-center justify-center ${
-                              isSelected 
-                                ? 'border-primary-500 bg-primary-500' 
-                                : 'border-neutral-300'
-                            }`}>
-                              {isSelected && (
-                                <CheckCircleIcon className="w-3 h-3 text-white" />
-                              )}
-                            </div>
-                            <div className="flex-1">
-                              <div className="flex items-center gap-2">
-                                <div className="font-medium text-neutral-800">{location.name}</div>
-                                {location.config && (
-                                  <span className="inline-flex items-center px-2 py-1 text-xs bg-success-100 text-success-700 rounded-full">
-                                    <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                                    </svg>
-                                    Configured
-                                  </span>
-                                )}
-                              </div>
-                              <div className="text-xs text-neutral-500 mt-1">
-                                {location.city}, {location.state} • {location.phoneNumber}
-                                {location.config && location.config.budget && (
-                                  <span className="ml-2 text-primary-600 font-medium">
-                                    Budget: ${location.config.budget.toFixed(2)}
-                                  </span>
-                                )}
-                              </div>
-                              {location.config && location.config.notes && (
-                                <div className="text-xs text-neutral-400 mt-1 italic truncate">
-                                  "{location.config.notes}"
-                                </div>
-                              )}
-                            </div>
+                      {/* Configuration Filter */}
+                      <div className="mb-6">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-sm font-medium text-neutral-700">Filter by configuration:</span>
+                        </div>
+                        <div className="flex gap-2 flex-wrap">
+                          <button
+                            onClick={() => setConfigurationFilter('all')}
+                            className={`px-4 py-2 text-sm font-medium rounded-xl transition-all duration-300 ${
+                              configurationFilter === 'all'
+                                ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/25'
+                                : 'bg-white/90 backdrop-blur-xl text-neutral-700 border-2 border-neutral-200 hover:border-primary-300 hover:bg-white'
+                            }`}
+                          >
+                            All Locations ({locations.length})
+                          </button>
+                          <button
+                            onClick={() => setConfigurationFilter('configured')}
+                            className={`px-4 py-2 text-sm font-medium rounded-xl transition-all duration-300 ${
+                              configurationFilter === 'configured'
+                                ? 'bg-success-500 text-white shadow-lg shadow-success-500/25'
+                                : 'bg-white/90 backdrop-blur-xl text-neutral-700 border-2 border-neutral-200 hover:border-success-300 hover:bg-white'
+                            }`}
+                          >
+                            Configured ({locations.filter(l => l.config).length})
+                          </button>
+                          <button
+                            onClick={() => setConfigurationFilter('not-configured')}
+                            className={`px-4 py-2 text-sm font-medium rounded-xl transition-all duration-300 ${
+                              configurationFilter === 'not-configured'
+                                ? 'bg-warning-500 text-white shadow-lg shadow-warning-500/25'
+                                : 'bg-white/90 backdrop-blur-xl text-neutral-700 border-2 border-neutral-200 hover:border-warning-300 hover:bg-white'
+                            }`}
+                          >
+                            Not Configured ({locations.filter(l => !l.config).length})
+                          </button>
+                        </div>
+                        {(searchQuery || configurationFilter !== 'all') && (
+                          <div className="mt-2 text-sm text-gray-500">
+                            Showing {filteredLocations.length} of {locations.length} locations
                           </div>
-                          <div className="flex items-center gap-3">
-                            <div className="text-neutral-600 text-xs flex flex-col gap-1">
-                              <div className="flex items-center gap-2">
-                                <span>{location.city}, {location.state}</span>
+                        )}
+                      </div>
+
+                      {/* Exclusion Mode Toggle */}
+                      <div className="mb-6 p-4 bg-primary-50 border border-primary-200 rounded-2xl">
+                        <label className="flex items-center gap-3 cursor-pointer text-sm font-medium text-primary-800">
+                          <input
+                            type="checkbox"
+                            checked={useExclusionMode}
+                            onChange={(e) => setUseExclusionMode(e.target.checked)}
+                            className="w-4 h-4 accent-primary-500 rounded"
+                          />
+                          Use exclusion mode (select locations to exclude instead)
+                        </label>
+                      </div>
+
+                      {/* Bulk Actions */}
+                      <div className="flex gap-4 mb-6 flex-wrap">
+                        <button
+                          onClick={selectAllLocations}
+                          className="inline-flex items-center gap-2 px-6 py-3 bg-white/90 backdrop-blur-xl text-neutral-700 font-semibold rounded-xl border border-neutral-200 shadow-lg shadow-black/5 transition-all duration-300 hover:bg-white hover:border-primary-300 hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 text-sm"
+                        >
+                          <CheckCircleIcon className="w-4 h-4" />
+                          Select All
+                        </button>
+                        <button
+                          onClick={clearAllLocations}
+                          className="inline-flex items-center gap-2 px-6 py-3 bg-white/90 backdrop-blur-xl text-neutral-700 font-semibold rounded-xl border border-neutral-200 shadow-lg shadow-black/5 transition-all duration-300 hover:bg-white hover:border-error-300 hover:text-error-600 hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-error-500 focus:ring-offset-2 text-sm"
+                        >
+                          <XMarkIcon className="w-4 h-4" />
+                          Clear All
+                        </button>
+                      </div>
+
+                      {/* Locations List */}
+                      <div className="max-h-96 overflow-y-auto border border-neutral-200 rounded-2xl bg-white/95 backdrop-blur-xl shadow-professional">
+                        {filteredLocations.map((location, index) => {
+                          const isSelected = useExclusionMode 
+                            ? !excludedLocationIds.includes(location.id)
+                            : selectedLocationIds.includes(location.id);
+
+                          return (
+                            <motion.div
+                              key={location.id}
+                              initial={{ opacity: 0, x: -20 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ delay: index * 0.02 }}
+                              onClick={() => toggleLocationSelection(location.id)}
+                              className={`flex items-center justify-between py-3 px-4 cursor-pointer transition-all duration-300 text-sm hover:bg-primary-50 ${
+                                index !== filteredLocations.length - 1 ? 'border-b border-neutral-100' : ''
+                              } ${isSelected ? 'bg-primary-50' : ''}`}
+                            >
+                              <div className="flex items-center gap-3 flex-1">
+                                <div className={`w-4 h-4 rounded border-2 transition-all duration-300 flex items-center justify-center ${
+                                  isSelected 
+                                    ? 'border-primary-500 bg-primary-500' 
+                                    : 'border-neutral-300'
+                                }`}>
+                                  {isSelected && (
+                                    <CheckCircleIcon className="w-3 h-3 text-white" />
+                                  )}
+                                </div>
+                                <div className="flex-1">
+                                  <div className="flex items-center gap-2">
+                                    <div className="font-medium text-neutral-800">{location.name}</div>
+                                    {location.config && (
+                                      <span className="inline-flex items-center px-2 py-1 text-xs bg-success-100 text-success-700 rounded-full">
+                                        <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                        </svg>
+                                        Configured
+                                      </span>
+                                    )}
+                                  </div>
+                                  <div className="text-xs text-neutral-500 mt-1">
+                                    {location.city}, {location.state} • {location.phoneNumber}
+                                    {location.config && location.config.budget && (
+                                      <span className="ml-2 text-primary-600 font-medium">
+                                        Budget: ${location.config.budget.toFixed(2)}
+                                      </span>
+                                    )}
+                                  </div>
+                                  {location.config && location.config.notes && (
+                                    <div className="text-xs text-neutral-400 mt-1 italic truncate">
+                                      "{location.config.notes}"
+                                    </div>
+                                  )}
+                                </div>
                               </div>
-                              <div className="flex items-center gap-2 text-accent-600 font-mono">
-                                {location.config ? (
-                                  <>
-                                    {location.config.primaryLat && location.config.primaryLng ? (
+                              <div className="flex items-center gap-3">
+                                <div className="text-neutral-600 text-xs flex flex-col gap-1">
+                                  <div className="flex items-center gap-2">
+                                    <span>{location.city}, {location.state}</span>
+                                  </div>
+                                  <div className="flex items-center gap-2 text-accent-600 font-mono">
+                                    {location.config ? (
                                       <>
-                                        <span>{location.config.primaryLat.toFixed(4)}, {location.config.primaryLng.toFixed(4)}</span>
-                                        {location.config.radiusMiles && (
+                                        {location.config.primaryLat && location.config.primaryLng ? (
                                           <>
-                                            <span className="text-neutral-400">•</span>
-                                            <span className="text-warning-600">{location.config.radiusMiles}mi</span>
+                                            <span>{location.config.primaryLat.toFixed(4)}, {location.config.primaryLng.toFixed(4)}</span>
+                                            {location.config.radiusMiles && (
+                                              <>
+                                                <span className="text-neutral-400">•</span>
+                                                <span className="text-warning-600">{location.config.radiusMiles}mi</span>
+                                              </>
+                                            )}
+                                            {location.config.coordinateList && location.config.coordinateList.length > 0 && (
+                                              <>
+                                                <span className="text-neutral-400">•</span>
+                                                <span className="text-success-600">+{location.config.coordinateList.length} points</span>
+                                              </>
+                                            )}
                                           </>
-                                        )}
-                                        {location.config.coordinateList && location.config.coordinateList.length > 0 && (
+                                        ) : (
                                           <>
-                                            <span className="text-neutral-400">•</span>
-                                            <span className="text-success-600">+{location.config.coordinateList.length} points</span>
+                                            <span>{location.coordinates.lat.toFixed(4)}, {location.coordinates.lng.toFixed(4)}</span>
+                                            <span className="text-neutral-400">• default</span>
                                           </>
                                         )}
                                       </>
                                     ) : (
                                       <>
                                         <span>{location.coordinates.lat.toFixed(4)}, {location.coordinates.lng.toFixed(4)}</span>
-                                        <span className="text-neutral-400">• default</span>
+                                        <span className="text-neutral-400">• unconfigured</span>
                                       </>
                                     )}
-                                  </>
-                                ) : (
-                                  <>
-                                    <span>{location.coordinates.lat.toFixed(4)}, {location.coordinates.lng.toFixed(4)}</span>
-                                    <span className="text-neutral-400">• unconfigured</span>
-                                  </>
-                                )}
+                                  </div>
+                                </div>
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setSelectedLocationToConfigure(location);
+                                    setShowLocationConfigModal(true);
+                                  }}
+                                  className="p-2 text-primary-600 hover:text-primary-800 hover:bg-primary-50 rounded-lg transition-colors duration-300"
+                                  title="Configure location settings"
+                                >
+                                  <CogIcon className="w-4 h-4" />
+                                </button>
                               </div>
-                            </div>
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setSelectedLocationToConfigure(location);
-                                setShowLocationConfigModal(true);
-                              }}
-                              className="p-2 text-primary-600 hover:text-primary-800 hover:bg-primary-50 rounded-lg transition-colors duration-300"
-                              title="Configure location settings"
-                            >
-                              <CogIcon className="w-4 h-4" />
-                            </button>
-                          </div>
-                        </motion.div>
-                      );
-                    })}
-                  </div>
+                            </motion.div>
+                          );
+                        })}
+                      </div>
 
-                  {/* Selection Summary */}
-                  <div className="mt-6 p-4 bg-gradient-to-r from-primary-50 to-accent-50 border border-primary-200 rounded-2xl">
-                    <div className="text-sm font-semibold text-primary-800 mb-1">
-                      {useExclusionMode ? 'Exclusion Mode:' : 'Selection Mode:'}
+                      {/* Selection Summary */}
+                      <div className="mt-6 p-4 bg-gradient-to-r from-primary-50 to-accent-50 border border-primary-200 rounded-2xl">
+                        <div className="text-sm font-semibold text-primary-800 mb-1">
+                          {useExclusionMode ? 'Exclusion Mode:' : 'Selection Mode:'}
+                        </div>
+                        <div className="text-sm text-primary-700">
+                          {effectiveSelectedLocations.length} locations selected for campaigns
+                        </div>
+                      </div>
+
+                      {/* Continue Button */}
+                      <div className="flex justify-end mt-8">
+                        <button
+                          className={`inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-primary-500 to-primary-600 text-white font-semibold rounded-2xl shadow-lg shadow-primary-500/25 transition-all duration-300 hover:from-primary-600 hover:to-primary-700 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary-500/30 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 text-lg ${
+                            effectiveSelectedLocations.length === 0 ? 'opacity-50 cursor-not-allowed' : ''
+                          }`}
+                          onClick={() => setCurrentStep(2)}
+                          disabled={effectiveSelectedLocations.length === 0}
+                        >
+                          Continue to Campaigns
+                          <ArrowRightIcon className="w-5 h-5" />
+                        </button>
+                      </div>
                     </div>
-                    <div className="text-sm text-primary-700">
-                      {effectiveSelectedLocations.length} locations selected for campaigns
+                  </motion.div>
+                )}
+
+                {currentStep === 2 && (
+                  <motion.div
+                    key="campaigns"
+                    variants={cardVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    className="max-w-4xl mx-auto"
+                  >
+                    <div className="card-premium rounded-3xl p-10 shadow-elegant transition-all duration-300 hover:shadow-3xl">
+                      <div className="mb-8">
+                        <h2 className="text-3xl font-extrabold text-gradient-professional mb-4">
+                          Campaign Configuration
+                        </h2>
+                        <p className="text-neutral-600 text-lg">
+                          Set up your Meta campaign parameters. These settings will be applied to all generated campaigns.
+                        </p>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <div className="space-y-2">
+                          <label className="block font-semibold text-neutral-700 text-sm uppercase tracking-wide">
+                            Campaign Prefix
+                          </label>
+                          <input
+                            type="text"
+                            value={campaignConfig.prefix}
+                            onChange={(e) => setCampaignConfig(prev => ({ ...prev, prefix: e.target.value }))}
+                            className="w-full px-6 py-4 border-2 border-neutral-200 rounded-2xl text-base bg-white/90 backdrop-blur-xl transition-all duration-300 focus:border-primary-500 focus:ring-4 focus:ring-primary-100 focus:-translate-y-0.5 focus:outline-none hover:bg-white"
+                            placeholder="EWC_Meta_"
+                          />
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <label className="block font-semibold text-neutral-700 text-sm uppercase tracking-wide">
+                            Platform
+                          </label>
+                          <Select
+                            value={campaignConfig.platform}
+                            onChange={(value) => setCampaignConfig(prev => ({ ...prev, platform: value }))}
+                            options={[
+                              { value: 'Meta', label: 'Meta' },
+                              { value: 'Facebook', label: 'Facebook' },
+                              { value: 'Instagram', label: 'Instagram' }
+                            ]}
+                            label=""
+                          />
+                        </div>
+
+                        <div className="space-y-2">
+                          <label className="block font-semibold text-neutral-700 text-sm uppercase tracking-wide">
+                            Campaign Date
+                          </label>
+                          <ModernDatePicker
+                            value={campaignConfig.selectedDate}
+                            onChange={(date: Date) => setCampaignConfig(prev => ({ ...prev, selectedDate: date }))}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <div className="space-y-2">
+                          <label className="block font-semibold text-neutral-700 text-sm uppercase tracking-wide">
+                            Campaign Objective
+                          </label>
+                          <Select
+                            value={campaignConfig.objective}
+                            onChange={(value) => setCampaignConfig(prev => ({ ...prev, objective: value }))}
+                            options={defaultObjectives.map(obj => ({ value: obj.value, label: obj.label }))}
+                            label=""
+                          />
+                        </div>
+
+                        <div className="space-y-2">
+                          <label className="block font-semibold text-neutral-700 text-sm uppercase tracking-wide">
+                            Budget per Campaign ($)
+                          </label>
+                          <input
+                            type="number"
+                            step="0.01"
+                            value={campaignConfig.budget}
+                            onChange={(e) => setCampaignConfig(prev => ({ ...prev, budget: parseFloat(e.target.value) }))}
+                            className="w-full px-6 py-4 border-2 border-neutral-200 rounded-2xl text-base bg-white/90 backdrop-blur-xl transition-all duration-300 focus:border-primary-500 focus:ring-4 focus:ring-primary-100 focus:-translate-y-0.5 focus:outline-none hover:bg-white"
+                            placeholder="92.69"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Continue Button */}
+                      <div className="flex justify-between mt-8">
+                        <button
+                          onClick={() => setCurrentStep(1)}
+                          className="inline-flex items-center gap-2 px-6 py-3 bg-white/90 backdrop-blur-xl text-neutral-700 font-semibold rounded-xl border border-neutral-200 shadow-lg shadow-black/5 transition-all duration-300 hover:bg-white hover:border-neutral-300 hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:ring-offset-2"
+                        >
+                          <ArrowRightIcon className="w-4 h-4 rotate-180" />
+                          Back to Locations
+                        </button>
+                        <button
+                          onClick={() => setCurrentStep(3)}
+                          className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-primary-500 to-primary-600 text-white font-semibold rounded-2xl shadow-lg shadow-primary-500/25 transition-all duration-300 hover:from-primary-600 hover:to-primary-700 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary-500/30 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 text-lg"
+                        >
+                          Continue to Ads
+                          <ArrowRightIcon className="w-5 h-5" />
+                        </button>
+                      </div>
                     </div>
-                  </div>
+                  </motion.div>
+                )}
 
-                  {/* Continue Button */}
-                  <div className="flex justify-end mt-8">
-                    <button
-                      className={`inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-primary-500 to-primary-600 text-white font-semibold rounded-2xl shadow-lg shadow-primary-500/25 transition-all duration-300 hover:from-primary-600 hover:to-primary-700 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary-500/30 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 text-lg ${
-                        effectiveSelectedLocations.length === 0 ? 'opacity-50 cursor-not-allowed' : ''
-                      }`}
-                      onClick={() => setCurrentStep(2)}
-                      disabled={effectiveSelectedLocations.length === 0}
-                    >
-                      Continue to Campaigns
-                      <ArrowRightIcon className="w-5 h-5" />
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-            )}
+                {currentStep === 3 && (
+                  <motion.div
+                    key="ads"
+                    variants={cardVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    className="max-w-6xl mx-auto"
+                  >
+                    <div className="card-premium rounded-3xl p-10 shadow-elegant transition-all duration-300 hover:shadow-3xl">
+                      <div className="mb-8">
+                        <h2 className="text-3xl font-extrabold text-gradient-professional mb-4">
+                          Ad Configuration
+                        </h2>
+                        <p className="text-neutral-600 text-lg">
+                          Create multiple ad variations for your campaigns. Each ad will be deployed to all selected locations.
+                        </p>
+                      </div>
 
-            {currentStep === 2 && (
-              <motion.div
-                key="campaigns"
-                variants={cardVariants}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-                className="max-w-4xl mx-auto"
-              >
-                <div className="card-premium rounded-3xl p-10 shadow-elegant transition-all duration-300 hover:shadow-3xl">
-                  <div className="mb-8">
-                    <h2 className="text-3xl font-extrabold text-gradient-professional mb-4">
-                      Campaign Configuration
-                    </h2>
-                    <p className="text-neutral-600 text-lg">
-                      Set up your Meta campaign parameters. These settings will be applied to all generated campaigns.
-                    </p>
-                  </div>
+                      {/* Add New Ad Button */}
+                      <div className="mb-6">
+                        <button
+                          onClick={addNewAd}
+                          className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-success-500 to-success-600 text-white font-semibold rounded-2xl shadow-lg shadow-success-500/25 transition-all duration-300 hover:from-success-600 hover:to-success-700 hover:-translate-y-1 hover:shadow-xl hover:shadow-success-500/30 focus:outline-none focus:ring-2 focus:ring-success-500 focus:ring-offset-2"
+                        >
+                          <PlusIcon className="w-5 h-5" />
+                          Add New Ad
+                        </button>
+                      </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    <div className="space-y-2">
-                      <label className="block font-semibold text-neutral-700 text-sm uppercase tracking-wide">
-                        Campaign Prefix
-                      </label>
-                      <input
-                        type="text"
-                        value={campaignConfig.prefix}
-                        onChange={(e) => setCampaignConfig(prev => ({ ...prev, prefix: e.target.value }))}
-                        className="w-full px-6 py-4 border-2 border-neutral-200 rounded-2xl text-base bg-white/90 backdrop-blur-xl transition-all duration-300 focus:border-primary-500 focus:ring-4 focus:ring-primary-100 focus:-translate-y-0.5 focus:outline-none hover:bg-white"
-                        placeholder="EWC_Meta_"
-                      />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <label className="block font-semibold text-neutral-700 text-sm uppercase tracking-wide">
-                        Platform
-                      </label>
-                      <Select
-                        value={campaignConfig.platform}
-                        onChange={(value) => setCampaignConfig(prev => ({ ...prev, platform: value }))}
-                        options={[
-                          { value: 'Meta', label: 'Meta' },
-                          { value: 'Facebook', label: 'Facebook' },
-                          { value: 'Instagram', label: 'Instagram' }
-                        ]}
-                        label=""
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <label className="block font-semibold text-neutral-700 text-sm uppercase tracking-wide">
-                        Campaign Date
-                      </label>
-                      <ModernDatePicker
-                        value={campaignConfig.selectedDate}
-                        onChange={(date: Date) => setCampaignConfig(prev => ({ ...prev, selectedDate: date }))}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                    <div className="space-y-2">
-                      <label className="block font-semibold text-neutral-700 text-sm uppercase tracking-wide">
-                        Campaign Objective
-                      </label>
-                      <Select
-                        value={campaignConfig.objective}
-                        onChange={(value) => setCampaignConfig(prev => ({ ...prev, objective: value }))}
-                        options={defaultObjectives.map(obj => ({ value: obj.value, label: obj.label }))}
-                        label=""
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <label className="block font-semibold text-neutral-700 text-sm uppercase tracking-wide">
-                        Budget per Campaign ($)
-                      </label>
-                      <input
-                        type="number"
-                        step="0.01"
-                        value={campaignConfig.budget}
-                        onChange={(e) => setCampaignConfig(prev => ({ ...prev, budget: parseFloat(e.target.value) }))}
-                        className="w-full px-6 py-4 border-2 border-neutral-200 rounded-2xl text-base bg-white/90 backdrop-blur-xl transition-all duration-300 focus:border-primary-500 focus:ring-4 focus:ring-primary-100 focus:-translate-y-0.5 focus:outline-none hover:bg-white"
-                        placeholder="92.69"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Continue Button */}
-                  <div className="flex justify-between mt-8">
-                    <button
-                      onClick={() => setCurrentStep(1)}
-                      className="inline-flex items-center gap-2 px-6 py-3 bg-white/90 backdrop-blur-xl text-neutral-700 font-semibold rounded-xl border border-neutral-200 shadow-lg shadow-black/5 transition-all duration-300 hover:bg-white hover:border-neutral-300 hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:ring-offset-2"
-                    >
-                      <ArrowRightIcon className="w-4 h-4 rotate-180" />
-                      Back to Locations
-                    </button>
-                    <button
-                      onClick={() => setCurrentStep(3)}
-                      className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-primary-500 to-primary-600 text-white font-semibold rounded-2xl shadow-lg shadow-primary-500/25 transition-all duration-300 hover:from-primary-600 hover:to-primary-700 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary-500/30 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 text-lg"
-                    >
-                      Continue to Ads
-                      <ArrowRightIcon className="w-5 h-5" />
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-            )}
-
-            {currentStep === 3 && (
-              <motion.div
-                key="ads"
-                variants={cardVariants}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-                className="max-w-6xl mx-auto"
-              >
-                <div className="card-premium rounded-3xl p-10 shadow-elegant transition-all duration-300 hover:shadow-3xl">
-                  <div className="mb-8">
-                    <h2 className="text-3xl font-extrabold text-gradient-professional mb-4">
-                      Ad Configuration
-                    </h2>
-                    <p className="text-neutral-600 text-lg">
-                      Create multiple ad variations for your campaigns. Each ad will be deployed to all selected locations.
-                    </p>
-                  </div>
-
-                  {/* Add New Ad Button */}
-                  <div className="mb-6">
-                    <button
-                      onClick={addNewAd}
-                      className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-success-500 to-success-600 text-white font-semibold rounded-2xl shadow-lg shadow-success-500/25 transition-all duration-300 hover:from-success-600 hover:to-success-700 hover:-translate-y-1 hover:shadow-xl hover:shadow-success-500/30 focus:outline-none focus:ring-2 focus:ring-success-500 focus:ring-offset-2"
-                    >
-                      <PlusIcon className="w-5 h-5" />
-                      Add New Ad
-                    </button>
-                  </div>
-
-                  {/* Ads List */}
-                  <div className="space-y-6 mb-8">
-                    {campaignConfig.ads.map((ad, index) => (
+                      {/* Ads List */}
+                      <div className="space-y-6 mb-8">
+                        {campaignConfig.ads.map((ad, index) => (
                                               <motion.div
                           key={ad.id}
                           initial={{ opacity: 0, y: 20 }}
@@ -997,10 +1011,10 @@ function App() {
 
                     <button
                       onClick={generateCampaigns}
-                      className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-success-500 to-success-600 text-white font-semibold rounded-2xl shadow-lg shadow-success-500/25 transition-all duration-300 hover:from-success-600 hover:to-success-700 hover:-translate-y-1 hover:shadow-xl hover:shadow-success-500/30 focus:outline-none focus:ring-2 focus:ring-success-500 focus:ring-offset-2 text-lg"
+                      className="inline-flex items-center gap-2 px-6 py-3 bg-transparent text-success-600 font-semibold rounded-xl border-2 border-success-500 transition-all duration-300 hover:text-success-700 hover:border-success-600 hover:bg-success-50 focus:outline-none focus:ring-2 focus:ring-success-500 focus:ring-offset-2"
                     >
-                      <SparklesIcon className="w-5 h-5" />
-                      Generate Campaigns
+                      <DocumentArrowDownIcon className="w-4 h-4" />
+                      Export
                     </button>
                   </div>
                 </div>
@@ -1080,6 +1094,8 @@ function App() {
                   </div>
                 </div>
               </motion.div>
+            )}
+              </>
             )}
           </AnimatePresence>
 

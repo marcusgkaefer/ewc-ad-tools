@@ -117,7 +117,97 @@ export default {
           800: '#1e3a8a',
           900: '#1e3a8a',
           950: '#172554',
-        }
+        },
+        // New Waxcenter color palette
+        wax: {
+          // Primary reds from waxcenter.com
+          red: {
+            50: '#fef2f2',
+            100: '#fee2e2',
+            200: '#fecaca',
+            300: '#fca5a5',
+            400: '#f87171',
+            500: '#ef4444', // Main red
+            600: '#dc2626', // Waxcenter primary red
+            700: '#b91c1c',
+            800: '#991b1b',
+            900: '#7f1d1d',
+            950: '#450a0a',
+          },
+          // Elegant whites and grays
+          white: {
+            50: '#ffffff',
+            100: '#fefefe',
+            200: '#fdfdfd',
+            300: '#fcfcfc',
+            400: '#fafafa',
+            500: '#f8f8f8',
+            600: '#f5f5f5',
+            700: '#f2f2f2',
+            800: '#eeeeee',
+            900: '#e8e8e8',
+          },
+          // Supporting grays for sophistication
+          gray: {
+            50: '#f9fafb',
+            100: '#f3f4f6',
+            200: '#e5e7eb',
+            300: '#d1d5db',
+            400: '#9ca3af',
+            500: '#6b7280',
+            600: '#4b5563',
+            700: '#374151',
+            800: '#1f2937',
+            900: '#111827',
+            950: '#030712',
+          },
+          // Accent colors for status and highlights
+          gold: {
+            50: '#fffbeb',
+            100: '#fef3c7',
+            200: '#fde68a',
+            300: '#fcd34d',
+            400: '#fbbf24',
+            500: '#f59e0b',
+            600: '#d97706',
+            700: '#b45309',
+            800: '#92400e',
+            900: '#78350f',
+          },
+        },
+      },
+      // Custom gradients for the new design
+      backgroundImage: {
+        'wax-gradient': 'linear-gradient(135deg, #dc2626 0%, #ef4444 50%, #f87171 100%)',
+        'wax-subtle': 'linear-gradient(135deg, #fef2f2 0%, #ffffff 50%, #fef2f2 100%)',
+        'wax-elegant': 'linear-gradient(135deg, #ffffff 0%, #fef2f2 25%, #ffffff 50%, #fef2f2 75%, #ffffff 100%)',
+      },
+      // Enhanced shadows for premium feel
+      boxShadow: {
+        'wax-sm': '0 2px 4px 0 rgba(220, 38, 38, 0.05)',
+        'wax': '0 4px 6px -1px rgba(220, 38, 38, 0.1), 0 2px 4px -1px rgba(220, 38, 38, 0.06)',
+        'wax-md': '0 10px 15px -3px rgba(220, 38, 38, 0.1), 0 4px 6px -2px rgba(220, 38, 38, 0.05)',
+        'wax-lg': '0 20px 25px -5px rgba(220, 38, 38, 0.1), 0 10px 10px -5px rgba(220, 38, 38, 0.04)',
+        'wax-xl': '0 25px 50px -12px rgba(220, 38, 38, 0.25)',
+        'wax-2xl': '0 25px 50px -12px rgba(220, 38, 38, 0.25)',
+        'wax-inner': 'inset 0 2px 4px 0 rgba(220, 38, 38, 0.06)',
+      },
+      // Enhanced animations
+      animation: {
+        'wax-pulse': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'wax-bounce': 'bounce 1s infinite',
+        'wax-fade-in': 'fadeIn 0.5s ease-in-out',
+        'wax-slide-up': 'slideUp 0.3s ease-out',
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0', transform: 'translateY(10px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        slideUp: {
+          '0%': { transform: 'translateY(20px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
+        },
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],

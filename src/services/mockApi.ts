@@ -25,8 +25,8 @@ import { REFERENCE_AD_TEMPLATE, generateAdName, generateCampaignName, generateAd
 // Simulate network delay
 const delay = (ms: number = 500) => new Promise(resolve => setTimeout(resolve, ms));
 
-// Simulate random network failures (5% chance)
-const simulateFailure = () => Math.random() < 0.05;
+// Simulate random network failures (5% chance) - DISABLED for stable generation
+const simulateFailure = () => false;
 
 // Mock API class
 class MockApiService {
@@ -501,7 +501,7 @@ class MockApiService {
       'Additional Image 1 Placement', 'Additional Image 2 Hash', 'Additional Image 2 Placement',
       'Additional Image 3 Hash', 'Additional Image 3 Placement', 'Additional Image 4 Hash',
       'Additional Image 4 Placement', 'Creative Type', 'URL Tags', 'Video ID', 'Video Placement',
-      'Additional Video 1 ID',
+      'Additional Video 1 ID', 'Additional Video 1 Placement', 'Additional Video 1 Thumbnail URL',
       'Instagram Account ID', 'Call to Action', 'Additional Custom Tracking Specs', 'Video Retargeting',
       'Permalink', 'Use Page as Actor', 'Dynamic Creative Call to Action', 'Degrees of Freedom Type'
     ];
