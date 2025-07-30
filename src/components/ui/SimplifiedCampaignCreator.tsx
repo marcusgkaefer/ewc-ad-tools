@@ -236,6 +236,7 @@ const SimplifiedCampaignCreator: React.FC = () => {
   const [showFileComparison, setShowFileComparison] = useState(false);
   const [showLocationConfig, setShowLocationConfig] = useState(false);
   const [selectedLocationForConfig, setSelectedLocationForConfig] = useState<LocationWithConfig | null>(null);
+  const [previewGeneratedFile, setPreviewGeneratedFile] = useState<GeneratedFile | null>(null);
 
   // Collapsible sections state
   const [openSections, setOpenSections] = useState({
@@ -252,6 +253,9 @@ const SimplifiedCampaignCreator: React.FC = () => {
 
   // Settings modal state
   const [showSettingsModal, setShowSettingsModal] = useState(false);
+  
+  // Success notification state
+  const [showSuccessNotification, setShowSuccessNotification] = useState(false);
 
   // Boolean field states for checkboxes
   const [booleanFields, setBooleanFields] = useState({
@@ -263,6 +267,19 @@ const SimplifiedCampaignCreator: React.FC = () => {
     videoRetargeting: false, // "No"
     usePageAsActor: false, // "No"
   });
+
+  // Generated files session storage
+  interface GeneratedFile {
+    id: string;
+    name: string;
+    timestamp: Date;
+    locationCount: number;
+    jobId: string;
+    blob?: Blob;
+  }
+  
+  const [generatedFiles, setGeneratedFiles] = useState<GeneratedFile[]>([]);
+  const [showFilesList, setShowFilesList] = useState(false);
 
   // Load locations
   useEffect(() => {
@@ -383,9 +400,23 @@ const SimplifiedCampaignCreator: React.FC = () => {
           campaign: campaignConfig
         }
       );
-      if (result.success && result.data) {
-        setGenerationJob(result.data);
-      }
+              if (result.success && result.data) {
+          setGenerationJob(result.data);
+          
+          // Add to generated files list
+          const newFile: GeneratedFile = {
+            id: result.data.id,
+            name: `${campaignConfig.prefix}_${campaignConfig.platform}_${campaignConfig.month}${campaignConfig.day}_AllCampaigns.csv`,
+            timestamp: new Date(),
+            locationCount: selectedLocations.length,
+            jobId: result.data.id
+          };
+          setGeneratedFiles(prev => [newFile, ...prev]);
+          
+          setShowSuccessNotification(true);
+          // Auto-hide notification after 5 seconds
+          setTimeout(() => setShowSuccessNotification(false), 5000);
+        }
     } catch (err) {
       setError('Failed to generate campaigns');
       console.error('Generation error:', err);
@@ -400,6 +431,11 @@ const SimplifiedCampaignCreator: React.FC = () => {
     try {
       const response = await mockApi.downloadGeneratedFile(generationJob.id);
       if (response.success && response.data) {
+        // Cache the blob in the generated files list
+        setGeneratedFiles(prev => 
+          prev.map(f => f.jobId === generationJob.id ? { ...f, blob: response.data } : f)
+        );
+        
         const url = URL.createObjectURL(response.data);
         const link = document.createElement('a');
         link.href = url;
@@ -411,6 +447,46 @@ const SimplifiedCampaignCreator: React.FC = () => {
       setError('Failed to download CSV');
       console.error('Download error:', err);
     }
+  };
+
+  const handleDownloadFile = async (file: GeneratedFile) => {
+    try {
+      // If we have the blob cached, use it
+      if (file.blob) {
+        const url = URL.createObjectURL(file.blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = file.name;
+        link.click();
+        URL.revokeObjectURL(url);
+        return;
+      }
+
+      // Otherwise, fetch it from the API
+      const response = await mockApi.downloadGeneratedFile(file.jobId);
+      if (response.success && response.data) {
+        // Cache the blob for future downloads
+        setGeneratedFiles(prev => 
+          prev.map(f => f.id === file.id ? { ...f, blob: response.data } : f)
+        );
+        
+        const url = URL.createObjectURL(response.data);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = file.name;
+        link.click();
+        URL.revokeObjectURL(url);
+      }
+    } catch (err) {
+      setError('Failed to download file');
+      console.error('Download error:', err);
+    }
+  };
+
+  const handlePreviewFile = (file: GeneratedFile) => {
+    // Use the same preview functionality as the toolbar button but for generated files
+    setPreviewGeneratedFile(file);
+    setShowEnhancedPreview(true);
   };
 
   if (isLoading) {
@@ -425,7 +501,7 @@ const SimplifiedCampaignCreator: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-wax-elegant">
+    <div className="">
 
 
       {/* Main Content */}
@@ -438,6 +514,8 @@ const SimplifiedCampaignCreator: React.FC = () => {
             </div>
           </div>
         )}
+
+        
 
         <div className="grid grid-cols-1 gap-8">
           {/* Locations */}
@@ -462,11 +540,14 @@ const SimplifiedCampaignCreator: React.FC = () => {
                   <CheckCircleIcon className="w-5 h-5 text-green-500" />
                 )}
                 <div className="flex items-center gap-3">
-                  <button
-                    onClick={() => setShowEnhancedPreview(true)}
-                    disabled={selectedLocations.length === 0}
-                    className="inline-flex items-center gap-2 px-4 py-2 text-wax-gray-600 font-medium rounded-lg transition-all duration-200 hover:text-wax-red-600 hover:bg-wax-red-50 focus:outline-none focus:ring-2 focus:ring-wax-red-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
+                                      <button
+                      onClick={() => {
+                        setPreviewGeneratedFile(null); // Ensure we're not in file preview mode
+                        setShowEnhancedPreview(true);
+                      }}
+                      disabled={selectedLocations.length === 0}
+                      className="inline-flex items-center gap-2 px-4 py-2 text-wax-gray-600 font-medium rounded-lg transition-all duration-200 hover:text-wax-red-600 hover:bg-wax-red-50 focus:outline-none focus:ring-2 focus:ring-wax-red-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
                     <EyeIcon className="w-4 h-4" />
                     Preview
                   </button>
@@ -477,13 +558,22 @@ const SimplifiedCampaignCreator: React.FC = () => {
                     <ScaleIcon className="w-4 h-4" />
                     Compare Files
                   </button>
-                  <button
-                    onClick={() => setShowSettingsModal(true)}
-                    className="inline-flex items-center gap-2 px-4 py-2 text-wax-gray-600 font-medium rounded-lg transition-all duration-200 hover:text-wax-red-600 hover:bg-wax-red-50 focus:outline-none focus:ring-2 focus:ring-wax-red-500 focus:ring-offset-2"
-                  >
-                    <Cog6ToothIcon className="w-4 h-4" />
-                    Settings
-                  </button>
+                                     <button
+                     onClick={() => setShowSettingsModal(true)}
+                     className="inline-flex items-center gap-2 px-4 py-2 text-wax-gray-600 font-medium rounded-lg transition-all duration-200 hover:text-wax-red-600 hover:bg-wax-red-50 focus:outline-none focus:ring-2 focus:ring-wax-red-500 focus:ring-offset-2"
+                   >
+                     <Cog6ToothIcon className="w-4 h-4" />
+                     Settings
+                   </button>
+                   {generatedFiles.length > 0 && (
+                     <button
+                       onClick={() => setShowFilesList(!showFilesList)}
+                       className="inline-flex items-center gap-2 px-4 py-2 text-wax-gray-600 font-medium rounded-lg transition-all duration-200 hover:text-blue-600 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                     >
+                       <DocumentArrowDownIcon className="w-4 h-4" />
+                       Generated Files ({generatedFiles.length})
+                     </button>
+                   )}
                   <button
                     onClick={handleGenerateCampaigns}
                     disabled={selectedLocations.length === 0 || isGenerating}
@@ -566,7 +656,7 @@ const SimplifiedCampaignCreator: React.FC = () => {
               </div>
 
               {/* Locations List */}
-              <div className="bg-white rounded-xl border border-wax-gray-200 overflow-hidden overflow-y-auto">
+              <div className="bg-white rounded-xl border border-wax-gray-200 overflow-hidden overflow-y-auto max-h-[26rem]">
                 {filteredLocations.length === 0 ? (
                   <div className="p-8 text-center">
                     <p className="text-wax-gray-500">No locations found matching your search.</p>
@@ -585,19 +675,102 @@ const SimplifiedCampaignCreator: React.FC = () => {
               </div>
             </div>
             {generationJob && (
-              <div className="px-6 py-4 border-t border-wax-gray-100">
-                <button
-                  onClick={handleDownloadCSV}
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-white text-wax-red-600 font-semibold rounded-xl border-2 border-wax-red-200 shadow-wax-sm transition-all duration-300 hover:border-wax-red-300 hover:bg-wax-red-50 hover:-translate-y-0.5 hover:shadow-wax-md focus:outline-none focus:ring-2 focus:ring-wax-red-500 focus:ring-offset-2"
-                >
-                  <DocumentArrowDownIcon className="w-4 h-4" />
-                  Download CSV
-                </button>
+              <div className="px-6 py-4 border-t border-wax-gray-100 bg-green-50">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                      <CheckCircleIcon className="w-5 h-5 text-green-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-green-800">Export completed successfully!</p>
+                      <p className="text-xs text-green-600">Your campaign file is ready to download</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={handleDownloadCSV}
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-green-600 text-white font-semibold rounded-xl shadow-lg transition-all duration-300 hover:bg-green-700 hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                  >
+                    <DocumentArrowDownIcon className="w-4 h-4" />
+                    Download CSV
+                  </button>
+                </div>
               </div>
             )}
-          </motion.div>
+                     </motion.div>
 
-            {/* Generation Status */}
+           {/* Generated Files List */}
+           {showFilesList && generatedFiles.length > 0 && (
+             <motion.div
+               initial={{ opacity: 0, y: 20 }}
+               animate={{ opacity: 1, y: 0 }}
+               transition={{ duration: 0.3 }}
+               className="bg-white rounded-2xl shadow-wax-sm border border-wax-gray-200"
+             >
+               <div className="px-6 py-4 border-b border-wax-gray-100">
+                 <div className="flex items-center justify-between">
+                   <div className="flex items-center gap-3">
+                     <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                       <DocumentArrowDownIcon className="w-4 h-4 text-blue-600" />
+                     </div>
+                     <div>
+                       <h3 className="text-lg font-semibold text-wax-gray-800">Generated Files</h3>
+                       <p className="text-sm text-wax-gray-500">{generatedFiles.length} file{generatedFiles.length !== 1 ? 's' : ''} available this session</p>
+                     </div>
+                   </div>
+                   <button
+                     onClick={() => setShowFilesList(false)}
+                     className="text-wax-gray-400 hover:text-wax-gray-600 transition-colors duration-200"
+                   >
+                     <XCircleIcon className="w-5 h-5" />
+                   </button>
+                 </div>
+               </div>
+               <div className="px-6 py-6">
+                 <div className="space-y-3">
+                   {generatedFiles.map((file) => (
+                     <div
+                       key={file.id}
+                       className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors duration-200"
+                     >
+                       <div className="flex-1">
+                         <div className="flex items-center gap-3">
+                           <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                             <DocumentArrowDownIcon className="w-5 h-5 text-green-600" />
+                           </div>
+                           <div>
+                             <h4 className="font-medium text-gray-900 text-sm">{file.name}</h4>
+                             <div className="flex items-center gap-4 text-xs text-gray-500 mt-1">
+                               <span>{file.locationCount} locations</span>
+                               <span>•</span>
+                               <span>{file.timestamp.toLocaleString()}</span>
+                             </div>
+                           </div>
+                         </div>
+                                               </div>
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => handlePreviewFile(file)}
+                            className="inline-flex items-center gap-2 px-3 py-2 bg-gray-600 text-white text-sm font-medium rounded-lg transition-all duration-200 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                          >
+                            <EyeIcon className="w-4 h-4" />
+                            Preview
+                          </button>
+                          <button
+                            onClick={() => handleDownloadFile(file)}
+                            className="inline-flex items-center gap-2 px-3 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg transition-all duration-200 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                          >
+                            <DocumentArrowDownIcon className="w-4 h-4" />
+                            Download
+                          </button>
+                        </div>
+                     </div>
+                   ))}
+                 </div>
+               </div>
+             </motion.div>
+           )}
+
+             {/* Generation Status */}
             {generationJob && (
               <div className="bg-white rounded-xl shadow-wax-sm border border-wax-gray-200 p-6 mt-6">
                 <h3 className="text-lg font-semibold text-wax-gray-800 mb-4">Generation Status</h3>
@@ -631,11 +804,36 @@ const SimplifiedCampaignCreator: React.FC = () => {
             )}
 
           </div>
-        </div>
+                 </div>
 
-        {/* Settings Modal */}
-      <AnimatePresence>
-        {showSettingsModal && (
+         {/* Success Notification - Bottom Left */}
+         {showSuccessNotification && (
+           <motion.div 
+             initial={{ opacity: 0, x: -100, y: 50 }}
+             animate={{ opacity: 1, x: 0, y: 0 }}
+             exit={{ opacity: 0, x: -100, y: 50 }}
+             className="fixed bottom-6 left-6 bg-green-50 border border-green-200 rounded-xl p-4 shadow-lg z-50 max-w-sm"
+           >
+             <div className="flex items-center justify-between">
+               <div className="flex items-center gap-2">
+                 <CheckCircleIcon className="w-5 h-5 text-green-500" />
+                 <p className="text-green-700 font-medium">Campaigns exported successfully!</p>
+               </div>
+               <button 
+                 onClick={() => setShowSuccessNotification(false)}
+                 className="text-green-500 hover:text-green-700 transition-colors duration-200"
+               >
+                 <XCircleIcon className="w-5 h-5" />
+               </button>
+             </div>
+           </motion.div>
+         )}
+
+         
+
+         {/* Settings Modal */}
+        <AnimatePresence>
+          {showSettingsModal && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -1556,9 +1754,15 @@ const SimplifiedCampaignCreator: React.FC = () => {
       {/* Modals */}
       <EnhancedPreview
         isOpen={showEnhancedPreview}
-        onClose={() => setShowEnhancedPreview(false)}
+        onClose={() => {
+          setShowEnhancedPreview(false);
+          setPreviewGeneratedFile(null);
+        }}
         locations={selectedLocations}
         campaign={campaignConfig}
+        title={previewGeneratedFile ? `File Preview: ${previewGeneratedFile.name}` : "Campaign Preview"}
+        isGeneratedFile={!!previewGeneratedFile}
+        onDownloadFile={previewGeneratedFile ? () => handleDownloadFile(previewGeneratedFile) : undefined}
       />
 
       <FileComparisonModal

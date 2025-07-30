@@ -23,6 +23,8 @@ interface EnhancedPreviewProps {
   locations: LocationWithConfig[];
   campaign: CampaignConfiguration;
   title?: string;
+  isGeneratedFile?: boolean;
+  onDownloadFile?: () => void;
 }
 
 interface PreviewRow {
@@ -82,7 +84,9 @@ const EnhancedPreview: React.FC<EnhancedPreviewProps> = ({
   onClose,
   locations,
   campaign,
-  title = "Enhanced Campaign Preview"
+  title = "Enhanced Campaign Preview",
+  isGeneratedFile = false,
+  onDownloadFile
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -176,7 +180,7 @@ const EnhancedPreview: React.FC<EnhancedPreviewProps> = ({
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
           transition={{ duration: 0.3 }}
-          className="w-full max-w-7xl max-h-[95vh] overflow-hidden bg-white rounded-3xl shadow-wax-2xl border border-wax-gray-200"
+          className="w-full max-w-7xl max-h-[95vh] bg-white rounded-3xl shadow-wax-2xl border border-wax-gray-200 flex flex-col"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
@@ -330,19 +334,23 @@ const EnhancedPreview: React.FC<EnhancedPreviewProps> = ({
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => {
-                    // TODO: Implement export functionality
-                    console.log('Export preview data');
+                    if (isGeneratedFile && onDownloadFile) {
+                      onDownloadFile();
+                    } else {
+                      // TODO: Implement export functionality
+                      console.log('Export preview data');
+                    }
                   }}
                 >
                   <DocumentArrowDownIcon className="w-5 h-5" />
-                  Export Preview
+                  {isGeneratedFile ? 'Download' : 'Export Preview'}
                 </motion.button>
               </div>
             </div>
           </div>
 
           {/* Content Area */}
-          <div className="flex-1 overflow-auto">
+          <div className="flex-1 overflow-auto min-h-0">
             {viewMode === 'cards' ? (
               /* Cards View */
               <div className="p-6">
