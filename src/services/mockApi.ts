@@ -636,8 +636,8 @@ class MockApiService {
     
     // Use papaparse to properly escape all values, including JSON
     const csvOutput = Papa.unparse([headers, ...rows], {
-      quotes: true,     // Quote all fields
-      quoteChar: '"',   // Use double quotes
+      quotes: false,    // Only quote fields that need it (contain commas, quotes, newlines, etc.)
+      quoteChar: '"',   // Use double quotes when quoting is needed
       escapeChar: '"'   // Escape quotes by doubling them
     });
     
