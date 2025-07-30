@@ -6,14 +6,14 @@ import {
   ChartBarIcon,
   ArrowRightIcon,
   CheckCircleIcon,
-  PlayIcon,
   SparklesIcon,
   CogIcon,
   EyeIcon,
   XMarkIcon,
   PlusIcon,
   TrashIcon,
-  DocumentIcon
+  DocumentIcon,
+  XCircleIcon
 } from '@heroicons/react/24/solid';
 import { ArrowDownTrayIcon as DownloadIcon, DocumentArrowDownIcon } from '@heroicons/react/24/outline';
 import { mockApi } from './services/mockApi';
@@ -23,7 +23,7 @@ import ModernDatePicker from './components/ui/ModernDatePicker';
 import TemplateCreationModal from './components/ui/TemplateCreationModal';
 import { LocationConfigModal } from './components/ui/LocationConfigModal';
 import FilePreview from './components/ui/FilePreview';
-import FirstAccessWizard from './components/ui/FirstAccessWizard';
+import CampaignSettingsModal from './components/ui/CampaignSettingsModal';
 import Select from './components/ui/Select';
 import AppHeader from './components/ui/AppHeader';
 import ProgressSteps from './components/ui/ProgressSteps';
@@ -69,16 +69,20 @@ function App() {
   const [configurationFilter, setConfigurationFilter] = useState<'all' | 'configured' | 'not-configured'>('all');
   const [generationJob, setGenerationJob] = useState<GenerationJob | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [showSettings, setShowSettings] = useState(false);
+  const [showCampaignSettings, setShowCampaignSettings] = useState(false);
   const [showTemplateCreationModal, setShowTemplateCreationModal] = useState(false);
   const [isCreatingTemplate, setIsCreatingTemplate] = useState(false);
   const [showFilePreview, setShowFilePreview] = useState(false);
-  const [showFirstAccessWizard, setShowFirstAccessWizard] = useState(false);
+
   const [hasReviewed, setHasReviewed] = useState(false);
   const [hasGenerated, setHasGenerated] = useState(false);
   const [showLocationConfigModal, setShowLocationConfigModal] = useState(false);
   const [selectedLocationToConfigure, setSelectedLocationToConfigure] = useState<LocationWithConfig | null>(null);
   const [useSimplifiedVersion, setUseSimplifiedVersion] = useState(true);
+  const [showLocationConfigSuccess, setShowLocationConfigSuccess] = useState(false);
+  const [configSuccessMessage, setConfigSuccessMessage] = useState('');
+  const [showLocationConfigError, setShowLocationConfigError] = useState(false);
+  const [configErrorMessage, setConfigErrorMessage] = useState('');
 
   const [campaignConfig, setCampaignConfig] = useState<CampaignConfiguration>({
     prefix: 'EWC',
@@ -120,10 +124,7 @@ function App() {
           setTemplates(templatesResponse.data);
         }
 
-        const hasSeenTour = localStorage.getItem('hasSeenTour');
-        if (!hasSeenTour) {
-          setTimeout(() => setShowFirstAccessWizard(true), 1000);
-        }
+
       } catch (error) {
         console.error('Failed to load data:', error);
       } finally {
@@ -391,7 +392,7 @@ function App() {
         >
           {/* App Header */}
           <AppHeader 
-            onSettingsClick={() => setShowSettings(!showSettings)} 
+            onSettingsClick={() => setShowCampaignSettings(true)} 
             useSimplifiedVersion={useSimplifiedVersion}
             onVersionToggle={() => setUseSimplifiedVersion(!useSimplifiedVersion)}
           />
@@ -666,7 +667,7 @@ function App() {
                     <div className="card-premium rounded-3xl p-10 shadow-elegant transition-all duration-300 hover:shadow-3xl">
                       <div className="mb-8">
                         <h2 className="text-3xl font-extrabold text-gradient-professional mb-4">
-                          Campaign Configuration
+                          Campaign Settings
                         </h2>
                         <p className="text-neutral-600 text-lg">
                           Set up your Meta campaign parameters. These settings will be applied to all generated campaigns.
@@ -911,7 +912,7 @@ function App() {
                       Review & Generate
                     </h2>
                     <p className="text-neutral-600 text-lg">
-                      Review your campaign configuration before generating the final export file.
+                      Review your campaign settings before generating the final export file.
                     </p>
                   </div>
 
@@ -974,7 +975,7 @@ function App() {
                     <div className="space-y-3">
                       {[
                         `${stats.totalFiles} comprehensive CSV file containing all campaigns`,
-                        `${stats.totalCampaigns.toLocaleString()} total Meta campaign configurations`,
+                        `${stats.totalCampaigns.toLocaleString()} total Meta campaign settings`,
                         'Complete 73-column campaign import format',
                         `File name: ${campaignConfig.prefix}_${campaignConfig.platform}_${campaignConfig.month}${campaignConfig.day}_AllCampaigns.csv`,
                         'Location-specific targeting coordinates and demographics',
@@ -1005,23 +1006,25 @@ function App() {
                         <ArrowRightIcon className="w-4 h-4 rotate-180" />
                         Back to Ads
                       </button>
-                      
-                      <button
-                        onClick={() => setShowFilePreview(true)}
-                        className="inline-flex items-center gap-2 px-6 py-3 bg-white/90 backdrop-blur-xl text-neutral-700 font-semibold rounded-xl border border-neutral-200 shadow-lg shadow-black/5 transition-all duration-300 hover:bg-white hover:border-primary-300 hover:text-primary-600 hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
-                      >
-                        <EyeIcon className="w-4 h-4" />
-                        Preview Data
-                      </button>
                     </div>
 
-                    <button
-                      onClick={generateCampaigns}
-                      className="inline-flex items-center gap-2 px-6 py-3 bg-transparent text-success-600 font-semibold rounded-xl border-2 border-success-500 transition-all duration-300 hover:text-success-700 hover:border-success-600 hover:bg-success-50 focus:outline-none focus:ring-2 focus:ring-success-500 focus:ring-offset-2"
-                    >
-                      <DocumentArrowDownIcon className="w-4 h-4" />
-                      Export
-                    </button>
+                    <div className="flex gap-4">
+                      <button
+                        onClick={() => setShowFilePreview(true)}
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-transparent text-blue-600 font-semibold rounded-xl border-2 border-blue-500 transition-all duration-300 hover:text-blue-700 hover:border-blue-600 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                      >
+                        <EyeIcon className="w-4 h-4" />
+                        Preview
+                      </button>
+
+                      <button
+                        onClick={generateCampaigns}
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-transparent text-success-600 font-semibold rounded-xl border-2 border-success-500 transition-all duration-300 hover:text-success-700 hover:border-success-600 hover:bg-success-50 focus:outline-none focus:ring-2 focus:ring-success-500 focus:ring-offset-2"
+                      >
+                        <DocumentArrowDownIcon className="w-4 h-4" />
+                        Export
+                      </button>
+                    </div>
                   </div>
                 </div>
               </motion.div>
@@ -1105,51 +1108,16 @@ function App() {
             )}
           </AnimatePresence>
 
-          {/* Settings Panel */}
-          {showSettings && (
-            <motion.div
-              initial={{ opacity: 0, x: 300 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 300 }}
-              className="fixed top-24 right-6 w-80 card-premium rounded-3xl p-6 shadow-elegant z-40"
-            >
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="text-lg font-bold text-neutral-800">Quick Settings</h3>
-                <button
-                  onClick={() => setShowSettings(false)}
-                  className="w-8 h-8 flex items-center justify-center text-neutral-500 hover:text-neutral-700 hover:bg-neutral-100 rounded-lg transition-all duration-300"
-                >
-                  <XMarkIcon className="w-5 h-5" />
-                </button>
-              </div>
-              
-              <div className="space-y-4">
-                <button
-                  onClick={() => {
-                    setSelectedLocationIds([]);
-                    setExcludedLocationIds([]);
-                    setCampaignConfig(prev => ({ ...prev, ads: [] }));
-                    setCurrentStep(1);
-                    setShowSettings(false);
-                  }}
-                  className="w-full inline-flex items-center gap-2 px-4 py-3 bg-white/90 backdrop-blur-xl text-neutral-700 font-semibold rounded-xl border border-neutral-200 shadow-lg shadow-black/5 transition-all duration-300 hover:bg-white hover:border-error-500 hover:text-error-600 focus:outline-none focus:ring-2 focus:ring-error-500 focus:ring-offset-2 text-sm"
-                >
-                  Reset All Selections
-                </button>
-                
-                <button
-                  onClick={() => {
-                    setShowFirstAccessWizard(true);
-                    setShowSettings(false);
-                  }}
-                  className="w-full inline-flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-primary-500 to-primary-600 text-white font-semibold rounded-xl shadow-lg shadow-primary-500/25 transition-all duration-300 hover:from-primary-600 hover:to-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 text-sm"
-                >
-                  <PlayIcon className="w-4 h-4" />
-                  Take Tour
-                </button>
-              </div>
-            </motion.div>
-          )}
+          {/* Campaign Settings Modal */}
+          <CampaignSettingsModal
+            isOpen={showCampaignSettings}
+            onClose={() => setShowCampaignSettings(false)}
+            campaignConfig={campaignConfig}
+            onSave={(config) => {
+              setCampaignConfig(config);
+              setShowCampaignSettings(false);
+            }}
+          />
         </motion.div>
       </div>
 
@@ -1170,14 +1138,7 @@ function App() {
         isSubmitting={isCreatingTemplate}
       />
 
-      <FirstAccessWizard
-        isOpen={showFirstAccessWizard}
-        onClose={() => setShowFirstAccessWizard(false)}
-        onComplete={() => {
-          setShowFirstAccessWizard(false);
-          localStorage.setItem('hasSeenTour', 'true');
-        }}
-      />
+
 
       {selectedLocationToConfigure && (
         <LocationConfigModal
@@ -1188,17 +1149,12 @@ function App() {
           }}
           location={selectedLocationToConfigure}
           onSave={(updatedConfig: LocationConfig) => {
-            console.log('App.tsx - Saving location config:', updatedConfig);
-            console.log('App.tsx - Current locations before update:', locations.map(l => ({ id: l.id, name: l.name, hasConfig: !!l.config })));
-            
             // Update the location in the locations array
+            let updatedLocationName = '';
             setLocations(prev => {
-              console.log('App.tsx - Looking for location ID:', updatedConfig.locationId);
-              console.log('App.tsx - Available location IDs:', prev.map(l => l.id));
-              
               const updated = prev.map(loc => {
                 if (loc.id === updatedConfig.locationId) {
-                  console.log('App.tsx - MATCH! Updating location:', loc.name, 'with config:', updatedConfig);
+                  updatedLocationName = loc.name;
                   return { ...loc, config: updatedConfig };
                 } else {
                   return loc;
@@ -1206,14 +1162,12 @@ function App() {
               });
               
               const updatedLocation = updated.find(l => l.id === updatedConfig.locationId);
-              console.log('App.tsx - Final updated location:', updatedLocation);
               
               // Fallback: if no location was updated, try to find by selectedLocationToConfigure
               if (!updatedLocation && selectedLocationToConfigure) {
-                console.log('App.tsx - No direct match found, trying fallback with selectedLocationToConfigure:', selectedLocationToConfigure.id);
+                updatedLocationName = selectedLocationToConfigure.name;
                 return prev.map(loc => {
                   if (loc.id === selectedLocationToConfigure.id) {
-                    console.log('App.tsx - FALLBACK MATCH! Updating location:', loc.name);
                     return { ...loc, config: updatedConfig };
                   } else {
                     return loc;
@@ -1223,11 +1177,71 @@ function App() {
               
               return updated;
             });
+
+            // Show success notification
+            setConfigSuccessMessage(`${updatedLocationName || 'Location'} configuration saved successfully!`);
+            setShowLocationConfigSuccess(true);
+            setTimeout(() => setShowLocationConfigSuccess(false), 5000);
+
             setShowLocationConfigModal(false);
             setSelectedLocationToConfigure(null);
           }}
+          onError={(error: string) => {
+            setConfigErrorMessage(error);
+            setShowLocationConfigError(true);
+            setTimeout(() => setShowLocationConfigError(false), 5000);
+          }}
         />
       )}
+
+      {/* Location Configuration Notifications */}
+      <AnimatePresence>
+        {showLocationConfigSuccess && (
+          <motion.div 
+            key="success-notification"
+            initial={{ opacity: 0, x: -100, y: 50 }}
+            animate={{ opacity: 1, x: 0, y: 0 }}
+            exit={{ opacity: 0, x: -100, y: 50 }}
+            className="fixed bottom-6 left-6 bg-green-50 border border-green-200 rounded-xl p-4 shadow-lg z-50 max-w-sm"
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <CheckCircleIcon className="w-5 h-5 text-green-500" />
+                <p className="text-green-700 font-medium">{configSuccessMessage}</p>
+              </div>
+              <button 
+                onClick={() => setShowLocationConfigSuccess(false)}
+                className="text-green-500 hover:text-green-700 transition-colors duration-200"
+              >
+                <XCircleIcon className="w-5 h-5" />
+              </button>
+            </div>
+          </motion.div>
+        )}
+
+        {showLocationConfigError && (
+          <motion.div 
+            key="error-notification"
+            initial={{ opacity: 0, x: -100, y: 50 }}
+            animate={{ opacity: 1, x: 0, y: 0 }}
+            exit={{ opacity: 0, x: -100, y: 50 }}
+            className="fixed bottom-6 left-6 bg-red-50 border border-red-200 rounded-xl p-4 shadow-lg z-50 max-w-sm"
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <XMarkIcon className="w-5 h-5 text-red-500" />
+                <p className="text-red-700 font-medium">{configErrorMessage}</p>
+              </div>
+              <button 
+                onClick={() => setShowLocationConfigError(false)}
+                className="text-red-500 hover:text-red-700 transition-colors duration-200"
+              >
+                <XCircleIcon className="w-5 h-5" />
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

@@ -203,7 +203,7 @@ const SimplifiedCampaignCreator: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Campaign configuration
+  // Campaign settings
   const [campaignConfig, setCampaignConfig] = useState<CampaignConfiguration>({
     prefix: 'EWC',
     platform: 'Meta',
@@ -866,7 +866,7 @@ const SimplifiedCampaignCreator: React.FC = () => {
             >
               {/* Modal Header */}
               <div className="px-6 py-4 border-b border-wax-gray-200 flex items-center justify-between">
-                <h2 className="text-xl font-bold text-wax-gray-800">Campaign Configuration</h2>
+                <h2 className="text-xl font-bold text-wax-gray-800">Campaign Settings</h2>
                 <button
                   onClick={() => setShowSettingsModal(false)}
                   className="w-8 h-8 rounded-lg flex items-center justify-center text-wax-gray-400 hover:text-wax-gray-600 hover:bg-wax-gray-100 transition-all duration-200"
@@ -878,9 +878,9 @@ const SimplifiedCampaignCreator: React.FC = () => {
               {/* Modal Content */}
               <div className="p-6 overflow-y-auto max-h-[calc(90vh-5rem)]">
                 <div className="space-y-6">
-                  {/* Campaign Configuration */}
+                  {/* Campaign Settings */}
                   <CollapsibleSection
-                    title="Campaign Configuration"
+                    title="Campaign Settings"
                     icon={AdjustmentsHorizontalIcon}
                     isOpen={openSections.campaignConfig}
                     onToggle={() => toggleSection('campaignConfig')}

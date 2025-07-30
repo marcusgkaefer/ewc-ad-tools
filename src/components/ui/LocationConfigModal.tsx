@@ -13,13 +13,15 @@ interface LocationConfigModalProps {
   onClose: () => void;
   location: LocationWithConfig | null;
   onSave: (updatedConfig: LocationConfig) => void;
+  onError?: (error: string) => void;
 }
 
 const LocationConfigModal: React.FC<LocationConfigModalProps> = ({
   isOpen,
   onClose,
   location,
-  onSave
+  onSave,
+  onError
 }) => {
   const [config, setConfig] = useState<LocationConfiguration>({
     budget: 100,
@@ -90,17 +92,15 @@ const LocationConfigModal: React.FC<LocationConfigModalProps> = ({
       }
 
       // Call parent callback with updated config
-      console.log('LocationConfigModal - About to save config:', {
-        locationId: location.id,
-        updatedConfig,
-        hasConfig: !!updatedConfig,
-        configLocationId: updatedConfig?.locationId
-      });
       onSave(updatedConfig);
       onClose();
     } catch (err) {
       console.error('Error saving location config:', err);
-      setError('Failed to save configuration');
+      const errorMessage = 'Failed to save configuration';
+      setError(errorMessage);
+      if (onError) {
+        onError(errorMessage);
+      }
     } finally {
       setIsLoading(false);
     }
