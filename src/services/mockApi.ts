@@ -527,10 +527,7 @@ class MockApiService {
       ]
     }];
 
-    const attributionSpec = [{
-      event_type: "CLICK_THROUGH",
-      window_days: 1
-    }];
+
 
     // Date formatting function for MM/DD/YYYY HH:mm:ss am/pm format
     const formatCsvDate = (dateString: string): string => {
@@ -585,7 +582,7 @@ class MockApiService {
           'Yes',
           'NONE',
           'No',
-          '[]',
+          'No',
           'NONE',
           '', // Ad Set ID (empty in example)
           'ACTIVE',
@@ -596,7 +593,7 @@ class MockApiService {
           'UNDEFINED',
           'No',
           'No',
-          '[]',
+          'No',
           'o:108555182262',
           'tp:1035642271793092',
           'SCHEDULE',
@@ -613,7 +610,7 @@ class MockApiService {
           'custom_audience: Off, lookalike: Off',
           'FACEBOOK_STANDARD, AN_STANDARD, FEED_RELAXED',
           'OFFSITE_CONVERSIONS',
-          JSON.stringify(attributionSpec), // This will be properly escaped by papaparse
+          '[{"event_type":"CLICK_THROUGH","window_days":1}]', // Attribution spec in expected format
           'IMPRESSIONS',
           'a:120228258706880508',
           'ACTIVE',
@@ -644,7 +641,7 @@ class MockApiService {
           'https://scontent-dfw5-2.xx.fbcdn.net/v/t15.13418-10/467256659_543283285137927_5402167441693162688_n.jpg?stp=dst-jpg_tt6&_nc_cat=102&ccb=1-7&_nc_sid=ace027&_nc_oc=Adl-w5-p4KgKcpfNbwFCMI8p2z8bvGQvk3O2EUHsARUHic1iLG7nej7NHJZf5vrcj-w&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-dfw5-2.xx&_nc_gid=DprWR9RBxU4CVd-KxeA7MA&oh=00_AfMi8ih1MsPowL9pJrKsL6C9UW1sfWFo4HOhjCFJSCvgkA&oe=685F93A7',
           'x:602557576501192',
           template.fields.callToAction,
-          '[]',
+          'No',
           'No',
           'https://www.facebook.com/100067578193272/posts/pfbid02f9M3ZgPPTqtYjvm3MzhNwE4HVV1BUT4cmZEactPNPvgPUgCnFVYC4GQ6E5pAeCQl?dco_ad_id=120228258706880508',
           'No',

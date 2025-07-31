@@ -12,7 +12,7 @@ export const REFERENCE_AD_TEMPLATE = {
   callToAction: 'BOOK_TRAVEL',
   
   // Creative format and placement settings
-  dynamicCreativeAdFormat: 'Automatic Format',
+  dynamicCreativeAdFormat: 'Link Page Post Ad',
   titlePlacement: 'Default, Default, Default, Default, audience_network classic, facebook biz_disco_feed, facebook facebook_reels, facebook facebook_reels_overlay, facebook feed, facebook instream_video, facebook marketplace, facebook right_hand_column, facebook search, facebook story, facebook video_feeds, instagram explore, instagram reels, instagram story, instagram stream, messenger story',
   bodyPlacement: 'Default, Default, Default, Default, audience_network classic, facebook biz_disco_feed, facebook facebook_reels, facebook facebook_reels_overlay, facebook feed, facebook instream_video, facebook marketplace, facebook right_hand_column, facebook search, facebook story, facebook video_feeds, instagram explore, instagram reels, instagram story, instagram stream, messenger story',
   linkPlacement: 'Default, Default, Default, Default, audience_network classic, facebook biz_disco_feed, facebook facebook_reels, facebook facebook_reels_overlay, facebook feed, facebook instream_video, facebook marketplace, facebook right_hand_column, facebook search, facebook story, facebook video_feeds, instagram explore, instagram reels, instagram story, instagram stream, messenger story',
