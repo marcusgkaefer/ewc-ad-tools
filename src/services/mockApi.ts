@@ -733,7 +733,7 @@ class MockApiService {
           newObjective: "Yes",
           buyWithPrimeType: "NONE",
           isBudgetSchedulingEnabledForCampaign: "No",
-          campaignHighDemandPeriods: "No",
+          campaignHighDemandPeriods: "[]",
           buyWithIntegrationPartner: "NONE",
 
           // Ad Set Fields
@@ -746,7 +746,7 @@ class MockApiService {
           destinationType: "UNDEFINED",
           useAcceleratedDelivery: "No",
           isBudgetSchedulingEnabledForAdSet: "No",
-          adSetHighDemandPeriods: "No",
+          adSetHighDemandPeriods: "[]",
           linkObjectId: "o:108555182262",
           optimizedConversionTrackingPixels: "tp:1035642271793092",
           optimizedEvent: "SCHEDULE",
@@ -801,7 +801,7 @@ class MockApiService {
           additionalVideo1ThumbnailUrl: REFERENCE_AD_TEMPLATE.additionalVideoThumbnailUrl,
           instagramAccountId: "x:602557576501192",
           callToAction: template.fields.callToAction,
-          additionalCustomTrackingSpecs: "No",
+          additionalCustomTrackingSpecs: "[]",
           videoRetargeting: "No",
           permalink: "https://www.facebook.com/100067578193272/posts/pfbid02f9M3ZgPPTqtYjvm3MzhNwE4HVV1BUT4cmZEactPNPvgPUgCnFVYC4GQ6E5pAeCQl?dco_ad_id=120228258706880508",
           usePageAsActor: "No",
