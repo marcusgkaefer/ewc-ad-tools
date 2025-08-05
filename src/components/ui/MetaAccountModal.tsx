@@ -7,9 +7,7 @@ import {
   ArrowRightIcon,
   EyeIcon,
   EyeSlashIcon,
-  KeyIcon,
-  BuildingOfficeIcon,
-  UserIcon
+  BuildingOfficeIcon
 } from '@heroicons/react/24/outline';
 import { metaApiService } from '../../services/metaApiService';
 import { metaIntegrationService } from '../../services/metaIntegrationService';
@@ -58,10 +56,6 @@ export default function MetaAccountModal({ isOpen, onClose, onSuccess }: MetaAcc
   const [accounts, setAccounts] = useState<MetaAccount[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [authState, setAuthState] = useState<MetaAuthState>({
-    isAuthenticated: false,
-    isLoading: false
-  });
 
   // Reset state when modal opens
   useEffect(() => {
@@ -73,10 +67,6 @@ export default function MetaAccountModal({ isOpen, onClose, onSuccess }: MetaAcc
       setAccounts([]);
       setIsLoading(false);
       setError(null);
-      setAuthState({
-        isAuthenticated: false,
-        isLoading: false
-      });
     }
   }, [isOpen]);
 

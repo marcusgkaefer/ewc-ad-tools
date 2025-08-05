@@ -15,7 +15,7 @@ import {
   ChartBarIcon,
   ChevronDownIcon,
   ChevronUpIcon,
-  RefreshIcon
+  ArrowPathIcon
 } from '@heroicons/react/24/outline';
 import { metaIntegrationService } from '../../services/metaIntegrationService';
 import type { MetaAdTemplateRecord, MetaAdFilters, MetaAdPreview } from '../../types/meta';
@@ -218,7 +218,7 @@ export default function MetaAdsBrowser({
             disabled={isLoading}
             className="p-2 text-neutral-400 hover:text-neutral-600 transition-colors disabled:opacity-50"
           >
-            <RefreshIcon className="w-5 h-5" />
+            <ArrowPathIcon className="w-5 h-5" />
           </button>
         </div>
       </div>

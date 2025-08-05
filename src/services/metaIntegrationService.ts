@@ -48,7 +48,7 @@ class MetaIntegrationService {
     return data.id;
   }
 
-  async getMetaAccounts(userId: string): Promise<MetaAccountRecord[]> {
+  async getMetaAccounts(userId: string): Promise<any[]> {
     const { data, error } = await supabase
       .from('meta_accounts')
       .select('*')
@@ -349,7 +349,7 @@ class MetaIntegrationService {
             startDate: campaignConfig.startDate,
             endDate: campaignConfig.endDate
           },
-          custom: overrides.locationSpecific?.[location.id]?.custom || {}
+          custom: {}
         };
 
         const processedAd = await this.processMetaAdWithVariables(metaAd, variableContext, overrides);

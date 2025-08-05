@@ -332,7 +332,7 @@ export default function VariableEditor({
                 </div>
                 
                 <div className="mt-2 text-xs text-neutral-500">
-                  Press Ctrl+{ to show variable suggestions
+                  Press Ctrl+{'{}'} to show variable suggestions
                 </div>
               </div>
 

@@ -167,8 +167,8 @@ export interface MetaAd {
   id: string;
   name: string;
   status: 'ACTIVE' | 'PAUSED' | 'DELETED' | 'ARCHIVED' | 'PENDING_REVIEW' | 'DISAPPROVED' | 'PREAPPROVED';
-  creative: MetaAdCreative;
-  targeting: MetaAdTargeting;
+  creative?: MetaAdCreative;
+  targeting?: MetaAdTargeting;
   campaign_id: string;
   adset_id: string;
   account_id: string;
@@ -327,8 +327,6 @@ export interface MetaAd {
   thumbnail_url?: string;
   use_unified_creative?: boolean;
   configured_status: 'ACTIVE' | 'PAUSED' | 'DELETED' | 'PENDING_REVIEW' | 'DISAPPROVED' | 'PREAPPROVED';
-  creative?: MetaAdCreative;
-  targeting?: MetaAdTargeting;
 }
 
 // Meta Campaign Types
@@ -413,7 +411,7 @@ export interface MetaAdTemplateRecord {
   id: string;
   meta_ad_id: string;
   name: string;
-  creative: MetaAdCreative;
+  creative?: MetaAdCreative;
   targeting?: MetaAdTargeting;
   campaign_id?: string;
   ad_set_id?: string;
@@ -462,7 +460,7 @@ export interface MetaAdLocationOverrideRecord {
 export interface MetaAdSelection {
   metaAdId: string;
   metaAdName: string;
-  creative: MetaAdCreative;
+  creative?: MetaAdCreative;
   targeting?: MetaAdTargeting;
   isSelected: boolean;
   overrideSettings?: Record<string, any>;
@@ -499,7 +497,7 @@ export interface LocationOverride {
 export interface MetaAdPreview {
   id: string;
   name: string;
-  creative: MetaAdCreative;
+  creative?: MetaAdCreative;
   targeting?: MetaAdTargeting;
   performance?: {
     impressions?: number;
@@ -514,7 +512,7 @@ export interface MetaAdPreview {
 export interface CreateMetaAdRequest {
   name: string;
   adset_id: string;
-  creative: MetaAdCreative;
+  creative?: MetaAdCreative;
   targeting?: MetaAdTargeting;
   status?: string;
   bid_amount?: number;
@@ -573,7 +571,7 @@ export interface VariableContext {
 export interface ProcessedAd {
   id: string;
   name: string;
-  creative: MetaAdCreative;
+  creative?: MetaAdCreative;
   targeting?: MetaAdTargeting;
   variables: VariableContext;
   processedContent: {
