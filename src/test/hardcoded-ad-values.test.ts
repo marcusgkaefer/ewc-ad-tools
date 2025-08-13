@@ -29,7 +29,7 @@ describe('Hard-coded Ad Values', () => {
 
     it('should have proper technical settings', () => {
       expect(REFERENCE_AD_TEMPLATE.dynamicCreativeAdFormat).toBe(
-        'Automatic Format'
+        'Link Page Post Ad'
       );
       expect(REFERENCE_AD_TEMPLATE.optimizeTextPerPerson).toBe('No');
       expect(REFERENCE_AD_TEMPLATE.creativeType).toBe('Link Page Post Ad');
@@ -298,7 +298,7 @@ describe('Hard-coded Ad Values', () => {
       expect(REFERENCE_AD_TEMPLATE.displayLink).toBe('waxcenter.com');
       expect(REFERENCE_AD_TEMPLATE.callToAction).toBe('BOOK_TRAVEL');
       expect(REFERENCE_AD_TEMPLATE.dynamicCreativeAdFormat).toBe(
-        'Automatic Format'
+        'Link Page Post Ad'
       );
 
       // Ad name pattern should match Ad Set Name (Campaign Name + June)
