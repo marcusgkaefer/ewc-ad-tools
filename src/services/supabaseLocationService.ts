@@ -610,13 +610,11 @@ class SupabaseLocationService {
 
   async getLocationsWithConfigs(userId?: string): Promise<LocationWithConfig[]> {
     try {
-      // Get all locations (from JSON or database based on environment variable)
-      const locations = await this.getAllLocations();
-
-      // Get all configs for the user (always from database)
+      // Get only ACTIVE configs for the user (always from database)
       let configQuery = supabase
         .from('location_configs')
-        .select('*');
+        .select('*')
+        .eq('is_active', true); // Only get active configs
 
       if (userId) {
         configQuery = configQuery.eq('user_id', userId);
@@ -624,20 +622,40 @@ class SupabaseLocationService {
         configQuery = configQuery.is('user_id', null);
       }
 
-      const { data: configs, error: configError } = await configQuery.limit(10000); // Override default 1000 row limit
+      const { data: configs, error: configError } = await configQuery.limit(10000);
 
       if (configError) {
         console.error('Error fetching location configs:', configError);
         throw new Error(`Failed to fetch location configs: ${configError.message}`);
       }
 
+      console.log(`🔍 Found ${configs?.length || 0} active location configs`);
+
+      if (!configs || configs.length === 0) {
+        console.log('⚠️  No active location configs found');
+        return [];
+      }
+
+      // Get only the location IDs that have active configs
+      const activeLocationIds = configs.map(config => config.location_id);
+
+      // Get all locations (from JSON or database based on environment variable)
+      const allLocations = await this.getAllLocations();
+
+      // Filter to only locations that have active configs
+      const locationsWithActiveConfigs = allLocations.filter(location => 
+        activeLocationIds.includes(location.id)
+      );
+
+      console.log(`🔍 Filtered to ${locationsWithActiveConfigs.length} locations with active configs`);
+
       // Map configs to locations
       const configMap = new Map<string, LocationConfig>();
-      (configs || []).forEach(config => {
+      configs.forEach(config => {
         configMap.set(config.location_id, this.convertToLocationConfig(config));
       });
 
-      return locations.map(location => ({
+      return locationsWithActiveConfigs.map(location => ({
         ...location,
         config: configMap.get(location.id),
       }));

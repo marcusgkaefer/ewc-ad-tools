@@ -16,7 +16,6 @@ import {
   generateMockGenerationJob,
   createTemplate as createMockTemplate,
   getAllTemplates,
-  getAllLocations,
   deleteTemplate as deleteMockTemplate,
 } from "../data/mockData";
 import { supabaseLocationService } from "./supabaseLocationService";
@@ -537,11 +536,11 @@ class MockApiService {
   }
 
   private async generateMockCsvContent(job: GenerationJob): Promise<string> {
-    // Ensure locations are loaded
-    await getAllLocations(); // This will load locations if they're not already loaded
-
-    // Use mock locations that are already loaded in the app
-    const locations = mockLocations.filter((loc) =>
+    // Get locations with configs from Supabase
+    const allLocationsWithConfigs = await supabaseLocationService.getLocationsWithConfigs();
+    
+    // Filter to only the locations for this job
+    const locations = allLocationsWithConfigs.filter((loc) =>
       job.locationIds.includes(loc.id)
     );
     const templates = mockTemplates.filter((tpl) =>
@@ -549,14 +548,14 @@ class MockApiService {
     );
 
     console.log("🔍 DEBUG: Generating CSV for:", {
-      totalMockLocations: mockLocations.length,
+      totalLocationsWithConfigs: allLocationsWithConfigs.length,
       jobLocationIds: job.locationIds,
       foundLocations: locations.length,
       jobTemplateIds: job.templateIds.length,
       foundTemplates: templates.length,
       locationSample: locations
         .slice(0, 2)
-        .map((l) => ({ id: l.id, name: l.name })),
+        .map((l) => ({ id: l.id, name: l.name, radius: l.config?.radiusMiles })),
       templateSample: templates
         .slice(0, 2)
         .map((t) => ({ id: t.id, name: t.name })),
@@ -751,7 +750,7 @@ class MockApiService {
           optimizedConversionTrackingPixels: "tp:1035642271793092",
           optimizedEvent: "SCHEDULE",
           link: landingPageUrl,
-          addresses: `(${location.coordinates.lat.toFixed(3)}, ${location.coordinates.lng.toFixed(3)}) +${campaign.radius}mi`,
+          addresses: `(${location.coordinates.lat.toFixed(3)}, ${location.coordinates.lng.toFixed(3)}) +${location.config?.radiusMiles || campaign.radius}mi`,
           locationTypes: "home, recent",
           excludedRegions: "Alaska US, Wyoming US",
           excludedZip: excludedZipCodes,

@@ -61,7 +61,7 @@ const generatePreviewData = (
         startDate: campaign.startDate,
         endDate: campaign.endDate,
         landingPage,
-        radius: `${location.coordinates.lat}, ${location.coordinates.lng} +${campaign.radius}mi`,
+        radius: `${location.coordinates.lat}, ${location.coordinates.lng} +${location.config?.radiusMiles || campaign.radius}mi`,
         caption: ad.caption,
         status: ad.status
       });
