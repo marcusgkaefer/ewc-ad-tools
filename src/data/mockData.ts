@@ -1,4 +1,12 @@
-import type { Location, AdTemplate, GeneratedAd, GenerationJob, ObjectiveOption, CreateTemplateRequest, LocationSummary } from '../types';
+import type {
+  Location,
+  AdTemplate,
+  GeneratedAd,
+  GenerationJob,
+  ObjectiveOption,
+  CreateTemplateRequest,
+  LocationSummary,
+} from '../types';
 
 // Cache for locations to avoid repeated fetches
 let locationsCache: LocationSummary[] | null = null;
@@ -12,7 +20,9 @@ export const clearLocationsCache = () => {
 };
 
 // Convert Location from JSON to LocationSummary for easier use in UI
-export const convertToLocationSummary = (location: Location): LocationSummary => {
+export const convertToLocationSummary = (
+  location: Location
+): LocationSummary => {
   return {
     id: location.id || '',
     name: location.name || 'Unknown Location',
@@ -20,7 +30,8 @@ export const convertToLocationSummary = (location: Location): LocationSummary =>
     city: location.address_info?.city || 'Unknown City',
     state: location.state?.short_name || 'Unknown State',
     zipCode: location.address_info?.zip_code || '',
-    phoneNumber: location.contact_info?.phone_1?.display_number || 'No phone available',
+    phoneNumber:
+      location.contact_info?.phone_1?.display_number || 'No phone available',
     address: `${location.address_info?.address_1 || 'Unknown Address'}${location.address_info?.address_2 ? ', ' + location.address_info.address_2 : ''}, ${location.address_info?.city || 'Unknown City'}, ${location.state?.short_name || 'Unknown State'} ${location.address_info?.zip_code || ''}`,
     coordinates: {
       lat: location.location?.latitude || 0,
@@ -48,47 +59,57 @@ export const loadLocationsFromJson = async (): Promise<LocationSummary[]> => {
   // Start loading
   locationsLoadingPromise = (async () => {
     try {
-      console.log('🔍 DEBUG: Fetching locations from Artemis Wax Group JSON file...');
+      console.log(
+        '🔍 DEBUG: Fetching locations from Artemis Wax Group JSON file...'
+      );
       const response = await fetch('/artemis_wax_group.json');
-      
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const data = await response.json() as { centers: Location[] };
+      const data = (await response.json()) as { centers: Location[] };
       console.log('🔍 DEBUG: Fetched locations data:', data);
       console.log('🔍 DEBUG: typeof data:', typeof data);
       console.log('🔍 DEBUG: data keys:', Object.keys(data || {}));
-      
+
       // More defensive checks
       if (!data) {
         console.error('❌ Fetched data is null/undefined');
         return getMockLocations(); // Fallback to mock data
       }
-      
+
       console.log('🔍 DEBUG: data.centers exists:', !!data.centers);
-      
+
       const locations = data.centers;
-      console.log('🔍 DEBUG: Raw locations count:', locations ? locations.length : 0);
-      
+      console.log(
+        '🔍 DEBUG: Raw locations count:',
+        locations ? locations.length : 0
+      );
+
       if (!locations || !Array.isArray(locations)) {
         console.error('❌ locations is not an array:', locations);
         return getMockLocations(); // Fallback to mock data
       }
-      
+
       if (locations.length === 0) {
         console.warn('⚠️ locations array is empty');
         return getMockLocations(); // Fallback to mock data
       }
-      
+
       const filtered = locations
         .filter((location: Location) => location.code !== 'CORP') // Filter out corporate location
         .map(convertToLocationSummary)
-        .sort((a: LocationSummary, b: LocationSummary) => a.name.localeCompare(b.name));
-      
+        .sort((a: LocationSummary, b: LocationSummary) =>
+          a.name.localeCompare(b.name)
+        );
+
       console.log('🔍 DEBUG: Filtered locations count:', filtered.length);
-      console.log('🔍 DEBUG: First few locations:', filtered.slice(0, 3).map(l => l.name));
-      
+      console.log(
+        '🔍 DEBUG: First few locations:',
+        filtered.slice(0, 3).map(l => l.name)
+      );
+
       // Cache the result
       locationsCache = filtered;
       return filtered;
@@ -117,7 +138,7 @@ const getMockLocations = (): LocationSummary[] => {
       phoneNumber: '(310) 555-0123',
       address: '9876 Rodeo Drive, Beverly Hills, CA 90210',
       coordinates: { lat: 34.0736, lng: -118.4004 },
-      locationPrime: 'BEVH'
+      locationPrime: 'BEVH',
     },
     {
       id: 'loc_2',
@@ -129,7 +150,7 @@ const getMockLocations = (): LocationSummary[] => {
       phoneNumber: '(212) 555-0124',
       address: '123 Broadway, New York, NY 10001',
       coordinates: { lat: 40.7505, lng: -73.9934 },
-      locationPrime: 'MANH'
+      locationPrime: 'MANH',
     },
     {
       id: 'loc_3',
@@ -140,8 +161,8 @@ const getMockLocations = (): LocationSummary[] => {
       zipCode: '33139',
       phoneNumber: '(305) 555-0125',
       address: '456 Ocean Drive, Miami Beach, FL 33139',
-      coordinates: { lat: 25.7907, lng: -80.1300 },
-      locationPrime: 'MIAM'
+      coordinates: { lat: 25.7907, lng: -80.13 },
+      locationPrime: 'MIAM',
     },
     {
       id: 'loc_4',
@@ -153,7 +174,7 @@ const getMockLocations = (): LocationSummary[] => {
       phoneNumber: '(512) 555-0126',
       address: '789 Congress Avenue, Austin, TX 78701',
       coordinates: { lat: 30.2672, lng: -97.7431 },
-      locationPrime: 'AUST'
+      locationPrime: 'AUST',
     },
     {
       id: 'loc_5',
@@ -165,8 +186,8 @@ const getMockLocations = (): LocationSummary[] => {
       phoneNumber: '(206) 555-0127',
       address: '321 Pike Street, Seattle, WA 98101',
       coordinates: { lat: 47.6062, lng: -122.3321 },
-      locationPrime: 'SEAT'
-    }
+      locationPrime: 'SEAT',
+    },
   ];
 };
 
@@ -186,7 +207,7 @@ export const defaultObjectives: ObjectiveOption[] = [
   { id: 'lead_generation', label: 'Lead Generation', value: 'Lead Generation' },
   { id: 'messages', label: 'Messages', value: 'Messages' },
   { id: 'app_installs', label: 'App Installs', value: 'App Installs' },
-  { id: 'store_visits', label: 'Store Visits', value: 'Store Visits' }
+  { id: 'store_visits', label: 'Store Visits', value: 'Store Visits' },
 ];
 
 // Template storage (simulating persistent storage)
@@ -202,7 +223,8 @@ export const generateMockTemplates = (): AdTemplate[] => {
       type: 'template_1',
       fields: {
         headline: 'Special Offer at {{location.name}}!',
-        description: 'Visit our {{location.city}} location for exclusive deals and amazing service. Call {{location.phone}} to learn more!',
+        description:
+          'Visit our {{location.city}} location for exclusive deals and amazing service. Call {{location.phone}} to learn more!',
         callToAction: 'Visit Us Today',
         imageUrl: '/images/template1-hero.jpg',
         landingPageUrl: 'https://example.com/{{location.id}}/promo',
@@ -241,7 +263,8 @@ export const generateMockTemplates = (): AdTemplate[] => {
       type: 'template_2',
       fields: {
         headline: 'Now Serving {{location.city}}!',
-        description: 'We\'re excited to announce our new services in {{location.city}}, {{location.state}}. Located at {{location.address}}, we\'re here to help!',
+        description:
+          "We're excited to announce our new services in {{location.city}}, {{location.state}}. Located at {{location.address}}, we're here to help!",
         callToAction: 'Learn More',
         imageUrl: '/images/template2-hero.jpg',
         landingPageUrl: 'https://example.com/{{location.id}}/services',
@@ -280,7 +303,8 @@ export const generateMockTemplates = (): AdTemplate[] => {
       type: 'template_3',
       fields: {
         headline: 'Grand Opening in {{location.city}}!',
-        description: 'Join us for the grand opening of our newest location in {{location.city}}, {{location.state}}! Special offers available.',
+        description:
+          'Join us for the grand opening of our newest location in {{location.city}}, {{location.state}}! Special offers available.',
         callToAction: 'Join the Celebration',
         imageUrl: '/images/template3-hero.jpg',
         landingPageUrl: 'https://example.com/{{location.id}}/grand-opening',
@@ -312,7 +336,8 @@ export const generateMockTemplates = (): AdTemplate[] => {
       type: 'template_4',
       fields: {
         headline: 'Find Us in {{location.city}}',
-        description: 'Visit us at {{location.address}} or call {{location.phone}}. We\'re here to serve the {{location.city}} community!',
+        description:
+          "Visit us at {{location.address}} or call {{location.phone}}. We're here to serve the {{location.city}} community!",
         callToAction: 'Get Directions',
         imageUrl: '/images/template4-hero.jpg',
         landingPageUrl: 'https://example.com/{{location.id}}/contact',
@@ -352,7 +377,9 @@ export const generateMockTemplates = (): AdTemplate[] => {
 };
 
 // Template creation function
-export const createTemplate = (templateData: CreateTemplateRequest): AdTemplate => {
+export const createTemplate = (
+  templateData: CreateTemplateRequest
+): AdTemplate => {
   const newTemplate: AdTemplate = {
     id: `template_${templateIdCounter++}`,
     name: templateData.name,
@@ -385,10 +412,13 @@ export const deleteTemplate = (templateId: string): boolean => {
 };
 
 // Generate mock generated ads
-export const generateMockGeneratedAds = (locations: LocationSummary[], templates: AdTemplate[]): GeneratedAd[] => {
+export const generateMockGeneratedAds = (
+  locations: LocationSummary[],
+  templates: AdTemplate[]
+): GeneratedAd[] => {
   const ads: GeneratedAd[] = [];
   const batchId = `batch_${Date.now()}`;
-  
+
   locations.forEach(location => {
     templates.forEach(template => {
       const ad: GeneratedAd = {
@@ -397,10 +427,16 @@ export const generateMockGeneratedAds = (locations: LocationSummary[], templates
         templateId: template.id,
         generatedFields: {
           headline: substituteVariables(template.fields.headline, location),
-          description: substituteVariables(template.fields.description, location),
+          description: substituteVariables(
+            template.fields.description,
+            location
+          ),
           callToAction: template.fields.callToAction,
           imageUrl: template.fields.imageUrl,
-          landingPageUrl: substituteVariables(template.fields.landingPageUrl, location),
+          landingPageUrl: substituteVariables(
+            template.fields.landingPageUrl,
+            location
+          ),
         },
         metadata: {
           createdAt: new Date().toISOString(),
@@ -412,13 +448,14 @@ export const generateMockGeneratedAds = (locations: LocationSummary[], templates
       ads.push(ad);
     });
   });
-  
+
   return ads;
 };
 
-
-
-function substituteVariables(template: string, location: LocationSummary): string {
+function substituteVariables(
+  template: string,
+  location: LocationSummary
+): string {
   return template
     .replace(/\{\{location\.name\}\}/g, location.name)
     .replace(/\{\{location\.city\}\}/g, location.city)
@@ -435,7 +472,7 @@ export const generateMockGenerationJob = (
 ): GenerationJob => {
   const totalAds = locationIds.length * templateIds.length;
   const estimatedTime = Math.ceil(totalAds / 100) * 10; // 10 seconds per 100 ads
-  
+
   return {
     id: `job_${Date.now()}`,
     status: 'pending',
@@ -462,8 +499,8 @@ export const generateMockGenerationJob = (
         startDate: '06/26/2025 2:32:00 am',
         endDate: '07/26/2025 11:59:00 pm',
         ads: [],
-        radius: 5
-      }
+        radius: 5,
+      },
     },
     createdAt: new Date().toISOString(),
     estimatedTime,
@@ -479,15 +516,25 @@ const initializeLocations = async () => {
   try {
     // Start with fallback data
     mockLocations.push(...getMockLocations());
-    console.log('🔍 DEBUG: Initialized with fallback locations:', mockLocations.length);
-    
+    console.log(
+      '🔍 DEBUG: Initialized with fallback locations:',
+      mockLocations.length
+    );
+
     // Load real locations and update
     const realLocations = await loadLocationsFromJson();
     mockLocations.length = 0; // Clear array
     mockLocations.push(...realLocations); // Add real locations
-    console.log('✅ Updated mockLocations with real data:', mockLocations.length, 'locations');
+    console.log(
+      '✅ Updated mockLocations with real data:',
+      mockLocations.length,
+      'locations'
+    );
   } catch (error) {
-    console.error('❌ Failed to load real locations, keeping fallback data:', error);
+    console.error(
+      '❌ Failed to load real locations, keeping fallback data:',
+      error
+    );
   }
 };
 
@@ -495,7 +542,10 @@ const initializeLocations = async () => {
 initializeLocations();
 console.log('🔍 DEBUG: mockLocations loaded, count:', mockLocations.length);
 export const mockTemplates = generateMockTemplates();
-export const mockGeneratedAds = generateMockGeneratedAds(mockLocations.slice(0, 10), mockTemplates);
+export const mockGeneratedAds = generateMockGeneratedAds(
+  mockLocations.slice(0, 10),
+  mockTemplates
+);
 
 // Export filtered data functions
 export const getLocationsByState = (state: string): LocationSummary[] => {
@@ -508,11 +558,12 @@ export const getLocationsByCity = (city: string): LocationSummary[] => {
 
 export const searchLocations = (query: string): LocationSummary[] => {
   const searchTerm = query.toLowerCase();
-  return mockLocations.filter(location => 
-    location.name.toLowerCase().includes(searchTerm) ||
-    location.city.toLowerCase().includes(searchTerm) ||
-    location.state.toLowerCase().includes(searchTerm) ||
-    location.zipCode.includes(searchTerm)
+  return mockLocations.filter(
+    location =>
+      location.name.toLowerCase().includes(searchTerm) ||
+      location.city.toLowerCase().includes(searchTerm) ||
+      location.state.toLowerCase().includes(searchTerm) ||
+      location.zipCode.includes(searchTerm)
   );
 };
 
@@ -529,6 +580,8 @@ export const getLocationStats = () => {
     totalLocations: mockLocations.length,
     totalStates: getUniqueStates().length,
     totalCities: getUniqueCities().length,
-    averageLocationsPerState: Math.round(mockLocations.length / getUniqueStates().length),
+    averageLocationsPerState: Math.round(
+      mockLocations.length / getUniqueStates().length
+    ),
   };
-}; 
+};

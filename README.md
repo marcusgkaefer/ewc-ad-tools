@@ -22,12 +22,14 @@ VITE_USE_ARTEMIS_GROUP=false
 ```
 
 **How it works:**
+
 - When `VITE_USE_ARTEMIS_GROUP=true`, the application loads location data from `/artemis_wax_group.json` in the public folder
 - Location configurations (budgets, targeting settings, etc.) are still managed through the Supabase `locations_configs` table
 - This allows you to use a static JSON file for location data while maintaining dynamic configuration capabilities
 - The JSON file contains comprehensive location information including addresses, coordinates, working hours, and contact details
 
 **Use cases:**
+
 - Testing with a specific set of locations
 - Working offline or with limited database access
 - Using pre-approved location data for specific campaigns
@@ -68,6 +70,7 @@ npm run migrate-locations
 ```
 
 This will:
+
 - Read your existing `locations.json` file
 - Upload all location data to Supabase
 - Skip corporate locations (code: 'CORP')
@@ -86,11 +89,13 @@ Visit `http://localhost:5173` to see the application.
 ## Database Schema
 
 ### Locations Table
+
 - Stores all location data including address, contact info, and working hours
 - Uses JSONB fields for complex nested data structures
 - Includes indexes for optimal search performance
 
 ### Location Configs Table
+
 - Stores user-specific configuration for each location
 - Includes budget settings, custom preferences, and notes
 - Supports per-user customization with Row Level Security
@@ -98,21 +103,25 @@ Visit `http://localhost:5173` to see the application.
 ## Features Overview
 
 ### Location Selection
+
 - Search and filter locations by name, city, or state
 - Multi-select with bulk operations
 - Real-time location count and statistics
 
 ### Location Configuration
+
 - Set custom budgets for each location
 - Add notes and special instructions
 - Configure location-specific campaign settings
 
 ### Template Management
+
 - 4 built-in ad templates
 - Custom template creation
 - Variable substitution for location-specific content
 
 ### Campaign Generation
+
 - Generate ads for selected locations
 - Preview before export
 - Download as CSV, Excel, or JSON
@@ -130,12 +139,14 @@ The application uses a service layer that abstracts Supabase operations:
 ## Configuration Options
 
 ### Location Configuration
+
 - **Budget**: Set campaign budget per location
 - **Notes**: Add special instructions or notes
 - **Custom Settings**: Store additional JSON configuration
 - **Active Status**: Enable/disable locations for campaigns
 
 ### Campaign Configuration
+
 - **Platform**: Meta, Google, etc.
 - **Objective**: Engagement, Conversions, etc.
 - **Duration**: Evergreen or time-bound campaigns

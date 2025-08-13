@@ -1,6 +1,10 @@
-import React, { useState } from 'react';
+import {
+  CalendarIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+} from '@heroicons/react/24/outline';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CalendarIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
+import React, { useState } from 'react';
 
 interface DatePickerProps {
   value: Date;
@@ -12,53 +16,85 @@ interface DatePickerProps {
 const DatePicker: React.FC<DatePickerProps> = ({
   value,
   onChange,
-  placeholder = "Select date",
-  className = ""
+  placeholder = 'Select date',
+  className = '',
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [currentMonth, setCurrentMonth] = useState(new Date(value.getFullYear(), value.getMonth()));
+  const [currentMonth, setCurrentMonth] = useState(
+    new Date(value.getFullYear(), value.getMonth())
+  );
 
   const monthNames = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
   ];
 
-  const daysInMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0).getDate();
-  const firstDayOfMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1).getDay();
+  const daysInMonth = new Date(
+    currentMonth.getFullYear(),
+    currentMonth.getMonth() + 1,
+    0
+  ).getDate();
+  const firstDayOfMonth = new Date(
+    currentMonth.getFullYear(),
+    currentMonth.getMonth(),
+    1
+  ).getDay();
 
   const formatDate = (date: Date) => {
     return date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
-      day: 'numeric'
+      day: 'numeric',
     });
   };
 
   const handleDateSelect = (day: number) => {
-    const newDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
+    const newDate = new Date(
+      currentMonth.getFullYear(),
+      currentMonth.getMonth(),
+      day
+    );
     onChange(newDate);
     setIsOpen(false);
   };
 
   const handlePrevMonth = () => {
-    setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1));
+    setCurrentMonth(
+      new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1)
+    );
   };
 
   const handleNextMonth = () => {
-    setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1));
+    setCurrentMonth(
+      new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1)
+    );
   };
 
   const isSelectedDate = (day: number) => {
-    return value.getDate() === day &&
-           value.getMonth() === currentMonth.getMonth() &&
-           value.getFullYear() === currentMonth.getFullYear();
+    return (
+      value.getDate() === day &&
+      value.getMonth() === currentMonth.getMonth() &&
+      value.getFullYear() === currentMonth.getFullYear()
+    );
   };
 
   const isToday = (day: number) => {
     const today = new Date();
-    return today.getDate() === day &&
-           today.getMonth() === currentMonth.getMonth() &&
-           today.getFullYear() === currentMonth.getFullYear();
+    return (
+      today.getDate() === day &&
+      today.getMonth() === currentMonth.getMonth() &&
+      today.getFullYear() === currentMonth.getFullYear()
+    );
   };
 
   return (
@@ -98,7 +134,8 @@ const DatePicker: React.FC<DatePickerProps> = ({
                 <ChevronLeftIcon className="w-5 h-5" />
               </button>
               <h3 className="text-lg font-semibold text-white">
-                {monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}
+                {monthNames[currentMonth.getMonth()]}{' '}
+                {currentMonth.getFullYear()}
               </h3>
               <button
                 type="button"
@@ -111,8 +148,11 @@ const DatePicker: React.FC<DatePickerProps> = ({
 
             {/* Days of week */}
             <div className="grid grid-cols-7 gap-1 mb-2">
-              {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
-                <div key={day} className="text-center text-xs text-white/50 py-2">
+              {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+                <div
+                  key={day}
+                  className="text-center text-xs text-white/50 py-2"
+                >
                   {day}
                 </div>
               ))}
@@ -136,11 +176,12 @@ const DatePicker: React.FC<DatePickerProps> = ({
                     className={`
                       h-8 w-8 rounded-lg text-sm font-medium transition-all duration-200
                       hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-blue-400/50
-                      ${isSelectedDate(day) 
-                        ? 'bg-blue-500 text-white shadow-lg' 
-                        : isToday(day)
-                        ? 'bg-white/10 text-white'
-                        : 'text-white/70 hover:text-white'
+                      ${
+                        isSelectedDate(day)
+                          ? 'bg-blue-500 text-white shadow-lg'
+                          : isToday(day)
+                            ? 'bg-white/10 text-white'
+                            : 'text-white/70 hover:text-white'
                       }
                     `}
                   >
@@ -168,4 +209,4 @@ const DatePicker: React.FC<DatePickerProps> = ({
   );
 };
 
-export default DatePicker; 
+export default DatePicker;

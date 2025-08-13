@@ -1,6 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react';
+import {
+  CalendarDaysIcon,
+  ChevronRightIcon,
+} from '@heroicons/react/24/outline';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CalendarDaysIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
+import React, { useState, useRef, useEffect } from 'react';
 
 interface ModernDatePickerProps {
   value: Date | null;
@@ -14,10 +17,10 @@ interface ModernDatePickerProps {
 const ModernDatePicker: React.FC<ModernDatePickerProps> = ({
   value: selectedDate,
   onChange,
-  placeholder = "Select a date",
+  placeholder = 'Select a date',
   label,
   disabled = false,
-  className = ""
+  className = '',
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(selectedDate || new Date());
@@ -26,7 +29,10 @@ const ModernDatePicker: React.FC<ModernDatePickerProps> = ({
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
         setHoveredDate(null);
       }
@@ -41,7 +47,7 @@ const ModernDatePicker: React.FC<ModernDatePickerProps> = ({
       weekday: 'short',
       year: 'numeric',
       month: 'short',
-      day: 'numeric'
+      day: 'numeric',
     });
   };
 
@@ -74,7 +80,11 @@ const ModernDatePicker: React.FC<ModernDatePickerProps> = ({
   };
 
   const handleDateSelect = (day: number) => {
-    const newDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
+    const newDate = new Date(
+      currentMonth.getFullYear(),
+      currentMonth.getMonth(),
+      day
+    );
     onChange(newDate);
     setIsOpen(false);
     setHoveredDate(null);
@@ -99,14 +109,16 @@ const ModernDatePicker: React.FC<ModernDatePickerProps> = ({
 
     // Empty cells for days before the first day of the month
     for (let i = 0; i < firstDayOfMonth; i++) {
-      days.push(
-        <div key={`empty-${i}`} className="p-2" />
-      );
+      days.push(<div key={`empty-${i}`} className="p-2" />);
     }
 
     // Days of the month
     for (let day = 1; day <= daysInMonth; day++) {
-      const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
+      const date = new Date(
+        currentMonth.getFullYear(),
+        currentMonth.getMonth(),
+        day
+      );
       const isSelected = isSameDate(date, selectedDate);
       const isHovered = hoveredDate && isSameDate(date, hoveredDate);
       const isTodayDate = isToday(date);
@@ -119,17 +131,15 @@ const ModernDatePicker: React.FC<ModernDatePickerProps> = ({
           onMouseEnter={() => !disabled && setHoveredDate(date)}
           onMouseLeave={() => setHoveredDate(null)}
           disabled={disabled}
-                className={`w-10 h-10 flex items-center justify-center border-none rounded-xl text-sm font-medium cursor-pointer transition-all duration-300 relative overflow-hidden ${
-              isSelected 
-                ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/25' 
-                : isHovered
-                  ? 'bg-primary-100 text-primary-700'
-                  : isTodayDate
-                    ? 'bg-accent-100 text-accent-700'
-                    : 'bg-transparent text-neutral-700'
-            } ${
-              disabled ? 'cursor-not-allowed text-neutral-300' : ''
-            }`}
+          className={`w-10 h-10 flex items-center justify-center border-none rounded-xl text-sm font-medium cursor-pointer transition-all duration-300 relative overflow-hidden ${
+            isSelected
+              ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/25'
+              : isHovered
+                ? 'bg-primary-100 text-primary-700'
+                : isTodayDate
+                  ? 'bg-accent-100 text-accent-700'
+                  : 'bg-transparent text-neutral-700'
+          } ${disabled ? 'cursor-not-allowed text-neutral-300' : ''}`}
           whileHover={!disabled ? { scale: 1.05 } : {}}
           whileTap={!disabled ? { scale: 0.95 } : {}}
         >
@@ -139,12 +149,12 @@ const ModernDatePicker: React.FC<ModernDatePickerProps> = ({
               className="absolute inset-0 bg-accent-200 rounded-xl"
               animate={{
                 scale: [1, 1.2, 1],
-                opacity: [0.3, 0.6, 0.3]
+                opacity: [0.3, 0.6, 0.3],
               }}
               transition={{
                 duration: 2,
                 repeat: Infinity,
-                ease: "easeInOut"
+                ease: 'easeInOut',
               }}
             />
           )}
@@ -163,19 +173,25 @@ const ModernDatePicker: React.FC<ModernDatePickerProps> = ({
           {label}
         </label>
       )}
-      
+
       <motion.button
         onClick={() => !disabled && setIsOpen(!isOpen)}
         disabled={disabled}
         className={`w-full px-6 py-4 flex items-center justify-between bg-white/90 backdrop-blur-xl border-2 rounded-2xl text-base text-neutral-700 cursor-pointer transition-all duration-300 focus:outline-none ${
           disabled ? 'cursor-not-allowed opacity-60' : ''
         } ${
-          isOpen ? 'border-primary-500 shadow-lg' : 'border-neutral-200 hover:border-primary-300 hover:bg-white'
+          isOpen
+            ? 'border-primary-500 shadow-lg'
+            : 'border-neutral-200 hover:border-primary-300 hover:bg-white'
         }`}
-        whileHover={!disabled ? { 
-          borderColor: '#f5a0a0',
-          boxShadow: '0 0 0 3px rgba(139, 0, 0, 0.1)'
-        } : {}}
+        whileHover={
+          !disabled
+            ? {
+                borderColor: '#f5a0a0',
+                boxShadow: '0 0 0 3px rgba(139, 0, 0, 0.1)',
+              }
+            : {}
+        }
         whileTap={!disabled ? { scale: 0.99 } : {}}
       >
         <div className="flex items-center gap-2">
@@ -184,7 +200,7 @@ const ModernDatePicker: React.FC<ModernDatePickerProps> = ({
             {selectedDate ? formatDisplayDate(selectedDate) : placeholder}
           </span>
         </div>
-        
+
         <motion.div
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ duration: 0.2 }}
@@ -212,14 +228,14 @@ const ModernDatePicker: React.FC<ModernDatePickerProps> = ({
               >
                 <ChevronRightIcon className="w-4 h-4 rotate-180" />
               </motion.button>
-              
+
               <h3 className="text-lg font-semibold text-neutral-800">
-                {currentMonth.toLocaleDateString('en-US', { 
-                  month: 'long', 
-                  year: 'numeric' 
+                {currentMonth.toLocaleDateString('en-US', {
+                  month: 'long',
+                  year: 'numeric',
                 })}
               </h3>
-              
+
               <motion.button
                 onClick={() => navigateMonth('next')}
                 className="p-2 text-neutral-600 bg-white rounded-xl border border-neutral-200 hover:bg-neutral-50 hover:text-neutral-800 focus:outline-none"
@@ -264,7 +280,7 @@ const ModernDatePicker: React.FC<ModernDatePickerProps> = ({
                 >
                   Today
                 </motion.button>
-                
+
                 <motion.button
                   onClick={() => setIsOpen(false)}
                   className="px-4 py-2 text-sm text-neutral-600 bg-white rounded-xl border border-neutral-200 hover:bg-neutral-50 focus:outline-none"
@@ -282,4 +298,4 @@ const ModernDatePicker: React.FC<ModernDatePickerProps> = ({
   );
 };
 
-export default ModernDatePicker; 
+export default ModernDatePicker;

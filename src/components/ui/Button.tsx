@@ -1,7 +1,9 @@
-import React from 'react';
-import { motion } from 'framer-motion';
 import { type VariantProps } from 'class-variance-authority';
+import { motion } from 'framer-motion';
+import React from 'react';
+
 import { cn } from '../../utils/cn';
+
 import { buttonVariants } from './button-variants';
 
 export interface ButtonProps
@@ -47,7 +49,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {animation === 'shimmer' && (
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] hover:translate-x-[100%] transition-transform duration-1000" />
         )}
-        
+
         {/* Loading spinner */}
         {loading && (
           <motion.div
@@ -162,4 +164,4 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   }
 );
 
-Button.displayName = 'Button'; 
+Button.displayName = 'Button';

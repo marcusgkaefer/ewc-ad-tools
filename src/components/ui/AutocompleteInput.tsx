@@ -1,16 +1,22 @@
-import React, { useState, useRef, useEffect } from 'react';
+import {
+  ChevronDownIcon,
+  CheckIcon,
+  PlusIcon,
+  MagnifyingGlassIcon,
+} from '@heroicons/react/24/outline';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDownIcon, CheckIcon, PlusIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+import React, { useState, useRef, useEffect } from 'react';
+
 import type { AutocompleteInputProps, ObjectiveOption } from '../../types';
 
 const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
   value,
   onChange,
   options,
-  placeholder = "Select or type an option...",
+  placeholder = 'Select or type an option...',
   allowCustom = true,
-  customLabel = "Add custom:",
-  label
+  customLabel = 'Add custom:',
+  label,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -24,16 +30,23 @@ const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
   );
 
   // Add custom option if search term doesn't match any existing option
-  const showCustomOption = allowCustom && searchTerm && 
-    !filteredOptions.some(option => option.value.toLowerCase() === searchTerm.toLowerCase());
+  const showCustomOption =
+    allowCustom &&
+    searchTerm &&
+    !filteredOptions.some(
+      option => option.value.toLowerCase() === searchTerm.toLowerCase()
+    );
 
-  const allOptions = showCustomOption 
-    ? [...filteredOptions, { 
-        id: 'custom', 
-        label: `${customLabel} "${searchTerm}"`, 
-        value: searchTerm, 
-        isCustom: true 
-      }]
+  const allOptions = showCustomOption
+    ? [
+        ...filteredOptions,
+        {
+          id: 'custom',
+          label: `${customLabel} "${searchTerm}"`,
+          value: searchTerm,
+          isCustom: true,
+        },
+      ]
     : filteredOptions;
 
   // Handle input change
@@ -65,13 +78,13 @@ const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
     switch (e.key) {
       case 'ArrowDown':
         e.preventDefault();
-        setHighlightedIndex(prev => 
+        setHighlightedIndex(prev =>
           prev < allOptions.length - 1 ? prev + 1 : prev
         );
         break;
       case 'ArrowUp':
         e.preventDefault();
-        setHighlightedIndex(prev => prev > 0 ? prev - 1 : prev);
+        setHighlightedIndex(prev => (prev > 0 ? prev - 1 : prev));
         break;
       case 'Enter':
         e.preventDefault();
@@ -90,7 +103,10 @@ const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
   // Click outside to close
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (inputRef.current && !inputRef.current.contains(event.target as Node)) {
+      if (
+        inputRef.current &&
+        !inputRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
         setSearchTerm('');
         setHighlightedIndex(-1);
@@ -104,11 +120,13 @@ const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
   // Auto-scroll highlighted option into view
   useEffect(() => {
     if (listRef.current && highlightedIndex >= 0) {
-      const highlightedElement = listRef.current.children[highlightedIndex] as HTMLElement;
+      const highlightedElement = listRef.current.children[
+        highlightedIndex
+      ] as HTMLElement;
       if (highlightedElement) {
         highlightedElement.scrollIntoView({
           block: 'nearest',
-          behavior: 'smooth'
+          behavior: 'smooth',
         });
       }
     }
@@ -135,15 +153,16 @@ const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
             }`}
             whileFocus={{
               borderColor: '#3b82f6',
-              boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)'
+              boxShadow:
+                '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)',
             }}
           />
-          
+
           <div className="absolute left-4 top-1/2 transform -translate-y-1/2 pointer-events-none z-10">
             <MagnifyingGlassIcon className="w-5 h-5 text-gray-400" />
           </div>
 
-          <motion.div 
+          <motion.div
             className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none z-10"
             animate={{ rotate: isOpen ? 180 : 0 }}
             transition={{ duration: 0.2 }}
@@ -161,56 +180,53 @@ const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
               transition={{ duration: 0.2 }}
               className="absolute top-full left-0 right-0 z-50 mt-1 bg-white backdrop-blur-lg border-2 border-blue-500 rounded-lg shadow-2xl max-h-60 overflow-hidden"
             >
-              <ul
-                ref={listRef}
-                className="max-h-60 overflow-y-auto py-1"
-              >
-              {allOptions.length === 0 ? (
-                <li className="px-6 py-4 text-gray-500 text-center text-sm">
-                  No options found
-                </li>
-              ) : (
-                allOptions.map((option, index) => (
-                  <li key={option.id} className="m-0">
-                    <motion.button
-                      type="button"
-                      onClick={() => handleOptionSelect(option)}
-                      className={`w-full px-4 py-3 text-left border-none rounded-md text-sm cursor-pointer transition-all duration-200 flex items-center justify-between ${
-                        highlightedIndex === index 
-                          ? option.isCustom 
-                            ? 'bg-purple-50'
-                            : 'bg-blue-50'
-                          : 'bg-transparent'
-                      } ${
-                        option.isCustom ? 'text-purple-700' : 'text-gray-700'
-                      }`}
-                      whileHover={{
-                        backgroundColor: option.isCustom 
-                          ? '#f3e8ff'
-                          : '#dbeafe',
-                        scale: 1.02
-                      }}
-                      whileTap={{ scale: 0.98 }}
-                    >
-                      <div className="flex items-center gap-3">
-                        {option.isCustom ? (
-                          <PlusIcon className="w-4 h-4 text-purple-600 flex-shrink-0" />
-                        ) : (
-                          <div className="w-4 h-4 flex-shrink-0" />
-                        )}
-                        
-                        <span className="flex-1 truncate">
-                          {option.label}
-                        </span>
-                      </div>
-                      
-                      {option.value === value && !option.isCustom && (
-                        <CheckIcon className="w-4 h-4 text-blue-600 flex-shrink-0" />
-                      )}
-                    </motion.button>
+              <ul ref={listRef} className="max-h-60 overflow-y-auto py-1">
+                {allOptions.length === 0 ? (
+                  <li className="px-6 py-4 text-gray-500 text-center text-sm">
+                    No options found
                   </li>
-                ))
-              )}
+                ) : (
+                  allOptions.map((option, index) => (
+                    <li key={option.id} className="m-0">
+                      <motion.button
+                        type="button"
+                        onClick={() => handleOptionSelect(option)}
+                        className={`w-full px-4 py-3 text-left border-none rounded-md text-sm cursor-pointer transition-all duration-200 flex items-center justify-between ${
+                          highlightedIndex === index
+                            ? option.isCustom
+                              ? 'bg-purple-50'
+                              : 'bg-blue-50'
+                            : 'bg-transparent'
+                        } ${
+                          option.isCustom ? 'text-purple-700' : 'text-gray-700'
+                        }`}
+                        whileHover={{
+                          backgroundColor: option.isCustom
+                            ? '#f3e8ff'
+                            : '#dbeafe',
+                          scale: 1.02,
+                        }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        <div className="flex items-center gap-3">
+                          {option.isCustom ? (
+                            <PlusIcon className="w-4 h-4 text-purple-600 flex-shrink-0" />
+                          ) : (
+                            <div className="w-4 h-4 flex-shrink-0" />
+                          )}
+
+                          <span className="flex-1 truncate">
+                            {option.label}
+                          </span>
+                        </div>
+
+                        {option.value === value && !option.isCustom && (
+                          <CheckIcon className="w-4 h-4 text-blue-600 flex-shrink-0" />
+                        )}
+                      </motion.button>
+                    </li>
+                  ))
+                )}
               </ul>
             </motion.div>
           )}
@@ -220,4 +236,4 @@ const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
   );
 };
 
-export default AutocompleteInput; 
+export default AutocompleteInput;

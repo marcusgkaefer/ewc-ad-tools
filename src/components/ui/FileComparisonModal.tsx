@@ -1,5 +1,3 @@
-import React, { useState, useCallback, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import {
   XMarkIcon,
   DocumentTextIcon,
@@ -9,8 +7,10 @@ import {
   ArrowPathIcon,
   CloudArrowUpIcon,
   DocumentArrowDownIcon,
-  MagnifyingGlassIcon
+  MagnifyingGlassIcon,
 } from '@heroicons/react/24/outline';
+import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useCallback, useMemo } from 'react';
 
 interface FileComparisonModalProps {
   isOpen: boolean;
@@ -34,7 +34,7 @@ interface ParsedCsvData {
 
 const FileComparisonModal: React.FC<FileComparisonModalProps> = ({
   isOpen,
-  onClose
+  onClose,
 }) => {
   const [file1, setFile1] = useState<File | null>(null);
   const [file2, setFile2] = useState<File | null>(null);
@@ -43,19 +43,23 @@ const FileComparisonModal: React.FC<FileComparisonModalProps> = ({
   const [differences, setDifferences] = useState<ComparisonResult[]>([]);
   const [isComparing, setIsComparing] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [filterType, setFilterType] = useState<'all' | 'added' | 'removed' | 'modified'>('all');
-  const [filterStatus, setFilterStatus] = useState<'all' | 'pending' | 'accepted' | 'rejected'>('all');
+  const [filterType, setFilterType] = useState<
+    'all' | 'added' | 'removed' | 'modified'
+  >('all');
+  const [filterStatus, setFilterStatus] = useState<
+    'all' | 'pending' | 'accepted' | 'rejected'
+  >('all');
 
   // Parse CSV file content
   const parseCsv = useCallback((content: string): ParsedCsvData => {
     const lines = content.split('\n').filter(line => line.trim());
     if (lines.length === 0) return { headers: [], rows: [] };
-    
+
     const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
-    const rows = lines.slice(1).map(line => 
-      line.split(',').map(cell => cell.trim().replace(/"/g, ''))
-    );
-    
+    const rows = lines
+      .slice(1)
+      .map(line => line.split(',').map(cell => cell.trim().replace(/"/g, '')));
+
     return { headers, rows };
   }, []);
 
@@ -63,44 +67,47 @@ const FileComparisonModal: React.FC<FileComparisonModalProps> = ({
   const readFile = useCallback(async (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.onload = (e) => resolve(e.target?.result as string);
+      reader.onload = e => resolve(e.target?.result as string);
       reader.onerror = reject;
       reader.readAsText(file);
     });
   }, []);
 
   // Handle file upload
-  const handleFileUpload = useCallback(async (file: File, fileNumber: 1 | 2) => {
-    try {
-      const content = await readFile(file);
-      const parsed = parseCsv(content);
-      
-      if (fileNumber === 1) {
-        setFile1(file);
-        setParsedFile1(parsed);
-      } else {
-        setFile2(file);
-        setParsedFile2(parsed);
+  const handleFileUpload = useCallback(
+    async (file: File, fileNumber: 1 | 2) => {
+      try {
+        const content = await readFile(file);
+        const parsed = parseCsv(content);
+
+        if (fileNumber === 1) {
+          setFile1(file);
+          setParsedFile1(parsed);
+        } else {
+          setFile2(file);
+          setParsedFile2(parsed);
+        }
+      } catch (error) {
+        console.error('Error reading file:', error);
       }
-    } catch (error) {
-      console.error('Error reading file:', error);
-    }
-  }, [readFile, parseCsv]);
+    },
+    [readFile, parseCsv]
+  );
 
   // Compare files and find differences
   const compareFiles = useCallback(() => {
     if (!parsedFile1 || !parsedFile2) return;
-    
+
     setIsComparing(true);
     const newDifferences: ComparisonResult[] = [];
-    
+
     // Get maximum rows between both files
     const maxRows = Math.max(parsedFile1.rows.length, parsedFile2.rows.length);
-    
+
     for (let rowIndex = 0; rowIndex < maxRows; rowIndex++) {
       const row1 = parsedFile1.rows[rowIndex];
       const row2 = parsedFile2.rows[rowIndex];
-      
+
       // Handle case where row exists in one file but not the other
       if (!row1 && row2) {
         newDifferences.push({
@@ -110,11 +117,11 @@ const FileComparisonModal: React.FC<FileComparisonModalProps> = ({
           originalValue: '',
           newValue: row2.join(','),
           type: 'added',
-          status: 'pending'
+          status: 'pending',
         });
         continue;
       }
-      
+
       if (row1 && !row2) {
         newDifferences.push({
           row: rowIndex + 1,
@@ -123,26 +130,29 @@ const FileComparisonModal: React.FC<FileComparisonModalProps> = ({
           originalValue: row1.join(','),
           newValue: '',
           type: 'removed',
-          status: 'pending'
+          status: 'pending',
         });
         continue;
       }
-      
+
       if (!row1 || !row2) continue;
-      
+
       // Compare each column
       const maxCols = Math.max(row1.length, row2.length);
       for (let colIndex = 0; colIndex < maxCols; colIndex++) {
         const val1 = row1[colIndex] || '';
         const val2 = row2[colIndex] || '';
-        
+
         if (val1 !== val2) {
-          const columnName = parsedFile1.headers[colIndex] || parsedFile2.headers[colIndex] || `Column ${colIndex + 1}`;
-          
+          const columnName =
+            parsedFile1.headers[colIndex] ||
+            parsedFile2.headers[colIndex] ||
+            `Column ${colIndex + 1}`;
+
           let type: 'added' | 'removed' | 'modified' = 'modified';
           if (!val1 && val2) type = 'added';
           if (val1 && !val2) type = 'removed';
-          
+
           newDifferences.push({
             row: rowIndex + 1,
             column: columnName,
@@ -150,30 +160,35 @@ const FileComparisonModal: React.FC<FileComparisonModalProps> = ({
             originalValue: val1,
             newValue: val2,
             type,
-            status: 'pending'
+            status: 'pending',
           });
         }
       }
     }
-    
+
     setDifferences(newDifferences);
     setIsComparing(false);
   }, [parsedFile1, parsedFile2]);
 
   // Update difference status
-  const updateDifferenceStatus = useCallback((index: number, status: 'accepted' | 'rejected') => {
-    setDifferences(prev => 
-      prev.map((diff, i) => i === index ? { ...diff, status } : diff)
-    );
-  }, []);
+  const updateDifferenceStatus = useCallback(
+    (index: number, status: 'accepted' | 'rejected') => {
+      setDifferences(prev =>
+        prev.map((diff, i) => (i === index ? { ...diff, status } : diff))
+      );
+    },
+    []
+  );
 
   // Apply accepted changes
   const applyChanges = useCallback(() => {
     if (!parsedFile1 || !parsedFile2) return;
-    
-    const acceptedDifferences = differences.filter(diff => diff.status === 'accepted');
+
+    const acceptedDifferences = differences.filter(
+      diff => diff.status === 'accepted'
+    );
     const updatedRows = [...parsedFile1.rows];
-    
+
     acceptedDifferences.forEach(diff => {
       if (diff.type === 'added' && diff.columnIndex === -1) {
         // Add entire row
@@ -188,13 +203,13 @@ const FileComparisonModal: React.FC<FileComparisonModalProps> = ({
         }
       }
     });
-    
+
     // Generate corrected CSV
     const correctedCsv = [
       parsedFile1.headers.join(','),
-      ...updatedRows.map(row => row.join(','))
+      ...updatedRows.map(row => row.join(',')),
     ].join('\n');
-    
+
     // Download corrected file
     const blob = new Blob([correctedCsv], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
@@ -209,26 +224,31 @@ const FileComparisonModal: React.FC<FileComparisonModalProps> = ({
   const filteredDifferences = useMemo(() => {
     return differences.filter(diff => {
       const typeMatch = filterType === 'all' || diff.type === filterType;
-      const statusMatch = filterStatus === 'all' || diff.status === filterStatus;
-      const searchMatch = !searchQuery.trim() || 
+      const statusMatch =
+        filterStatus === 'all' || diff.status === filterStatus;
+      const searchMatch =
+        !searchQuery.trim() ||
         diff.column.toLowerCase().includes(searchQuery.toLowerCase()) ||
         diff.originalValue.toLowerCase().includes(searchQuery.toLowerCase()) ||
         diff.newValue.toLowerCase().includes(searchQuery.toLowerCase());
-      
+
       return typeMatch && statusMatch && searchMatch;
     });
   }, [differences, filterType, filterStatus, searchQuery]);
 
   // Statistics
-  const stats = useMemo(() => ({
-    total: differences.length,
-    added: differences.filter(d => d.type === 'added').length,
-    removed: differences.filter(d => d.type === 'removed').length,
-    modified: differences.filter(d => d.type === 'modified').length,
-    accepted: differences.filter(d => d.status === 'accepted').length,
-    rejected: differences.filter(d => d.status === 'rejected').length,
-    pending: differences.filter(d => d.status === 'pending').length
-  }), [differences]);
+  const stats = useMemo(
+    () => ({
+      total: differences.length,
+      added: differences.filter(d => d.type === 'added').length,
+      removed: differences.filter(d => d.type === 'removed').length,
+      modified: differences.filter(d => d.type === 'modified').length,
+      accepted: differences.filter(d => d.status === 'accepted').length,
+      rejected: differences.filter(d => d.status === 'rejected').length,
+      pending: differences.filter(d => d.status === 'pending').length,
+    }),
+    [differences]
+  );
 
   if (!isOpen) return null;
 
@@ -247,7 +267,7 @@ const FileComparisonModal: React.FC<FileComparisonModalProps> = ({
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
           transition={{ duration: 0.3 }}
           className="w-full max-w-7xl max-h-[95vh] overflow-hidden bg-white rounded-3xl shadow-wax-2xl border border-wax-gray-200"
-          onClick={(e) => e.stopPropagation()}
+          onClick={e => e.stopPropagation()}
         >
           {/* Header */}
           <div className="flex items-center justify-between p-8 border-b border-wax-gray-100 bg-wax-elegant">
@@ -264,7 +284,7 @@ const FileComparisonModal: React.FC<FileComparisonModalProps> = ({
                 </p>
               </div>
             </div>
-            
+
             <motion.button
               onClick={onClose}
               className="p-3 text-wax-gray-500 bg-white/80 backdrop-blur-sm border border-wax-gray-200/50 rounded-xl transition-all duration-200 hover:bg-white hover:text-wax-gray-700 hover:shadow-wax-md focus:outline-none focus:ring-2 focus:ring-wax-red-500 focus:ring-offset-2"
@@ -287,7 +307,7 @@ const FileComparisonModal: React.FC<FileComparisonModalProps> = ({
                   <input
                     type="file"
                     accept=".csv"
-                    onChange={(e) => {
+                    onChange={e => {
                       const file = e.target.files?.[0];
                       if (file) handleFileUpload(file, 1);
                     }}
@@ -308,9 +328,14 @@ const FileComparisonModal: React.FC<FileComparisonModalProps> = ({
                   <div className="text-xs text-wax-gray-600 bg-white rounded-lg p-3 border border-wax-gray-200">
                     <div className="flex items-center gap-2 mb-1">
                       <DocumentTextIcon className="w-4 h-4 text-emerald-600" />
-                      <span className="font-medium">File loaded successfully</span>
+                      <span className="font-medium">
+                        File loaded successfully
+                      </span>
                     </div>
-                    <div>Rows: {parsedFile1.rows.length} | Columns: {parsedFile1.headers.length}</div>
+                    <div>
+                      Rows: {parsedFile1.rows.length} | Columns:{' '}
+                      {parsedFile1.headers.length}
+                    </div>
                   </div>
                 )}
               </div>
@@ -324,7 +349,7 @@ const FileComparisonModal: React.FC<FileComparisonModalProps> = ({
                   <input
                     type="file"
                     accept=".csv"
-                    onChange={(e) => {
+                    onChange={e => {
                       const file = e.target.files?.[0];
                       if (file) handleFileUpload(file, 2);
                     }}
@@ -345,9 +370,14 @@ const FileComparisonModal: React.FC<FileComparisonModalProps> = ({
                   <div className="text-xs text-wax-gray-600 bg-white rounded-lg p-3 border border-wax-gray-200">
                     <div className="flex items-center gap-2 mb-1">
                       <DocumentTextIcon className="w-4 h-4 text-emerald-600" />
-                      <span className="font-medium">File loaded successfully</span>
+                      <span className="font-medium">
+                        File loaded successfully
+                      </span>
                     </div>
-                    <div>Rows: {parsedFile2.rows.length} | Columns: {parsedFile2.headers.length}</div>
+                    <div>
+                      Rows: {parsedFile2.rows.length} | Columns:{' '}
+                      {parsedFile2.headers.length}
+                    </div>
                   </div>
                 )}
               </div>
@@ -381,31 +411,47 @@ const FileComparisonModal: React.FC<FileComparisonModalProps> = ({
               <div className="p-6 border-b border-wax-gray-100 bg-wax-gray-50">
                 <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
                   <div className="bg-white rounded-xl p-4 text-center shadow-wax-sm">
-                    <div className="text-2xl font-bold text-wax-gray-900">{stats.total}</div>
-                    <div className="text-xs text-wax-gray-600">Total Differences</div>
+                    <div className="text-2xl font-bold text-wax-gray-900">
+                      {stats.total}
+                    </div>
+                    <div className="text-xs text-wax-gray-600">
+                      Total Differences
+                    </div>
                   </div>
                   <div className="bg-white rounded-xl p-4 text-center shadow-wax-sm">
-                    <div className="text-2xl font-bold text-emerald-600">{stats.added}</div>
+                    <div className="text-2xl font-bold text-emerald-600">
+                      {stats.added}
+                    </div>
                     <div className="text-xs text-wax-gray-600">Added</div>
                   </div>
                   <div className="bg-white rounded-xl p-4 text-center shadow-wax-sm">
-                    <div className="text-2xl font-bold text-red-600">{stats.removed}</div>
+                    <div className="text-2xl font-bold text-red-600">
+                      {stats.removed}
+                    </div>
                     <div className="text-xs text-wax-gray-600">Removed</div>
                   </div>
                   <div className="bg-white rounded-xl p-4 text-center shadow-wax-sm">
-                    <div className="text-2xl font-bold text-amber-600">{stats.modified}</div>
+                    <div className="text-2xl font-bold text-amber-600">
+                      {stats.modified}
+                    </div>
                     <div className="text-xs text-wax-gray-600">Modified</div>
                   </div>
                   <div className="bg-white rounded-xl p-4 text-center shadow-wax-sm">
-                    <div className="text-2xl font-bold text-emerald-600">{stats.accepted}</div>
+                    <div className="text-2xl font-bold text-emerald-600">
+                      {stats.accepted}
+                    </div>
                     <div className="text-xs text-wax-gray-600">Accepted</div>
                   </div>
                   <div className="bg-white rounded-xl p-4 text-center shadow-wax-sm">
-                    <div className="text-2xl font-bold text-red-600">{stats.rejected}</div>
+                    <div className="text-2xl font-bold text-red-600">
+                      {stats.rejected}
+                    </div>
                     <div className="text-xs text-wax-gray-600">Rejected</div>
                   </div>
                   <div className="bg-white rounded-xl p-4 text-center shadow-wax-sm">
-                    <div className="text-2xl font-bold text-wax-gray-600">{stats.pending}</div>
+                    <div className="text-2xl font-bold text-wax-gray-600">
+                      {stats.pending}
+                    </div>
                     <div className="text-xs text-wax-gray-600">Pending</div>
                   </div>
                 </div>
@@ -422,15 +468,17 @@ const FileComparisonModal: React.FC<FileComparisonModalProps> = ({
                         type="text"
                         placeholder="Search differences..."
                         value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onChange={e => setSearchQuery(e.target.value)}
                         className="w-full pl-10 pr-4 py-3 border-2 border-wax-gray-200 rounded-xl focus:border-wax-red-500 focus:ring-4 focus:ring-wax-red-100 focus:outline-none transition-all duration-200"
                       />
                     </div>
-                    
+
                     {/* Type Filter */}
                     <select
                       value={filterType}
-                      onChange={(e) => setFilterType(e.target.value as typeof filterType)}
+                      onChange={e =>
+                        setFilterType(e.target.value as typeof filterType)
+                      }
                       className="px-4 py-3 border-2 border-wax-gray-200 rounded-xl focus:border-wax-red-500 focus:ring-4 focus:ring-wax-red-100 focus:outline-none transition-all duration-200 bg-white"
                     >
                       <option value="all">All Types</option>
@@ -442,7 +490,9 @@ const FileComparisonModal: React.FC<FileComparisonModalProps> = ({
                     {/* Status Filter */}
                     <select
                       value={filterStatus}
-                      onChange={(e) => setFilterStatus(e.target.value as typeof filterStatus)}
+                      onChange={e =>
+                        setFilterStatus(e.target.value as typeof filterStatus)
+                      }
                       className="px-4 py-3 border-2 border-wax-gray-200 rounded-xl focus:border-wax-red-500 focus:ring-4 focus:ring-wax-red-100 focus:outline-none transition-all duration-200 bg-white"
                     >
                       <option value="all">All Status</option>
@@ -451,12 +501,13 @@ const FileComparisonModal: React.FC<FileComparisonModalProps> = ({
                       <option value="rejected">Rejected</option>
                     </select>
                   </div>
-                  
+
                   <div className="flex items-center gap-4">
                     <div className="text-sm text-wax-gray-600">
-                      {filteredDifferences.length} of {differences.length} differences
+                      {filteredDifferences.length} of {differences.length}{' '}
+                      differences
                     </div>
-                    
+
                     <motion.button
                       onClick={applyChanges}
                       disabled={stats.accepted === 0}
@@ -476,13 +527,27 @@ const FileComparisonModal: React.FC<FileComparisonModalProps> = ({
                 <table className="w-full">
                   <thead className="bg-wax-gray-50 sticky top-0">
                     <tr>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-wax-gray-700 uppercase tracking-wider border-b border-wax-gray-200">Row</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-wax-gray-700 uppercase tracking-wider border-b border-wax-gray-200">Column</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-wax-gray-700 uppercase tracking-wider border-b border-wax-gray-200">Type</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-wax-gray-700 uppercase tracking-wider border-b border-wax-gray-200">Original</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-wax-gray-700 uppercase tracking-wider border-b border-wax-gray-200">New</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-wax-gray-700 uppercase tracking-wider border-b border-wax-gray-200">Status</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-wax-gray-700 uppercase tracking-wider border-b border-wax-gray-200">Actions</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-wax-gray-700 uppercase tracking-wider border-b border-wax-gray-200">
+                        Row
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-wax-gray-700 uppercase tracking-wider border-b border-wax-gray-200">
+                        Column
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-wax-gray-700 uppercase tracking-wider border-b border-wax-gray-200">
+                        Type
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-wax-gray-700 uppercase tracking-wider border-b border-wax-gray-200">
+                        Original
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-wax-gray-700 uppercase tracking-wider border-b border-wax-gray-200">
+                        New
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-wax-gray-700 uppercase tracking-wider border-b border-wax-gray-200">
+                        Status
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-wax-gray-700 uppercase tracking-wider border-b border-wax-gray-200">
+                        Actions
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-wax-gray-200">
@@ -501,40 +566,63 @@ const FileComparisonModal: React.FC<FileComparisonModalProps> = ({
                           {difference.column}
                         </td>
                         <td className="px-4 py-4 text-sm">
-                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                            difference.type === 'added' 
-                              ? 'bg-emerald-100 text-emerald-800'
-                              : difference.type === 'removed'
-                              ? 'bg-red-100 text-red-800'
-                              : 'bg-amber-100 text-amber-800'
-                          }`}>
+                          <span
+                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                              difference.type === 'added'
+                                ? 'bg-emerald-100 text-emerald-800'
+                                : difference.type === 'removed'
+                                  ? 'bg-red-100 text-red-800'
+                                  : 'bg-amber-100 text-amber-800'
+                            }`}
+                          >
                             {difference.type}
                           </span>
                         </td>
                         <td className="px-4 py-4 text-sm text-wax-gray-900 max-w-xs truncate">
-                          {difference.originalValue || <span className="text-wax-gray-400 italic">empty</span>}
+                          {difference.originalValue || (
+                            <span className="text-wax-gray-400 italic">
+                              empty
+                            </span>
+                          )}
                         </td>
                         <td className="px-4 py-4 text-sm text-wax-gray-900 max-w-xs truncate">
-                          {difference.newValue || <span className="text-wax-gray-400 italic">empty</span>}
+                          {difference.newValue || (
+                            <span className="text-wax-gray-400 italic">
+                              empty
+                            </span>
+                          )}
                         </td>
                         <td className="px-4 py-4 text-sm">
-                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                            difference.status === 'accepted' 
-                              ? 'bg-emerald-100 text-emerald-800'
-                              : difference.status === 'rejected'
-                              ? 'bg-red-100 text-red-800'
-                              : 'bg-wax-gray-100 text-wax-gray-800'
-                          }`}>
-                            {difference.status === 'accepted' && <CheckCircleIcon className="w-3 h-3 mr-1" />}
-                            {difference.status === 'rejected' && <XMarkIcon className="w-3 h-3 mr-1" />}
-                            {difference.status === 'pending' && <ExclamationTriangleIcon className="w-3 h-3 mr-1" />}
+                          <span
+                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                              difference.status === 'accepted'
+                                ? 'bg-emerald-100 text-emerald-800'
+                                : difference.status === 'rejected'
+                                  ? 'bg-red-100 text-red-800'
+                                  : 'bg-wax-gray-100 text-wax-gray-800'
+                            }`}
+                          >
+                            {difference.status === 'accepted' && (
+                              <CheckCircleIcon className="w-3 h-3 mr-1" />
+                            )}
+                            {difference.status === 'rejected' && (
+                              <XMarkIcon className="w-3 h-3 mr-1" />
+                            )}
+                            {difference.status === 'pending' && (
+                              <ExclamationTriangleIcon className="w-3 h-3 mr-1" />
+                            )}
                             {difference.status}
                           </span>
                         </td>
                         <td className="px-4 py-4 text-sm">
                           <div className="flex items-center gap-2">
                             <button
-                              onClick={() => updateDifferenceStatus(differences.indexOf(difference), 'accepted')}
+                              onClick={() =>
+                                updateDifferenceStatus(
+                                  differences.indexOf(difference),
+                                  'accepted'
+                                )
+                              }
                               disabled={difference.status === 'accepted'}
                               className="p-1 text-emerald-600 hover:text-emerald-800 hover:bg-emerald-50 rounded transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                               title="Accept change"
@@ -542,7 +630,12 @@ const FileComparisonModal: React.FC<FileComparisonModalProps> = ({
                               <CheckCircleIcon className="w-4 h-4" />
                             </button>
                             <button
-                              onClick={() => updateDifferenceStatus(differences.indexOf(difference), 'rejected')}
+                              onClick={() =>
+                                updateDifferenceStatus(
+                                  differences.indexOf(difference),
+                                  'rejected'
+                                )
+                              }
                               disabled={difference.status === 'rejected'}
                               className="p-1 text-red-600 hover:text-red-800 hover:bg-red-50 rounded transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                               title="Reject change"
@@ -560,23 +653,26 @@ const FileComparisonModal: React.FC<FileComparisonModalProps> = ({
           )}
 
           {/* Empty State */}
-          {differences.length === 0 && parsedFile1 && parsedFile2 && !isComparing && (
-            <div className="flex-1 flex items-center justify-center p-12">
-              <div className="text-center">
-                <CheckCircleIcon className="w-16 h-16 text-emerald-600 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-wax-gray-900 mb-2">
-                  No Differences Found
-                </h3>
-                <p className="text-wax-gray-600">
-                  The files are identical. No changes needed.
-                </p>
+          {differences.length === 0 &&
+            parsedFile1 &&
+            parsedFile2 &&
+            !isComparing && (
+              <div className="flex-1 flex items-center justify-center p-12">
+                <div className="text-center">
+                  <CheckCircleIcon className="w-16 h-16 text-emerald-600 mx-auto mb-4" />
+                  <h3 className="text-xl font-semibold text-wax-gray-900 mb-2">
+                    No Differences Found
+                  </h3>
+                  <p className="text-wax-gray-600">
+                    The files are identical. No changes needed.
+                  </p>
+                </div>
               </div>
-            </div>
-          )}
+            )}
         </motion.div>
       </motion.div>
     </AnimatePresence>
   );
 };
 
-export default FileComparisonModal; 
+export default FileComparisonModal;

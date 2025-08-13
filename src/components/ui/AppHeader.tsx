@@ -1,17 +1,12 @@
-import React from 'react';
+import { Cog6ToothIcon, SparklesIcon } from '@heroicons/react/24/outline';
 import { motion } from 'framer-motion';
-import { 
-  Cog6ToothIcon,
-  SparklesIcon
-} from '@heroicons/react/24/outline';
+import React from 'react';
 
 interface AppHeaderProps {
   onSettingsClick: () => void;
 }
 
-const AppHeader: React.FC<AppHeaderProps> = ({ 
-  onSettingsClick 
-}) => {
+const AppHeader: React.FC<AppHeaderProps> = ({ onSettingsClick }) => {
   return (
     <div className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-b border-neutral-200 shadow-lg">
       <div className="max-w-7xl mx-auto px-6 py-4">

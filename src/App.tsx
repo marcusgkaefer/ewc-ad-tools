@@ -1,5 +1,7 @@
-import { useState, useEffect, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import {
+  ArrowDownTrayIcon as DownloadIcon,
+  DocumentArrowDownIcon,
+} from '@heroicons/react/24/outline';
 import {
   MapPinIcon,
   DocumentDuplicateIcon,
@@ -13,49 +15,51 @@ import {
   PlusIcon,
   TrashIcon,
   DocumentIcon,
-  XCircleIcon
+  XCircleIcon,
 } from '@heroicons/react/24/solid';
-import { ArrowDownTrayIcon as DownloadIcon, DocumentArrowDownIcon } from '@heroicons/react/24/outline';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect, useMemo } from 'react';
+
+import AppHeader from './components/ui/AppHeader';
+import CampaignSettingsModal from './components/ui/CampaignSettingsModal';
+import FilePreview from './components/ui/FilePreview';
+import { LocationConfigModal } from './components/ui/LocationConfigModal';
+import ModernDatePicker from './components/ui/ModernDatePicker';
+import ProgressSteps from './components/ui/ProgressSteps';
+import Select from './components/ui/Select';
+import SimplifiedCampaignCreator from './components/ui/SimplifiedCampaignCreator';
+import TemplateCreationModal from './components/ui/TemplateCreationModal';
+import { generateAdName } from './constants/hardcodedAdValues';
+import { defaultObjectives } from './data/mockData';
 import { mockApi } from './services/mockApi';
 import { supabaseLocationService } from './services/supabaseLocationService';
-import { defaultObjectives } from './data/mockData';
-import ModernDatePicker from './components/ui/ModernDatePicker';
-import TemplateCreationModal from './components/ui/TemplateCreationModal';
-import { LocationConfigModal } from './components/ui/LocationConfigModal';
-import FilePreview from './components/ui/FilePreview';
-import CampaignSettingsModal from './components/ui/CampaignSettingsModal';
-import Select from './components/ui/Select';
-import AppHeader from './components/ui/AppHeader';
-import ProgressSteps from './components/ui/ProgressSteps';
-import type { 
-  LocationWithConfig, 
-  AdTemplate, 
-  GenerationJob, 
-  AdConfiguration, 
+import type {
+  LocationWithConfig,
+  AdTemplate,
+  GenerationJob,
+  AdConfiguration,
   CampaignConfiguration,
   CreateTemplateRequest,
-  LocationConfig
+  LocationConfig,
 } from './types';
 
 // Constants
-import { generateAdName } from './constants/hardcodedAdValues';
 
 // Add import for the new simplified creator at the top
-import SimplifiedCampaignCreator from './components/ui/SimplifiedCampaignCreator';
 
 // Animation variants
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.1, delayChildren: 0.2 }
-  }
+    transition: { staggerChildren: 0.1, delayChildren: 0.2 },
+  },
 };
 
 const cardVariants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { duration: 0.3 } },
-  exit: { opacity: 0, transition: { duration: 0.2 } }
+  exit: { opacity: 0, transition: { duration: 0.2 } },
 };
 
 function App() {
@@ -66,20 +70,27 @@ function App() {
   const [excludedLocationIds, setExcludedLocationIds] = useState<string[]>([]);
   const [useExclusionMode, setUseExclusionMode] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [configurationFilter, setConfigurationFilter] = useState<'all' | 'configured' | 'not-configured'>('all');
-  const [generationJob, setGenerationJob] = useState<GenerationJob | null>(null);
+  const [configurationFilter, setConfigurationFilter] = useState<
+    'all' | 'configured' | 'not-configured'
+  >('all');
+  const [generationJob, setGenerationJob] = useState<GenerationJob | null>(
+    null
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [showCampaignSettings, setShowCampaignSettings] = useState(false);
-  const [showTemplateCreationModal, setShowTemplateCreationModal] = useState(false);
+  const [showTemplateCreationModal, setShowTemplateCreationModal] =
+    useState(false);
   const [isCreatingTemplate, setIsCreatingTemplate] = useState(false);
   const [showFilePreview, setShowFilePreview] = useState(false);
 
   const [hasReviewed, setHasReviewed] = useState(false);
   const [hasGenerated, setHasGenerated] = useState(false);
   const [showLocationConfigModal, setShowLocationConfigModal] = useState(false);
-  const [selectedLocationToConfigure, setSelectedLocationToConfigure] = useState<LocationWithConfig | null>(null);
+  const [selectedLocationToConfigure, setSelectedLocationToConfigure] =
+    useState<LocationWithConfig | null>(null);
   const useSimplifiedVersion = true; // Always use simplified version
-  const [showLocationConfigSuccess, setShowLocationConfigSuccess] = useState(false);
+  const [showLocationConfigSuccess, setShowLocationConfigSuccess] =
+    useState(false);
   const [configSuccessMessage, setConfigSuccessMessage] = useState('');
   const [showLocationConfigError, setShowLocationConfigError] = useState(false);
   const [configErrorMessage, setConfigErrorMessage] = useState('');
@@ -98,7 +109,7 @@ function App() {
     startDate: '06/26/2025 2:32:00 am',
     endDate: '07/26/2025 11:59:00 pm',
     ads: [],
-    radius: 5
+    radius: 5,
   });
 
   // Load initial data
@@ -108,23 +119,26 @@ function App() {
       try {
         const [locationsResponse, templatesResponse] = await Promise.all([
           supabaseLocationService.getLocationsWithConfigs(),
-          mockApi.getTemplates()
+          mockApi.getTemplates(),
         ]);
 
-        console.log('App.tsx - Initial locations loaded:', locationsResponse.map(l => ({ 
-          id: l.id, 
-          name: l.name, 
-          hasConfig: !!l.config,
-          config: l.config 
-        })));
+        console.log(
+          'App.tsx - Initial locations loaded:',
+          locationsResponse.map(l => ({
+            id: l.id,
+            name: l.name,
+            hasConfig: !!l.config,
+            config: l.config,
+          }))
+        );
         setLocations(locationsResponse);
-        setSelectedLocationIds(locationsResponse.map((loc: LocationWithConfig) => loc.id));
+        setSelectedLocationIds(
+          locationsResponse.map((loc: LocationWithConfig) => loc.id)
+        );
 
         if (templatesResponse.success && templatesResponse.data) {
           setTemplates(templatesResponse.data);
         }
-
-
       } catch (error) {
         console.error('Failed to load data:', error);
       } finally {
@@ -140,32 +154,53 @@ function App() {
     if (templates.length > 0 && campaignConfig.ads.length === 0) {
       const defaultAd: AdConfiguration = {
         id: 'ad-1',
-        name: generateAdName('Template', campaignConfig.month, campaignConfig.day), // Auto-generated using reference template
+        name: generateAdName(
+          'Template',
+          campaignConfig.month,
+          campaignConfig.day
+        ), // Auto-generated using reference template
         templateId: templates[0]?.id || '',
         radius: '+4m',
         caption: 'You learn something new everyday', // Fixed from reference template
         additionalNotes: '',
         scheduledDate: '',
-        status: 'Paused'
+        status: 'Paused',
       };
       setCampaignConfig(prev => ({ ...prev, ads: [defaultAd] }));
     }
-  }, [templates, campaignConfig.ads.length, campaignConfig.month, campaignConfig.day]);
+  }, [
+    templates,
+    campaignConfig.ads.length,
+    campaignConfig.month,
+    campaignConfig.day,
+  ]);
 
   // Update date fields when selectedDate changes
   useEffect(() => {
     const date = campaignConfig.selectedDate;
-    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'];
+    const monthNames = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
     const month = monthNames[date.getMonth()];
     const day = date.getDate().toString();
     const scheduledDate = date.toLocaleDateString('en-US');
-    
+
     setCampaignConfig(prev => ({
       ...prev,
       month,
       day,
-      ads: prev.ads.map(ad => ({ ...ad, scheduledDate }))
+      ads: prev.ads.map(ad => ({ ...ad, scheduledDate })),
     }));
   }, [campaignConfig.selectedDate]);
 
@@ -180,13 +215,15 @@ function App() {
   const filteredLocations = useMemo(() => {
     return locations.filter(location => {
       // Search filter
-      const searchMatch = !searchQuery.trim() || 
+      const searchMatch =
+        !searchQuery.trim() ||
         location.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         location.city.toLowerCase().includes(searchQuery.toLowerCase()) ||
         location.state.toLowerCase().includes(searchQuery.toLowerCase());
 
       // Configuration filter
-      const configMatch = configurationFilter === 'all' || 
+      const configMatch =
+        configurationFilter === 'all' ||
         (configurationFilter === 'configured' && location.config) ||
         (configurationFilter === 'not-configured' && !location.config);
 
@@ -197,26 +234,40 @@ function App() {
   // Calculate effective selected locations
   const effectiveSelectedLocations = useMemo(() => {
     if (useExclusionMode) {
-      return filteredLocations.filter(loc => !excludedLocationIds.includes(loc.id));
+      return filteredLocations.filter(
+        loc => !excludedLocationIds.includes(loc.id)
+      );
     }
-    return filteredLocations.filter(loc => selectedLocationIds.includes(loc.id));
-  }, [useExclusionMode, filteredLocations, excludedLocationIds, selectedLocationIds]);
+    return filteredLocations.filter(loc =>
+      selectedLocationIds.includes(loc.id)
+    );
+  }, [
+    useExclusionMode,
+    filteredLocations,
+    excludedLocationIds,
+    selectedLocationIds,
+  ]);
 
   // Calculate statistics
   const stats = useMemo(() => {
-    const totalCampaigns = effectiveSelectedLocations.length * campaignConfig.ads.length;
+    const totalCampaigns =
+      effectiveSelectedLocations.length * campaignConfig.ads.length;
     const totalBudget = campaignConfig.budget * totalCampaigns;
     const estimatedReach = totalCampaigns * 15000;
-    
+
     return {
       totalCampaigns,
       totalBudget,
       estimatedReach,
       selectedLocations: effectiveSelectedLocations.length,
       totalAds: campaignConfig.ads.length,
-      totalFiles: 1
+      totalFiles: 1,
     };
-  }, [effectiveSelectedLocations.length, campaignConfig.ads.length, campaignConfig.budget]);
+  }, [
+    effectiveSelectedLocations.length,
+    campaignConfig.ads.length,
+    campaignConfig.budget,
+  ]);
 
   // Event handlers
   const toggleLocationSelection = (locationId: string) => {
@@ -260,7 +311,7 @@ function App() {
       caption: 'Hello World',
       additionalNotes: '',
       scheduledDate: campaignConfig.selectedDate.toLocaleDateString('en-US'),
-      status: 'Paused'
+      status: 'Paused',
     };
     setCampaignConfig(prev => ({ ...prev, ads: [...prev.ads, newAd] }));
   };
@@ -268,13 +319,13 @@ function App() {
   const removeAd = (adId: string) => {
     setCampaignConfig(prev => ({
       ...prev,
-      ads: prev.ads.filter(ad => ad.id !== adId)
+      ads: prev.ads.filter(ad => ad.id !== adId),
     }));
   };
 
-
-
-  const handleTemplateCreation = async (templateData: CreateTemplateRequest) => {
+  const handleTemplateCreation = async (
+    templateData: CreateTemplateRequest
+  ) => {
     setIsCreatingTemplate(true);
     try {
       const response = await mockApi.createTemplate(templateData);
@@ -290,7 +341,11 @@ function App() {
   };
 
   const generateCampaigns = async () => {
-    if (effectiveSelectedLocations.length === 0 || campaignConfig.ads.length === 0) return;
+    if (
+      effectiveSelectedLocations.length === 0 ||
+      campaignConfig.ads.length === 0
+    )
+      return;
 
     setIsLoading(true);
     try {
@@ -300,9 +355,15 @@ function App() {
         {
           format: 'csv',
           includeHeaders: true,
-          customFields: ['radius', 'caption', 'additionalNotes', 'scheduledDate', 'status'],
+          customFields: [
+            'radius',
+            'caption',
+            'additionalNotes',
+            'scheduledDate',
+            'status',
+          ],
           fileName: `${campaignConfig.prefix}_${campaignConfig.platform}_${campaignConfig.month}${campaignConfig.day}_AllCampaigns.csv`,
-          campaign: campaignConfig
+          campaign: campaignConfig,
         }
       );
 
@@ -320,41 +381,41 @@ function App() {
 
   // Progress steps
   const steps = [
-    { 
-      id: 1, 
-      title: 'Locations', 
-      icon: MapPinIcon, 
+    {
+      id: 1,
+      title: 'Locations',
+      icon: MapPinIcon,
       completed: effectiveSelectedLocations.length > 0,
-      description: 'Select target locations'
+      description: 'Select target locations',
     },
-    { 
-      id: 2, 
-      title: 'Campaigns', 
-      icon: CogIcon, 
+    {
+      id: 2,
+      title: 'Campaigns',
+      icon: CogIcon,
       completed: campaignConfig.prefix !== '',
-      description: 'Configure campaigns'
+      description: 'Configure campaigns',
     },
-    { 
-      id: 3, 
-      title: 'Ads', 
-      icon: DocumentIcon, 
+    {
+      id: 3,
+      title: 'Ads',
+      icon: DocumentIcon,
       completed: campaignConfig.ads.length > 0,
-      description: 'Create ads for campaigns'
+      description: 'Create ads for campaigns',
     },
-    { 
-      id: 4, 
-      title: 'Review', 
-      icon: EyeIcon, 
+    {
+      id: 4,
+      title: 'Review',
+      icon: EyeIcon,
       completed: hasReviewed || currentStep > 4,
-      description: 'Preview & validate'
+      description: 'Preview & validate',
     },
-    { 
-      id: 5, 
-      title: 'Generate', 
-      icon: SparklesIcon, 
+    {
+      id: 5,
+      title: 'Generate',
+      icon: SparklesIcon,
       completed: hasGenerated || generationJob?.status === 'completed',
-      description: 'Export campaigns'
-    }
+      description: 'Export campaigns',
+    },
   ];
 
   if (isLoading) {
@@ -369,7 +430,7 @@ function App() {
           <motion.div
             className="w-20 h-20 rounded-full mx-auto mb-6 bg-gradient-to-r from-primary-500 to-primary-600 shadow-lg shadow-primary-500/30"
             animate={{ rotate: 360 }}
-            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+            transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
           />
           <h2 className="text-2xl font-bold text-neutral-800 mb-2">
             Loading Ad Tools
@@ -391,7 +452,7 @@ function App() {
           animate="visible"
         >
           {/* App Header */}
-          <AppHeader 
+          <AppHeader
             onSettingsClick={() => {
               if (useSimplifiedVersion) {
                 // For simplified version, we need to trigger the settings modal from within that component
@@ -400,7 +461,7 @@ function App() {
               } else {
                 setShowCampaignSettings(true);
               }
-            }} 
+            }}
           />
 
           {/* Progress Steps - only show in professional mode */}
@@ -408,7 +469,7 @@ function App() {
             <ProgressSteps
               currentStep={currentStep}
               steps={steps}
-              onStepClick={(stepId) => setCurrentStep(stepId)}
+              onStepClick={stepId => setCurrentStep(stepId)}
             />
           )}
 
@@ -433,7 +494,9 @@ function App() {
                           Select Target Locations
                         </h2>
                         <p className="text-neutral-600 text-lg">
-                          Choose the locations where your campaigns will run. You can select individual locations or use exclusion mode.
+                          Choose the locations where your campaigns will run.
+                          You can select individual locations or use exclusion
+                          mode.
                         </p>
                       </div>
 
@@ -442,7 +505,7 @@ function App() {
                         <input
                           type="text"
                           value={searchQuery}
-                          onChange={(e) => setSearchQuery(e.target.value)}
+                          onChange={e => setSearchQuery(e.target.value)}
                           placeholder="Search locations by name, city, or state..."
                           className="w-full px-6 py-4 border-2 border-neutral-200 rounded-2xl text-base bg-white/90 backdrop-blur-xl transition-all duration-300 focus:border-primary-500 focus:ring-4 focus:ring-primary-100 focus:-translate-y-0.5 focus:outline-none hover:bg-white"
                         />
@@ -451,7 +514,9 @@ function App() {
                       {/* Configuration Filter */}
                       <div className="mb-6">
                         <div className="flex items-center gap-2 mb-2">
-                          <span className="text-sm font-medium text-neutral-700">Filter by configuration:</span>
+                          <span className="text-sm font-medium text-neutral-700">
+                            Filter by configuration:
+                          </span>
                         </div>
                         <div className="flex gap-2 flex-wrap">
                           <button
@@ -472,22 +537,27 @@ function App() {
                                 : 'bg-white/90 backdrop-blur-xl text-neutral-700 border-2 border-neutral-200 hover:border-success-300 hover:bg-white'
                             }`}
                           >
-                            Configured ({locations.filter(l => l.config).length})
+                            Configured ({locations.filter(l => l.config).length}
+                            )
                           </button>
                           <button
-                            onClick={() => setConfigurationFilter('not-configured')}
+                            onClick={() =>
+                              setConfigurationFilter('not-configured')
+                            }
                             className={`px-4 py-2 text-sm font-medium rounded-xl transition-all duration-300 ${
                               configurationFilter === 'not-configured'
                                 ? 'bg-warning-500 text-white shadow-lg shadow-warning-500/25'
                                 : 'bg-white/90 backdrop-blur-xl text-neutral-700 border-2 border-neutral-200 hover:border-warning-300 hover:bg-white'
                             }`}
                           >
-                            Not Configured ({locations.filter(l => !l.config).length})
+                            Not Configured (
+                            {locations.filter(l => !l.config).length})
                           </button>
                         </div>
                         {(searchQuery || configurationFilter !== 'all') && (
                           <div className="mt-2 text-sm text-gray-500">
-                            Showing {filteredLocations.length} of {locations.length} locations
+                            Showing {filteredLocations.length} of{' '}
+                            {locations.length} locations
                           </div>
                         )}
                       </div>
@@ -498,10 +568,13 @@ function App() {
                           <input
                             type="checkbox"
                             checked={useExclusionMode}
-                            onChange={(e) => setUseExclusionMode(e.target.checked)}
+                            onChange={e =>
+                              setUseExclusionMode(e.target.checked)
+                            }
                             className="w-4 h-4 accent-primary-500 rounded"
                           />
-                          Use exclusion mode (select locations to exclude instead)
+                          Use exclusion mode (select locations to exclude
+                          instead)
                         </label>
                       </div>
 
@@ -526,7 +599,7 @@ function App() {
                       {/* Locations List */}
                       <div className="max-h-96 overflow-y-auto border border-neutral-200 rounded-2xl bg-white/95 backdrop-blur-xl shadow-professional">
                         {filteredLocations.map((location, index) => {
-                          const isSelected = useExclusionMode 
+                          const isSelected = useExclusionMode
                             ? !excludedLocationIds.includes(location.id)
                             : selectedLocationIds.includes(location.id);
 
@@ -536,40 +609,59 @@ function App() {
                               initial={{ opacity: 0, x: -20 }}
                               animate={{ opacity: 1, x: 0 }}
                               transition={{ delay: index * 0.02 }}
-                              onClick={() => toggleLocationSelection(location.id)}
+                              onClick={() =>
+                                toggleLocationSelection(location.id)
+                              }
                               className={`flex items-center justify-between py-3 px-4 cursor-pointer transition-all duration-300 text-sm hover:bg-primary-50 ${
-                                index !== filteredLocations.length - 1 ? 'border-b border-neutral-100' : ''
+                                index !== filteredLocations.length - 1
+                                  ? 'border-b border-neutral-100'
+                                  : ''
                               } ${isSelected ? 'bg-primary-50' : ''}`}
                             >
                               <div className="flex items-center gap-3 flex-1">
-                                <div className={`w-4 h-4 rounded border-2 transition-all duration-300 flex items-center justify-center ${
-                                  isSelected 
-                                    ? 'border-primary-500 bg-primary-500' 
-                                    : 'border-neutral-300'
-                                }`}>
+                                <div
+                                  className={`w-4 h-4 rounded border-2 transition-all duration-300 flex items-center justify-center ${
+                                    isSelected
+                                      ? 'border-primary-500 bg-primary-500'
+                                      : 'border-neutral-300'
+                                  }`}
+                                >
                                   {isSelected && (
                                     <CheckCircleIcon className="w-3 h-3 text-white" />
                                   )}
                                 </div>
                                 <div className="flex-1">
                                   <div className="flex items-center gap-2">
-                                    <div className="font-medium text-neutral-800">{location.name}</div>
+                                    <div className="font-medium text-neutral-800">
+                                      {location.name}
+                                    </div>
                                     {location.config && (
                                       <span className="inline-flex items-center px-2 py-1 text-xs bg-success-100 text-success-700 rounded-full">
-                                        <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                        <svg
+                                          className="w-3 h-3 mr-1"
+                                          fill="currentColor"
+                                          viewBox="0 0 20 20"
+                                        >
+                                          <path
+                                            fillRule="evenodd"
+                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                            clipRule="evenodd"
+                                          />
                                         </svg>
                                         Configured
                                       </span>
                                     )}
                                   </div>
                                   <div className="text-xs text-neutral-500 mt-1">
-                                    {location.city}, {location.state} • {location.phoneNumber}
-                                    {location.config && location.config.budget && (
-                                      <span className="ml-2 text-primary-600 font-medium">
-                                        Budget: ${location.config.budget.toFixed(2)}
-                                      </span>
-                                    )}
+                                    {location.city}, {location.state} •{' '}
+                                    {location.phoneNumber}
+                                    {location.config &&
+                                      location.config.budget && (
+                                        <span className="ml-2 text-primary-600 font-medium">
+                                          Budget: $
+                                          {location.config.budget.toFixed(2)}
+                                        </span>
+                                      )}
                                   </div>
                                   {location.config && location.config.notes && (
                                     <div className="text-xs text-neutral-400 mt-1 italic truncate">
@@ -581,44 +673,86 @@ function App() {
                               <div className="flex items-center gap-3">
                                 <div className="text-neutral-600 text-xs flex flex-col gap-1">
                                   <div className="flex items-center gap-2">
-                                    <span>{location.city}, {location.state}</span>
+                                    <span>
+                                      {location.city}, {location.state}
+                                    </span>
                                   </div>
                                   <div className="flex items-center gap-2 text-accent-600 font-mono">
                                     {location.config ? (
                                       <>
-                                        {location.config.primaryLat && location.config.primaryLng ? (
+                                        {location.config.primaryLat &&
+                                        location.config.primaryLng ? (
                                           <>
-                                            <span>{location.config.primaryLat.toFixed(4)}, {location.config.primaryLng.toFixed(4)}</span>
+                                            <span>
+                                              {location.config.primaryLat.toFixed(
+                                                4
+                                              )}
+                                              ,{' '}
+                                              {location.config.primaryLng.toFixed(
+                                                4
+                                              )}
+                                            </span>
                                             {location.config.radiusMiles && (
                                               <>
-                                                <span className="text-neutral-400">•</span>
-                                                <span className="text-warning-600">{location.config.radiusMiles}mi</span>
+                                                <span className="text-neutral-400">
+                                                  •
+                                                </span>
+                                                <span className="text-warning-600">
+                                                  {location.config.radiusMiles}
+                                                  mi
+                                                </span>
                                               </>
                                             )}
-                                            {location.config.coordinateList && location.config.coordinateList.length > 0 && (
-                                              <>
-                                                <span className="text-neutral-400">•</span>
-                                                <span className="text-success-600">+{location.config.coordinateList.length} points</span>
-                                              </>
-                                            )}
+                                            {location.config.coordinateList &&
+                                              location.config.coordinateList
+                                                .length > 0 && (
+                                                <>
+                                                  <span className="text-neutral-400">
+                                                    •
+                                                  </span>
+                                                  <span className="text-success-600">
+                                                    +
+                                                    {
+                                                      location.config
+                                                        .coordinateList.length
+                                                    }{' '}
+                                                    points
+                                                  </span>
+                                                </>
+                                              )}
                                           </>
                                         ) : (
                                           <>
-                                            <span>{location.coordinates.lat.toFixed(4)}, {location.coordinates.lng.toFixed(4)}</span>
-                                            <span className="text-neutral-400">• default</span>
+                                            <span>
+                                              {location.coordinates.lat.toFixed(
+                                                4
+                                              )}
+                                              ,{' '}
+                                              {location.coordinates.lng.toFixed(
+                                                4
+                                              )}
+                                            </span>
+                                            <span className="text-neutral-400">
+                                              • default
+                                            </span>
                                           </>
                                         )}
                                       </>
                                     ) : (
                                       <>
-                                        <span>{location.coordinates.lat.toFixed(4)}, {location.coordinates.lng.toFixed(4)}</span>
-                                        <span className="text-neutral-400">• unconfigured</span>
+                                        <span>
+                                          {location.coordinates.lat.toFixed(4)},{' '}
+                                          {location.coordinates.lng.toFixed(4)}
+                                        </span>
+                                        <span className="text-neutral-400">
+                                          • unconfigured
+                                        </span>
                                       </>
                                     )}
                                   </div>
                                 </div>
                                 <button
-                                  onClick={(e) => {
+                                  onClick={e => {
                                     e.stopPropagation();
                                     setSelectedLocationToConfigure(location);
                                     setShowLocationConfigModal(true);
@@ -637,10 +771,13 @@ function App() {
                       {/* Selection Summary */}
                       <div className="mt-6 p-4 bg-gradient-to-r from-primary-50 to-accent-50 border border-primary-200 rounded-2xl">
                         <div className="text-sm font-semibold text-primary-800 mb-1">
-                          {useExclusionMode ? 'Exclusion Mode:' : 'Selection Mode:'}
+                          {useExclusionMode
+                            ? 'Exclusion Mode:'
+                            : 'Selection Mode:'}
                         </div>
                         <div className="text-sm text-primary-700">
-                          {effectiveSelectedLocations.length} locations selected for campaigns
+                          {effectiveSelectedLocations.length} locations selected
+                          for campaigns
                         </div>
                       </div>
 
@@ -648,7 +785,9 @@ function App() {
                       <div className="flex justify-end mt-8">
                         <button
                           className={`inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-primary-500 to-primary-600 text-white font-semibold rounded-2xl shadow-lg shadow-primary-500/25 transition-all duration-300 hover:from-primary-600 hover:to-primary-700 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary-500/30 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 text-lg ${
-                            effectiveSelectedLocations.length === 0 ? 'opacity-50 cursor-not-allowed' : ''
+                            effectiveSelectedLocations.length === 0
+                              ? 'opacity-50 cursor-not-allowed'
+                              : ''
                           }`}
                           onClick={() => setCurrentStep(2)}
                           disabled={effectiveSelectedLocations.length === 0}
@@ -676,7 +815,8 @@ function App() {
                           Campaign Settings
                         </h2>
                         <p className="text-neutral-600 text-lg">
-                          Set up your Meta campaign parameters. These settings will be applied to all generated campaigns.
+                          Set up your Meta campaign parameters. These settings
+                          will be applied to all generated campaigns.
                         </p>
                       </div>
 
@@ -688,23 +828,33 @@ function App() {
                           <input
                             type="text"
                             value={campaignConfig.prefix}
-                            onChange={(e) => setCampaignConfig(prev => ({ ...prev, prefix: e.target.value }))}
+                            onChange={e =>
+                              setCampaignConfig(prev => ({
+                                ...prev,
+                                prefix: e.target.value,
+                              }))
+                            }
                             className="w-full px-6 py-4 border-2 border-neutral-200 rounded-2xl text-base bg-white/90 backdrop-blur-xl transition-all duration-300 focus:border-primary-500 focus:ring-4 focus:ring-primary-100 focus:-translate-y-0.5 focus:outline-none hover:bg-white"
                             placeholder="EWC_Meta_"
                           />
                         </div>
-                        
+
                         <div className="space-y-2">
                           <label className="block font-semibold text-neutral-700 text-sm uppercase tracking-wide">
                             Platform
                           </label>
                           <Select
                             value={campaignConfig.platform}
-                            onChange={(value) => setCampaignConfig(prev => ({ ...prev, platform: value }))}
+                            onChange={value =>
+                              setCampaignConfig(prev => ({
+                                ...prev,
+                                platform: value,
+                              }))
+                            }
                             options={[
                               { value: 'Meta', label: 'Meta' },
                               { value: 'Facebook', label: 'Facebook' },
-                              { value: 'Instagram', label: 'Instagram' }
+                              { value: 'Instagram', label: 'Instagram' },
                             ]}
                             label=""
                           />
@@ -716,7 +866,12 @@ function App() {
                           </label>
                           <ModernDatePicker
                             value={campaignConfig.selectedDate}
-                            onChange={(date: Date) => setCampaignConfig(prev => ({ ...prev, selectedDate: date }))}
+                            onChange={(date: Date) =>
+                              setCampaignConfig(prev => ({
+                                ...prev,
+                                selectedDate: date,
+                              }))
+                            }
                           />
                         </div>
                       </div>
@@ -728,8 +883,16 @@ function App() {
                           </label>
                           <Select
                             value={campaignConfig.objective}
-                            onChange={(value) => setCampaignConfig(prev => ({ ...prev, objective: value }))}
-                            options={defaultObjectives.map(obj => ({ value: obj.value, label: obj.label }))}
+                            onChange={value =>
+                              setCampaignConfig(prev => ({
+                                ...prev,
+                                objective: value,
+                              }))
+                            }
+                            options={defaultObjectives.map(obj => ({
+                              value: obj.value,
+                              label: obj.label,
+                            }))}
                             label=""
                           />
                         </div>
@@ -742,7 +905,12 @@ function App() {
                             type="number"
                             step="0.01"
                             value={campaignConfig.budget}
-                            onChange={(e) => setCampaignConfig(prev => ({ ...prev, budget: parseFloat(e.target.value) }))}
+                            onChange={e =>
+                              setCampaignConfig(prev => ({
+                                ...prev,
+                                budget: parseFloat(e.target.value),
+                              }))
+                            }
                             className="w-full px-6 py-4 border-2 border-neutral-200 rounded-2xl text-base bg-white/90 backdrop-blur-xl transition-all duration-300 focus:border-primary-500 focus:ring-4 focus:ring-primary-100 focus:-translate-y-0.5 focus:outline-none hover:bg-white"
                             placeholder="92.69"
                           />
@@ -785,7 +953,8 @@ function App() {
                           Ad Configuration
                         </h2>
                         <p className="text-neutral-600 text-lg">
-                          Create multiple ad variations for your campaigns. Each ad will be deployed to all selected locations.
+                          Create multiple ad variations for your campaigns. Each
+                          ad will be deployed to all selected locations.
                         </p>
                       </div>
 
@@ -803,313 +972,376 @@ function App() {
                       {/* Ads List */}
                       <div className="space-y-6 mb-8">
                         {campaignConfig.ads.map((ad, index) => (
-                                              <motion.div
-                          key={ad.id}
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: index * 0.1 }}
-                          className="bg-white/90 backdrop-blur-xl border border-neutral-200 rounded-3xl p-8 shadow-professional transition-all duration-300 hover:shadow-elegant hover:border-primary-300"
+                          <motion.div
+                            key={ad.id}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: index * 0.1 }}
+                            className="bg-white/90 backdrop-blur-xl border border-neutral-200 rounded-3xl p-8 shadow-professional transition-all duration-300 hover:shadow-elegant hover:border-primary-300"
+                          >
+                            <div className="flex justify-between items-start mb-6">
+                              <h3 className="text-xl font-semibold text-neutral-800">
+                                {ad.name}
+                              </h3>
+                              <button
+                                onClick={() => removeAd(ad.id)}
+                                className="inline-flex items-center gap-1 px-3 py-1 text-sm bg-white/90 backdrop-blur-xl text-neutral-700 rounded-xl border border-neutral-200 shadow-lg shadow-black/5 hover:border-error-500 hover:text-error-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-error-500 focus:ring-offset-2"
+                              >
+                                <TrashIcon className="w-4 h-4" />
+                              </button>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                              <div className="space-y-2">
+                                <label className="block font-semibold text-gray-700 text-sm">
+                                  Ad Name{' '}
+                                  <span className="text-gray-500 text-xs">
+                                    (Auto-generated)
+                                  </span>
+                                </label>
+                                <input
+                                  type="text"
+                                  value={ad.name}
+                                  readOnly
+                                  className="w-full px-3 py-2 border border-gray-200 rounded-lg bg-gray-50 text-gray-600 cursor-not-allowed"
+                                  title="This field is auto-generated based on the reference template and location"
+                                />
+                              </div>
+
+                              <div className="space-y-2">
+                                <label className="block font-semibold text-gray-700 text-sm">
+                                  Title{' '}
+                                  <span className="text-gray-500 text-xs">
+                                    (Fixed from template)
+                                  </span>
+                                </label>
+                                <input
+                                  type="text"
+                                  value="Get your First Wax Free"
+                                  readOnly
+                                  className="w-full px-3 py-2 border border-gray-200 rounded-lg bg-gray-50 text-gray-600 cursor-not-allowed"
+                                  title="This field uses the fixed value from the reference template"
+                                />
+                              </div>
+
+                              <div className="space-y-2">
+                                <label className="block font-semibold text-gray-700 text-sm">
+                                  Caption{' '}
+                                  <span className="text-gray-500 text-xs">
+                                    (Fixed from template)
+                                  </span>
+                                </label>
+                                <input
+                                  type="text"
+                                  value="You learn something new everyday"
+                                  readOnly
+                                  className="w-full px-3 py-2 border border-gray-200 rounded-lg bg-gray-50 text-gray-600 cursor-not-allowed"
+                                  title="This field uses the fixed value from the reference template"
+                                />
+                              </div>
+
+                              <div className="space-y-2">
+                                <label className="block font-semibold text-gray-700 text-sm">
+                                  Call to Action{' '}
+                                  <span className="text-gray-500 text-xs">
+                                    (Fixed from template)
+                                  </span>
+                                </label>
+                                <input
+                                  type="text"
+                                  value="BOOK_TRAVEL"
+                                  readOnly
+                                  className="w-full px-3 py-2 border border-gray-200 rounded-lg bg-gray-50 text-gray-600 cursor-not-allowed"
+                                  title="This field uses the fixed value from the reference template"
+                                />
+                              </div>
+                            </div>
+                          </motion.div>
+                        ))}
+                      </div>
+
+                      {/* Navigation */}
+                      <div className="flex justify-between mt-8">
+                        <button
+                          onClick={() => setCurrentStep(2)}
+                          className="inline-flex items-center gap-2 px-6 py-3 bg-white/90 backdrop-blur-xl text-neutral-700 font-semibold rounded-xl border border-neutral-200 shadow-lg shadow-black/5 transition-all duration-300 hover:bg-white hover:border-neutral-300 hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:ring-offset-2"
                         >
-                          <div className="flex justify-between items-start mb-6">
-                            <h3 className="text-xl font-semibold text-neutral-800">
-                              {ad.name}
-                            </h3>
-                            <button
-                              onClick={() => removeAd(ad.id)}
-                              className="inline-flex items-center gap-1 px-3 py-1 text-sm bg-white/90 backdrop-blur-xl text-neutral-700 rounded-xl border border-neutral-200 shadow-lg shadow-black/5 hover:border-error-500 hover:text-error-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-error-500 focus:ring-offset-2"
-                            >
-                              <TrashIcon className="w-4 h-4" />
-                            </button>
-                          </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                          <div className="space-y-2">
-                            <label className="block font-semibold text-gray-700 text-sm">
-                              Ad Name <span className="text-gray-500 text-xs">(Auto-generated)</span>
-                            </label>
-                            <input
-                              type="text"
-                              value={ad.name}
-                              readOnly
-                              className="w-full px-3 py-2 border border-gray-200 rounded-lg bg-gray-50 text-gray-600 cursor-not-allowed"
-                              title="This field is auto-generated based on the reference template and location"
-                            />
-                          </div>
-
-                          <div className="space-y-2">
-                            <label className="block font-semibold text-gray-700 text-sm">
-                              Title <span className="text-gray-500 text-xs">(Fixed from template)</span>
-                            </label>
-                            <input
-                              type="text"
-                              value="Get your First Wax Free"
-                              readOnly
-                              className="w-full px-3 py-2 border border-gray-200 rounded-lg bg-gray-50 text-gray-600 cursor-not-allowed"
-                              title="This field uses the fixed value from the reference template"
-                            />
-                          </div>
-
-                          <div className="space-y-2">
-                            <label className="block font-semibold text-gray-700 text-sm">
-                              Caption <span className="text-gray-500 text-xs">(Fixed from template)</span>
-                            </label>
-                            <input
-                              type="text"
-                              value="You learn something new everyday"
-                              readOnly
-                              className="w-full px-3 py-2 border border-gray-200 rounded-lg bg-gray-50 text-gray-600 cursor-not-allowed"
-                              title="This field uses the fixed value from the reference template"
-                            />
-                          </div>
-
-                          <div className="space-y-2">
-                            <label className="block font-semibold text-gray-700 text-sm">
-                              Call to Action <span className="text-gray-500 text-xs">(Fixed from template)</span>
-                            </label>
-                            <input
-                              type="text"
-                              value="BOOK_TRAVEL"
-                              readOnly
-                              className="w-full px-3 py-2 border border-gray-200 rounded-lg bg-gray-50 text-gray-600 cursor-not-allowed"
-                              title="This field uses the fixed value from the reference template"
-                            />
-                          </div>
-                        </div>
-                      </motion.div>
-                    ))}
-                  </div>
-
-                  {/* Navigation */}
-                  <div className="flex justify-between mt-8">
-                    <button
-                      onClick={() => setCurrentStep(2)}
-                      className="inline-flex items-center gap-2 px-6 py-3 bg-white/90 backdrop-blur-xl text-neutral-700 font-semibold rounded-xl border border-neutral-200 shadow-lg shadow-black/5 transition-all duration-300 hover:bg-white hover:border-neutral-300 hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:ring-offset-2"
-                    >
-                      <ArrowRightIcon className="w-4 h-4 rotate-180" />
-                      Back to Campaigns
-                    </button>
-                    <button
-                      onClick={() => setCurrentStep(4)}
-                      className={`inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-primary-500 to-primary-600 text-white font-semibold rounded-2xl shadow-lg shadow-primary-500/25 transition-all duration-300 hover:from-primary-600 hover:to-primary-700 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary-500/30 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 text-lg ${
-                        campaignConfig.ads.length === 0 ? 'opacity-50 cursor-not-allowed' : ''
-                      }`}
-                      disabled={campaignConfig.ads.length === 0}
-                    >
-                      Continue to Review
-                      <ArrowRightIcon className="w-5 h-5" />
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-            )}
-
-            {currentStep === 4 && (
-              <motion.div
-                key="review"
-                variants={cardVariants}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-                className="max-w-6xl mx-auto"
-              >
-                <div className="card-premium rounded-3xl p-10 shadow-elegant transition-all duration-300 hover:shadow-3xl">
-                  <div className="mb-8">
-                    <h2 className="text-3xl font-extrabold text-gradient-professional mb-4">
-                      Review & Generate
-                    </h2>
-                    <p className="text-neutral-600 text-lg">
-                      Review your campaign settings before generating the final export file.
-                    </p>
-                  </div>
-
-                  {/* Statistics Grid */}
-                  <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mb-12">
-                    <motion.div 
-                      className="bg-gradient-to-br from-primary-50/80 to-white/90 backdrop-blur-xl border border-primary-200 rounded-3xl p-8 text-center relative overflow-hidden shadow-professional"
-                      initial={{ scale: 0, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      transition={{ type: "spring", stiffness: 200, delay: 0.1 }}
-                    >
-                      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary-500 to-accent-500 rounded-t-3xl"></div>
-                      <MapPinIcon className="w-8 h-8 text-primary-600 mx-auto mb-3" />
-                      <div className="text-4xl font-extrabold text-neutral-800 mb-1 leading-none">{stats.selectedLocations}</div>
-                      <div className="text-neutral-600 font-medium text-sm uppercase tracking-wider">Locations</div>
-                    </motion.div>
-                    
-                    <motion.div 
-                      className="bg-gradient-to-br from-accent-50/80 to-white/90 backdrop-blur-xl border border-accent-200 rounded-3xl p-8 text-center relative overflow-hidden shadow-professional"
-                      initial={{ scale: 0, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
-                    >
-                      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-accent-500 to-primary-500 rounded-t-3xl"></div>
-                      <DocumentIcon className="w-8 h-8 text-accent-600 mx-auto mb-3" />
-                      <div className="text-4xl font-extrabold text-neutral-800 mb-1 leading-none">{stats.totalAds}</div>
-                      <div className="text-neutral-600 font-medium text-sm uppercase tracking-wider">Ad Variations</div>
-                    </motion.div>
-                    
-                    <motion.div 
-                      className="bg-gradient-to-br from-success-50/80 to-white/90 backdrop-blur-xl border border-success-200 rounded-3xl p-8 text-center relative overflow-hidden shadow-professional"
-                      initial={{ scale: 0, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      transition={{ type: "spring", stiffness: 200, delay: 0.3 }}
-                    >
-                      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-success-500 to-primary-500 rounded-t-3xl"></div>
-                      <ChartBarIcon className="w-8 h-8 text-success-600 mx-auto mb-3" />
-                      <div className="text-4xl font-extrabold text-neutral-800 mb-1 leading-none">{stats.totalCampaigns.toLocaleString()}</div>
-                      <div className="text-neutral-600 font-medium text-sm uppercase tracking-wider">Total Campaigns</div>
-                    </motion.div>
-                    
-                    <motion.div 
-                      className="bg-gradient-to-br from-info-50/80 to-white/90 backdrop-blur-xl border border-info-200 rounded-3xl p-8 text-center relative overflow-hidden shadow-professional"
-                      initial={{ scale: 0, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      transition={{ type: "spring", stiffness: 200, delay: 0.4 }}
-                    >
-                      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-info-500 to-accent-500 rounded-t-3xl"></div>
-                      <DocumentDuplicateIcon className="w-8 h-8 text-info-600 mx-auto mb-3" />
-                      <div className="text-4xl font-extrabold text-neutral-800 mb-1 leading-none">{stats.totalFiles}</div>
-                      <div className="text-neutral-600 font-medium text-sm uppercase tracking-wider">CSV File</div>
-                    </motion.div>
-                  </div>
-
-                  {/* What will be generated */}
-                  <div className="bg-white/90 backdrop-blur-xl border border-neutral-200 rounded-3xl p-8 mb-8 shadow-professional">
-                    <h3 className="text-xl font-bold text-neutral-800 mb-4">
-                      What will be generated:
-                    </h3>
-                    <div className="space-y-3">
-                      {[
-                        `${stats.totalFiles} comprehensive CSV file containing all campaigns`,
-                        `${stats.totalCampaigns.toLocaleString()} total Meta campaign settings`,
-                        'Complete 73-column campaign import format',
-                        `File name: ${campaignConfig.prefix}_${campaignConfig.platform}_${campaignConfig.month}${campaignConfig.day}_AllCampaigns.csv`,
-                        'Location-specific targeting coordinates and demographics',
-                        'All ad variations organized in a single file',
-                        'Ready for Meta Ads Manager bulk import'
-                      ].map((item, index) => (
-                        <motion.div
-                          key={index}
-                          className="flex items-center gap-3"
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: index * 0.1 }}
+                          <ArrowRightIcon className="w-4 h-4 rotate-180" />
+                          Back to Campaigns
+                        </button>
+                        <button
+                          onClick={() => setCurrentStep(4)}
+                          className={`inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-primary-500 to-primary-600 text-white font-semibold rounded-2xl shadow-lg shadow-primary-500/25 transition-all duration-300 hover:from-primary-600 hover:to-primary-700 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary-500/30 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 text-lg ${
+                            campaignConfig.ads.length === 0
+                              ? 'opacity-50 cursor-not-allowed'
+                              : ''
+                          }`}
+                          disabled={campaignConfig.ads.length === 0}
                         >
-                          <CheckCircleIcon className="w-5 h-5 text-success-500 flex-shrink-0" />
-                          <span className="text-neutral-700">{item}</span>
-                        </motion.div>
-                      ))}
+                          Continue to Review
+                          <ArrowRightIcon className="w-5 h-5" />
+                        </button>
+                      </div>
                     </div>
-                  </div>
-
-                  {/* Action Buttons */}
-                  <div className="flex gap-4 justify-between items-center">
-                    <div className="flex gap-4">
-                      <button
-                        onClick={() => setCurrentStep(3)}
-                        className="inline-flex items-center gap-2 px-6 py-3 bg-white/90 backdrop-blur-xl text-neutral-700 font-semibold rounded-xl border border-neutral-200 shadow-lg shadow-black/5 transition-all duration-300 hover:bg-white hover:border-neutral-300 hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:ring-offset-2"
-                      >
-                        <ArrowRightIcon className="w-4 h-4 rotate-180" />
-                        Back to Ads
-                      </button>
-                    </div>
-
-                    <div className="flex gap-4">
-                      <button
-                        onClick={() => setShowFilePreview(true)}
-                        className="inline-flex items-center gap-2 px-6 py-3 bg-transparent text-blue-600 font-semibold rounded-xl border-2 border-blue-500 transition-all duration-300 hover:text-blue-700 hover:border-blue-600 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                      >
-                        <EyeIcon className="w-4 h-4" />
-                        Preview
-                      </button>
-
-                      <button
-                        onClick={generateCampaigns}
-                        className="inline-flex items-center gap-2 px-6 py-3 bg-transparent text-success-600 font-semibold rounded-xl border-2 border-success-500 transition-all duration-300 hover:text-success-700 hover:border-success-600 hover:bg-success-50 focus:outline-none focus:ring-2 focus:ring-success-500 focus:ring-offset-2"
-                      >
-                        <DocumentArrowDownIcon className="w-4 h-4" />
-                        Export
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            )}
-
-            {currentStep === 5 && generationJob && (
-              <motion.div
-                key="results"
-                variants={cardVariants}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-                className="max-w-2xl mx-auto"
-              >
-                <div className="card-premium rounded-3xl p-10 shadow-elegant transition-all duration-300 hover:shadow-3xl text-center">
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ type: "spring", stiffness: 200, delay: 0.3 }}
-                    className="w-24 h-24 bg-gradient-to-r from-success-500 to-success-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-success-500/30"
-                  >
-                    <CheckCircleIcon className="w-12 h-12 text-white" />
                   </motion.div>
+                )}
 
-                  <h2 className="text-3xl font-extrabold bg-gradient-to-r from-success-600 to-success-500 bg-clip-text text-transparent mb-4">
-                    Campaigns Generated Successfully!
-                  </h2>
-                  
-                  <p className="text-neutral-600 text-lg mb-8">
-                    Your campaign file has been generated and is ready for download.
-                  </p>
+                {currentStep === 4 && (
+                  <motion.div
+                    key="review"
+                    variants={cardVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    className="max-w-6xl mx-auto"
+                  >
+                    <div className="card-premium rounded-3xl p-10 shadow-elegant transition-all duration-300 hover:shadow-3xl">
+                      <div className="mb-8">
+                        <h2 className="text-3xl font-extrabold text-gradient-professional mb-4">
+                          Review & Generate
+                        </h2>
+                        <p className="text-neutral-600 text-lg">
+                          Review your campaign settings before generating the
+                          final export file.
+                        </p>
+                      </div>
 
-                  <div className="bg-neutral-50 border border-neutral-200 rounded-2xl p-6 mb-8">
-                    <div className="text-sm font-semibold text-neutral-700 mb-2">Generated File:</div>
-                    <div className="font-mono text-sm text-neutral-600 break-all">
-                      {generationJob.options?.fileName || 'Campaign_Export.csv'}
+                      {/* Statistics Grid */}
+                      <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mb-12">
+                        <motion.div
+                          className="bg-gradient-to-br from-primary-50/80 to-white/90 backdrop-blur-xl border border-primary-200 rounded-3xl p-8 text-center relative overflow-hidden shadow-professional"
+                          initial={{ scale: 0, opacity: 0 }}
+                          animate={{ scale: 1, opacity: 1 }}
+                          transition={{
+                            type: 'spring',
+                            stiffness: 200,
+                            delay: 0.1,
+                          }}
+                        >
+                          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary-500 to-accent-500 rounded-t-3xl"></div>
+                          <MapPinIcon className="w-8 h-8 text-primary-600 mx-auto mb-3" />
+                          <div className="text-4xl font-extrabold text-neutral-800 mb-1 leading-none">
+                            {stats.selectedLocations}
+                          </div>
+                          <div className="text-neutral-600 font-medium text-sm uppercase tracking-wider">
+                            Locations
+                          </div>
+                        </motion.div>
+
+                        <motion.div
+                          className="bg-gradient-to-br from-accent-50/80 to-white/90 backdrop-blur-xl border border-accent-200 rounded-3xl p-8 text-center relative overflow-hidden shadow-professional"
+                          initial={{ scale: 0, opacity: 0 }}
+                          animate={{ scale: 1, opacity: 1 }}
+                          transition={{
+                            type: 'spring',
+                            stiffness: 200,
+                            delay: 0.2,
+                          }}
+                        >
+                          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-accent-500 to-primary-500 rounded-t-3xl"></div>
+                          <DocumentIcon className="w-8 h-8 text-accent-600 mx-auto mb-3" />
+                          <div className="text-4xl font-extrabold text-neutral-800 mb-1 leading-none">
+                            {stats.totalAds}
+                          </div>
+                          <div className="text-neutral-600 font-medium text-sm uppercase tracking-wider">
+                            Ad Variations
+                          </div>
+                        </motion.div>
+
+                        <motion.div
+                          className="bg-gradient-to-br from-success-50/80 to-white/90 backdrop-blur-xl border border-success-200 rounded-3xl p-8 text-center relative overflow-hidden shadow-professional"
+                          initial={{ scale: 0, opacity: 0 }}
+                          animate={{ scale: 1, opacity: 1 }}
+                          transition={{
+                            type: 'spring',
+                            stiffness: 200,
+                            delay: 0.3,
+                          }}
+                        >
+                          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-success-500 to-primary-500 rounded-t-3xl"></div>
+                          <ChartBarIcon className="w-8 h-8 text-success-600 mx-auto mb-3" />
+                          <div className="text-4xl font-extrabold text-neutral-800 mb-1 leading-none">
+                            {stats.totalCampaigns.toLocaleString()}
+                          </div>
+                          <div className="text-neutral-600 font-medium text-sm uppercase tracking-wider">
+                            Total Campaigns
+                          </div>
+                        </motion.div>
+
+                        <motion.div
+                          className="bg-gradient-to-br from-info-50/80 to-white/90 backdrop-blur-xl border border-info-200 rounded-3xl p-8 text-center relative overflow-hidden shadow-professional"
+                          initial={{ scale: 0, opacity: 0 }}
+                          animate={{ scale: 1, opacity: 1 }}
+                          transition={{
+                            type: 'spring',
+                            stiffness: 200,
+                            delay: 0.4,
+                          }}
+                        >
+                          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-info-500 to-accent-500 rounded-t-3xl"></div>
+                          <DocumentDuplicateIcon className="w-8 h-8 text-info-600 mx-auto mb-3" />
+                          <div className="text-4xl font-extrabold text-neutral-800 mb-1 leading-none">
+                            {stats.totalFiles}
+                          </div>
+                          <div className="text-neutral-600 font-medium text-sm uppercase tracking-wider">
+                            CSV File
+                          </div>
+                        </motion.div>
+                      </div>
+
+                      {/* What will be generated */}
+                      <div className="bg-white/90 backdrop-blur-xl border border-neutral-200 rounded-3xl p-8 mb-8 shadow-professional">
+                        <h3 className="text-xl font-bold text-neutral-800 mb-4">
+                          What will be generated:
+                        </h3>
+                        <div className="space-y-3">
+                          {[
+                            `${stats.totalFiles} comprehensive CSV file containing all campaigns`,
+                            `${stats.totalCampaigns.toLocaleString()} total Meta campaign settings`,
+                            'Complete 73-column campaign import format',
+                            `File name: ${campaignConfig.prefix}_${campaignConfig.platform}_${campaignConfig.month}${campaignConfig.day}_AllCampaigns.csv`,
+                            'Location-specific targeting coordinates and demographics',
+                            'All ad variations organized in a single file',
+                            'Ready for Meta Ads Manager bulk import',
+                          ].map((item, index) => (
+                            <motion.div
+                              key={index}
+                              className="flex items-center gap-3"
+                              initial={{ opacity: 0, x: -20 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ delay: index * 0.1 }}
+                            >
+                              <CheckCircleIcon className="w-5 h-5 text-success-500 flex-shrink-0" />
+                              <span className="text-neutral-700">{item}</span>
+                            </motion.div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Action Buttons */}
+                      <div className="flex gap-4 justify-between items-center">
+                        <div className="flex gap-4">
+                          <button
+                            onClick={() => setCurrentStep(3)}
+                            className="inline-flex items-center gap-2 px-6 py-3 bg-white/90 backdrop-blur-xl text-neutral-700 font-semibold rounded-xl border border-neutral-200 shadow-lg shadow-black/5 transition-all duration-300 hover:bg-white hover:border-neutral-300 hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:ring-offset-2"
+                          >
+                            <ArrowRightIcon className="w-4 h-4 rotate-180" />
+                            Back to Ads
+                          </button>
+                        </div>
+
+                        <div className="flex gap-4">
+                          <button
+                            onClick={() => setShowFilePreview(true)}
+                            className="inline-flex items-center gap-2 px-6 py-3 bg-transparent text-blue-600 font-semibold rounded-xl border-2 border-blue-500 transition-all duration-300 hover:text-blue-700 hover:border-blue-600 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                          >
+                            <EyeIcon className="w-4 h-4" />
+                            Preview
+                          </button>
+
+                          <button
+                            onClick={generateCampaigns}
+                            className="inline-flex items-center gap-2 px-6 py-3 bg-transparent text-success-600 font-semibold rounded-xl border-2 border-success-500 transition-all duration-300 hover:text-success-700 hover:border-success-600 hover:bg-success-50 focus:outline-none focus:ring-2 focus:ring-success-500 focus:ring-offset-2"
+                          >
+                            <DocumentArrowDownIcon className="w-4 h-4" />
+                            Export
+                          </button>
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                  </motion.div>
+                )}
 
-                  <div className="flex gap-4 justify-center">
-                    <button
-                      onClick={() => {
-                        // Reset to start over
-                        setCurrentStep(1);
-                        setGenerationJob(null);
-                      }}
-                      className="inline-flex items-center gap-2 px-6 py-3 bg-white/90 backdrop-blur-xl text-neutral-700 font-semibold rounded-xl border border-neutral-200 shadow-lg shadow-black/5 transition-all duration-300 hover:bg-white hover:border-neutral-300 hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:ring-offset-2"
-                    >
-                      Create New Campaign
-                    </button>
+                {currentStep === 5 && generationJob && (
+                  <motion.div
+                    key="results"
+                    variants={cardVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    className="max-w-2xl mx-auto"
+                  >
+                    <div className="card-premium rounded-3xl p-10 shadow-elegant transition-all duration-300 hover:shadow-3xl text-center">
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{
+                          type: 'spring',
+                          stiffness: 200,
+                          delay: 0.3,
+                        }}
+                        className="w-24 h-24 bg-gradient-to-r from-success-500 to-success-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-success-500/30"
+                      >
+                        <CheckCircleIcon className="w-12 h-12 text-white" />
+                      </motion.div>
 
-                    <button
-                      onClick={async () => {
-                        try {
-                          // Download the file using the mock API
-                          const response = await mockApi.downloadGeneratedFile(generationJob.id);
-                          if (response.success && response.data) {
-                            const url = URL.createObjectURL(response.data);
-                            const link = document.createElement('a');
-                            link.href = url;
-                            link.download = generationJob.options?.fileName || 'Campaign_Export.csv';
-                            link.click();
-                            URL.revokeObjectURL(url);
-                          } else {
-                            console.error('Failed to download file:', response.error);
-                          }
-                        } catch (error) {
-                          console.error('Download error:', error);
-                        }
-                      }}
-                      className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-success-500 to-success-600 text-white font-semibold rounded-2xl shadow-lg shadow-success-500/25 transition-all duration-300 hover:from-success-600 hover:to-success-700 hover:-translate-y-1 hover:shadow-xl hover:shadow-success-500/30 focus:outline-none focus:ring-2 focus:ring-success-500 focus:ring-offset-2 text-lg"
-                    >
-                      <DownloadIcon className="w-5 h-5" />
-                      Download File
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-            )}
+                      <h2 className="text-3xl font-extrabold bg-gradient-to-r from-success-600 to-success-500 bg-clip-text text-transparent mb-4">
+                        Campaigns Generated Successfully!
+                      </h2>
+
+                      <p className="text-neutral-600 text-lg mb-8">
+                        Your campaign file has been generated and is ready for
+                        download.
+                      </p>
+
+                      <div className="bg-neutral-50 border border-neutral-200 rounded-2xl p-6 mb-8">
+                        <div className="text-sm font-semibold text-neutral-700 mb-2">
+                          Generated File:
+                        </div>
+                        <div className="font-mono text-sm text-neutral-600 break-all">
+                          {generationJob.options?.fileName ||
+                            'Campaign_Export.csv'}
+                        </div>
+                      </div>
+
+                      <div className="flex gap-4 justify-center">
+                        <button
+                          onClick={() => {
+                            // Reset to start over
+                            setCurrentStep(1);
+                            setGenerationJob(null);
+                          }}
+                          className="inline-flex items-center gap-2 px-6 py-3 bg-white/90 backdrop-blur-xl text-neutral-700 font-semibold rounded-xl border border-neutral-200 shadow-lg shadow-black/5 transition-all duration-300 hover:bg-white hover:border-neutral-300 hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:ring-offset-2"
+                        >
+                          Create New Campaign
+                        </button>
+
+                        <button
+                          onClick={async () => {
+                            try {
+                              // Download the file using the mock API
+                              const response =
+                                await mockApi.downloadGeneratedFile(
+                                  generationJob.id
+                                );
+                              if (response.success && response.data) {
+                                const url = URL.createObjectURL(response.data);
+                                const link = document.createElement('a');
+                                link.href = url;
+                                link.download =
+                                  generationJob.options?.fileName ||
+                                  'Campaign_Export.csv';
+                                link.click();
+                                URL.revokeObjectURL(url);
+                              } else {
+                                console.error(
+                                  'Failed to download file:',
+                                  response.error
+                                );
+                              }
+                            } catch (error) {
+                              console.error('Download error:', error);
+                            }
+                          }}
+                          className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-success-500 to-success-600 text-white font-semibold rounded-2xl shadow-lg shadow-success-500/25 transition-all duration-300 hover:from-success-600 hover:to-success-700 hover:-translate-y-1 hover:shadow-xl hover:shadow-success-500/30 focus:outline-none focus:ring-2 focus:ring-success-500 focus:ring-offset-2 text-lg"
+                        >
+                          <DownloadIcon className="w-5 h-5" />
+                          Download File
+                        </button>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
               </>
             )}
           </AnimatePresence>
@@ -1119,7 +1351,7 @@ function App() {
             isOpen={showCampaignSettings}
             onClose={() => setShowCampaignSettings(false)}
             campaignConfig={campaignConfig}
-            onSave={(config) => {
+            onSave={config => {
               setCampaignConfig(config);
               setShowCampaignSettings(false);
             }}
@@ -1144,8 +1376,6 @@ function App() {
         isSubmitting={isCreatingTemplate}
       />
 
-
-
       {selectedLocationToConfigure && (
         <LocationConfigModal
           isOpen={showLocationConfigModal}
@@ -1166,9 +1396,11 @@ function App() {
                   return loc;
                 }
               });
-              
-              const updatedLocation = updated.find(l => l.id === updatedConfig.locationId);
-              
+
+              const updatedLocation = updated.find(
+                l => l.id === updatedConfig.locationId
+              );
+
               // Fallback: if no location was updated, try to find by selectedLocationToConfigure
               if (!updatedLocation && selectedLocationToConfigure) {
                 updatedLocationName = selectedLocationToConfigure.name;
@@ -1180,12 +1412,14 @@ function App() {
                   }
                 });
               }
-              
+
               return updated;
             });
 
             // Show success notification
-            setConfigSuccessMessage(`${updatedLocationName || 'Location'} configuration saved successfully!`);
+            setConfigSuccessMessage(
+              `${updatedLocationName || 'Location'} configuration saved successfully!`
+            );
             setShowLocationConfigSuccess(true);
             setTimeout(() => setShowLocationConfigSuccess(false), 5000);
 
@@ -1203,7 +1437,7 @@ function App() {
       {/* Location Configuration Notifications */}
       <AnimatePresence>
         {showLocationConfigSuccess && (
-          <motion.div 
+          <motion.div
             key="success-notification"
             initial={{ opacity: 0, x: -100, y: 50 }}
             animate={{ opacity: 1, x: 0, y: 0 }}
@@ -1213,9 +1447,11 @@ function App() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <CheckCircleIcon className="w-5 h-5 text-green-500" />
-                <p className="text-green-700 font-medium">{configSuccessMessage}</p>
+                <p className="text-green-700 font-medium">
+                  {configSuccessMessage}
+                </p>
               </div>
-              <button 
+              <button
                 onClick={() => setShowLocationConfigSuccess(false)}
                 className="text-green-500 hover:text-green-700 transition-colors duration-200"
               >
@@ -1226,7 +1462,7 @@ function App() {
         )}
 
         {showLocationConfigError && (
-          <motion.div 
+          <motion.div
             key="error-notification"
             initial={{ opacity: 0, x: -100, y: 50 }}
             animate={{ opacity: 1, x: 0, y: 0 }}
@@ -1238,7 +1474,7 @@ function App() {
                 <XMarkIcon className="w-5 h-5 text-red-500" />
                 <p className="text-red-700 font-medium">{configErrorMessage}</p>
               </div>
-              <button 
+              <button
                 onClick={() => setShowLocationConfigError(false)}
                 className="text-red-500 hover:text-red-700 transition-colors duration-200"
               >

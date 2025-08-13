@@ -7,7 +7,7 @@ This script automatically creates location configurations for all locations in y
 ### What it does:
 
 1. **Fetches all locations** from the `locations` table
-2. **Checks existing configurations** to avoid duplicates  
+2. **Checks existing configurations** to avoid duplicates
 3. **Creates configs** for locations that don't have them yet with:
    - **Primary lat/lng** from the location's coordinates
    - **Default 5-mile radius**
@@ -17,6 +17,7 @@ This script automatically creates location configurations for all locations in y
 ### Prerequisites:
 
 1. **Environment Variables** - Set these in your `.env` file:
+
    ```bash
    VITE_SUPABASE_URL=your-supabase-project-url
    SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
@@ -29,12 +30,14 @@ This script automatically creates location configurations for all locations in y
 ### Usage:
 
 **Option 1: TypeScript Script (Recommended)**
+
 ```bash
 # Run the population script
 npm run populate-configs
 ```
 
 **Option 2: SQL Script**
+
 ```sql
 -- Run this SQL directly in your Supabase SQL editor or psql
 -- File: database/populate_location_configs.sql
@@ -79,6 +82,7 @@ npm run populate-configs
 ### Landing Page Detection:
 
 The script automatically looks for landing page URLs in the `additional_info` field under these possible keys:
+
 - `landing_page`
 - `landing_page_url`
 - `landingPage`
@@ -99,4 +103,4 @@ The script automatically looks for landing page URLs in the `additional_info` fi
 
 - **Idempotent**: Safe to run multiple times - won't create duplicates
 - **Non-destructive**: Only creates new configs, never modifies existing ones
-- **Global configs**: Creates configs with `user_id = null` (global/default configs) 
+- **Global configs**: Creates configs with `user_id = null` (global/default configs)

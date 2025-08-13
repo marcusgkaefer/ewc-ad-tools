@@ -1,13 +1,13 @@
-import { supabase } from '../lib/supabase';
 import { BUILD_CONFIG } from '../config/build-config';
-import type { 
-  Location, 
-  LocationSummary, 
-  LocationConfig, 
+import { supabase } from '../lib/supabase';
+import type {
+  Location,
+  LocationSummary,
+  LocationConfig,
   LocationWithConfig,
   CreateLocationConfigRequest,
   UpdateLocationConfigRequest,
-  LocationFilters 
+  LocationFilters,
 } from '../types';
 
 // Helper types for Supabase responses
@@ -26,7 +26,9 @@ type AddressInfo = {
 };
 
 // Convert raw location data from Supabase to LocationSummary format
-export const convertToLocationSummary = (location: Location): LocationSummary => {
+export const convertToLocationSummary = (
+  location: Location
+): LocationSummary => {
   // Safely extract nested data with fallbacks
   const addressInfo = location.address_info || {};
   const contactInfo = location.contact_info || {};
@@ -66,17 +68,21 @@ class SupabaseLocationService {
       trimmed: envValue ? envValue.trim() : null,
       isExactlyTrue: envValue === 'true',
       buildConfig: BUILD_CONFIG.USE_ARTEMIS_GROUP,
-      allEnvVars: import.meta.env
+      allEnvVars: import.meta.env,
     });
-    
+
     // More flexible checking to handle common issues
-    const normalizedValue = String(envValue || '').toLowerCase().trim();
+    const normalizedValue = String(envValue || '')
+      .toLowerCase()
+      .trim();
     const fromEnv = normalizedValue === 'true' || normalizedValue === '1';
-    
+
     // Use build config as fallback if env var is not set
     const shouldUse = fromEnv || BUILD_CONFIG.USE_ARTEMIS_GROUP;
-    
-    console.log(`📊 Using ${shouldUse ? 'JSON file' : 'Supabase database'} for location data`);
+
+    console.log(
+      `📊 Using ${shouldUse ? 'JSON file' : 'Supabase database'} for location data`
+    );
     return shouldUse;
   }
 
@@ -96,13 +102,13 @@ class SupabaseLocationService {
     this.ewcCentersLoading = (async () => {
       try {
         const response = await fetch('/artemis_wax_group.json');
-        
+
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        const data = await response.json() as { centers: Location[] };
-        
+        const data = (await response.json()) as { centers: Location[] };
+
         if (!data.centers || !Array.isArray(data.centers)) {
           throw new Error('Invalid JSON structure: centers array not found');
         }
@@ -128,7 +134,9 @@ class SupabaseLocationService {
       return locations
         .filter((location: Location) => location.code !== 'CORP') // Filter out corporate location
         .map(convertToLocationSummary)
-        .sort((a: LocationSummary, b: LocationSummary) => a.name.localeCompare(b.name));
+        .sort((a: LocationSummary, b: LocationSummary) =>
+          a.name.localeCompare(b.name)
+        );
     } catch (error) {
       console.error('Error loading EWC centers from JSON:', error);
       return [];
@@ -147,47 +155,54 @@ class SupabaseLocationService {
   }
 
   // Search locations in EWC centers JSON file
-  private async searchEwcCenters(filters: LocationFilters): Promise<LocationSummary[]> {
+  private async searchEwcCenters(
+    filters: LocationFilters
+  ): Promise<LocationSummary[]> {
     try {
       let locations = await this.loadEwcCenters();
-      
+
       // Filter out corporate location
-      locations = locations.filter((location: Location) => location.code !== 'CORP');
+      locations = locations.filter(
+        (location: Location) => location.code !== 'CORP'
+      );
 
       // Apply search filter
       if (filters.search) {
         const searchTerm = filters.search.toLowerCase();
-        locations = locations.filter((location: Location) => 
-          location.name?.toLowerCase().includes(searchTerm) ||
-          location.display_name?.toLowerCase().includes(searchTerm) ||
-          location.address_info?.city?.toLowerCase().includes(searchTerm)
+        locations = locations.filter(
+          (location: Location) =>
+            location.name?.toLowerCase().includes(searchTerm) ||
+            location.display_name?.toLowerCase().includes(searchTerm) ||
+            location.address_info?.city?.toLowerCase().includes(searchTerm)
         );
       }
 
       // Apply state filter
       if (filters.states && filters.states.length > 0) {
-        locations = locations.filter((location: Location) => 
+        locations = locations.filter((location: Location) =>
           filters.states!.includes(location.state?.short_name || '')
         );
       }
 
       // Apply city filter
       if (filters.cities && filters.cities.length > 0) {
-        locations = locations.filter((location: Location) => 
+        locations = locations.filter((location: Location) =>
           filters.cities!.includes(location.address_info?.city || '')
         );
       }
 
       // Apply zip code filter
       if (filters.zipCodes && filters.zipCodes.length > 0) {
-        locations = locations.filter((location: Location) => 
+        locations = locations.filter((location: Location) =>
           filters.zipCodes!.includes(location.address_info?.zip_code || '')
         );
       }
 
       return locations
         .map(convertToLocationSummary)
-        .sort((a: LocationSummary, b: LocationSummary) => a.name.localeCompare(b.name));
+        .sort((a: LocationSummary, b: LocationSummary) =>
+          a.name.localeCompare(b.name)
+        );
     } catch (error) {
       console.error('Error searching EWC centers:', error);
       return [];
@@ -195,16 +210,20 @@ class SupabaseLocationService {
   }
 
   // Get locations by state from EWC centers JSON file
-  private async getEwcCentersByState(state: string): Promise<LocationSummary[]> {
+  private async getEwcCentersByState(
+    state: string
+  ): Promise<LocationSummary[]> {
     try {
       const locations = await this.loadEwcCenters();
       return locations
-        .filter((location: Location) => 
-          location.code !== 'CORP' && 
-          location.state?.short_name === state
+        .filter(
+          (location: Location) =>
+            location.code !== 'CORP' && location.state?.short_name === state
         )
         .map(convertToLocationSummary)
-        .sort((a: LocationSummary, b: LocationSummary) => a.name.localeCompare(b.name));
+        .sort((a: LocationSummary, b: LocationSummary) =>
+          a.name.localeCompare(b.name)
+        );
     } catch (error) {
       console.error('Error getting EWC centers by state:', error);
       return [];
@@ -215,12 +234,14 @@ class SupabaseLocationService {
   private async getEwcCentersUniqueStates(): Promise<string[]> {
     try {
       const locations = await this.loadEwcCenters();
-      const states = [...new Set(
-        locations
-          .filter((location: Location) => location.code !== 'CORP')
-          .map((location: Location) => location.state?.short_name)
-          .filter(Boolean)
-      )] as string[];
+      const states = [
+        ...new Set(
+          locations
+            .filter((location: Location) => location.code !== 'CORP')
+            .map((location: Location) => location.state?.short_name)
+            .filter(Boolean)
+        ),
+      ] as string[];
       return states.sort();
     } catch (error) {
       console.error('Error getting unique states from EWC centers:', error);
@@ -232,22 +253,26 @@ class SupabaseLocationService {
   private async getEwcCentersUniqueCities(state?: string): Promise<string[]> {
     try {
       let locations = await this.loadEwcCenters();
-      
+
       // Filter out corporate location
-      locations = locations.filter((location: Location) => location.code !== 'CORP');
+      locations = locations.filter(
+        (location: Location) => location.code !== 'CORP'
+      );
 
       // Filter by state if provided
       if (state) {
-        locations = locations.filter((location: Location) => 
-          location.state?.short_name === state
+        locations = locations.filter(
+          (location: Location) => location.state?.short_name === state
         );
       }
 
-      const cities = [...new Set(
-        locations
-          .map((location: Location) => location.address_info?.city)
-          .filter(Boolean)
-      )] as string[];
+      const cities = [
+        ...new Set(
+          locations
+            .map((location: Location) => location.address_info?.city)
+            .filter(Boolean)
+        ),
+      ] as string[];
       return cities.sort();
     } catch (error) {
       console.error('Error getting unique cities from EWC centers:', error);
@@ -314,15 +339,14 @@ class SupabaseLocationService {
     }
 
     try {
-      let query = supabase
-        .from('locations')
-        .select('*')
-        .neq('code', 'CORP');
+      let query = supabase.from('locations').select('*').neq('code', 'CORP');
 
       // Apply search filter
       if (filters.search) {
         const searchTerm = `%${filters.search.toLowerCase()}%`;
-        query = query.or(`name.ilike.${searchTerm},display_name.ilike.${searchTerm},address_info->>city.ilike.${searchTerm}`);
+        query = query.or(
+          `name.ilike.${searchTerm},display_name.ilike.${searchTerm},address_info->>city.ilike.${searchTerm}`
+        );
       }
 
       // Apply state filter
@@ -397,7 +421,9 @@ class SupabaseLocationService {
         throw new Error(`Failed to fetch unique states: ${error.message}`);
       }
 
-      const states = [...new Set((data || []).map(row => (row.state as State)?.short_name))].filter(Boolean) as string[];
+      const states = [
+        ...new Set((data || []).map(row => (row.state as State)?.short_name)),
+      ].filter(Boolean) as string[];
       return states.sort();
     } catch (error) {
       console.error('Error in getUniqueStates:', error);
@@ -427,7 +453,11 @@ class SupabaseLocationService {
         throw new Error(`Failed to fetch unique cities: ${error.message}`);
       }
 
-      const cities = [...new Set((data || []).map(row => (row.address_info as AddressInfo)?.city))].filter(Boolean) as string[];
+      const cities = [
+        ...new Set(
+          (data || []).map(row => (row.address_info as AddressInfo)?.city)
+        ),
+      ].filter(Boolean) as string[];
       return cities.sort();
     } catch (error) {
       console.error('Error in getUniqueCities:', error);
@@ -436,7 +466,10 @@ class SupabaseLocationService {
   }
 
   // Location Configuration management
-  async getLocationConfig(locationId: string, userId?: string): Promise<LocationConfig | null> {
+  async getLocationConfig(
+    locationId: string,
+    userId?: string
+  ): Promise<LocationConfig | null> {
     try {
       let query = supabase
         .from('location_configs')
@@ -465,7 +498,9 @@ class SupabaseLocationService {
 
       // If there are multiple rows, log a warning and use the most recent one
       if (data.length > 1) {
-        console.warn(`Multiple location configs found for locationId: ${locationId}, using most recent`);
+        console.warn(
+          `Multiple location configs found for locationId: ${locationId}, using most recent`
+        );
       }
 
       return this.convertToLocationConfig(data[0]);
@@ -475,23 +510,35 @@ class SupabaseLocationService {
     }
   }
 
-  async createLocationConfig(request: CreateLocationConfigRequest, userId?: string): Promise<LocationConfig> {
+  async createLocationConfig(
+    request: CreateLocationConfigRequest,
+    userId?: string
+  ): Promise<LocationConfig> {
     try {
       // First check if a config already exists
-      const existingConfig = await this.getLocationConfig(request.locationId, userId);
+      const existingConfig = await this.getLocationConfig(
+        request.locationId,
+        userId
+      );
       if (existingConfig) {
-        console.warn(`Location config already exists for locationId: ${request.locationId}, updating instead`);
-        return await this.updateLocationConfig(request.locationId, {
-          budget: request.budget,
-          radiusMiles: request.radiusMiles,
-          customSettings: request.customSettings,
-          notes: request.notes,
-          primaryLat: request.primaryLat,
-          primaryLng: request.primaryLng,
-          coordinateList: request.coordinateList,
-          landingPageUrl: request.landingPageUrl,
-          isActive: true
-        }, userId);
+        console.warn(
+          `Location config already exists for locationId: ${request.locationId}, updating instead`
+        );
+        return await this.updateLocationConfig(
+          request.locationId,
+          {
+            budget: request.budget,
+            radiusMiles: request.radiusMiles,
+            customSettings: request.customSettings,
+            notes: request.notes,
+            primaryLat: request.primaryLat,
+            primaryLng: request.primaryLng,
+            coordinateList: request.coordinateList,
+            landingPageUrl: request.landingPageUrl,
+            isActive: true,
+          },
+          userId
+        );
       }
 
       const { data, error } = await supabase
@@ -570,7 +617,9 @@ class SupabaseLocationService {
 
       // If multiple configs were updated, log a warning and return the first one
       if (data.length > 1) {
-        console.warn(`Updated ${data.length} location configs for locationId: ${locationId}, returning first one`);
+        console.warn(
+          `Updated ${data.length} location configs for locationId: ${locationId}, returning first one`
+        );
       }
 
       console.log('updateLocationConfig - Raw data from DB:', data[0]);
@@ -583,7 +632,10 @@ class SupabaseLocationService {
     }
   }
 
-  async deleteLocationConfig(locationId: string, userId?: string): Promise<void> {
+  async deleteLocationConfig(
+    locationId: string,
+    userId?: string
+  ): Promise<void> {
     try {
       let query = supabase
         .from('location_configs')
@@ -608,7 +660,9 @@ class SupabaseLocationService {
     }
   }
 
-  async getLocationsWithConfigs(userId?: string): Promise<LocationWithConfig[]> {
+  async getLocationsWithConfigs(
+    userId?: string
+  ): Promise<LocationWithConfig[]> {
     try {
       // Get only ACTIVE configs for the user (always from database)
       let configQuery = supabase
@@ -622,11 +676,14 @@ class SupabaseLocationService {
         configQuery = configQuery.is('user_id', null);
       }
 
-      const { data: configs, error: configError } = await configQuery.limit(10000);
+      const { data: configs, error: configError } =
+        await configQuery.limit(10000);
 
       if (configError) {
         console.error('Error fetching location configs:', configError);
-        throw new Error(`Failed to fetch location configs: ${configError.message}`);
+        throw new Error(
+          `Failed to fetch location configs: ${configError.message}`
+        );
       }
 
       console.log(`🔍 Found ${configs?.length || 0} active location configs`);
@@ -643,11 +700,13 @@ class SupabaseLocationService {
       const allLocations = await this.getAllLocations();
 
       // Filter to only locations that have active configs
-      const locationsWithActiveConfigs = allLocations.filter(location => 
+      const locationsWithActiveConfigs = allLocations.filter(location =>
         activeLocationIds.includes(location.id)
       );
 
-      console.log(`🔍 Filtered to ${locationsWithActiveConfigs.length} locations with active configs`);
+      console.log(
+        `🔍 Filtered to ${locationsWithActiveConfigs.length} locations with active configs`
+      );
 
       // Map configs to locations
       const configMap = new Map<string, LocationConfig>();
@@ -668,9 +727,7 @@ class SupabaseLocationService {
   // Bulk operations for migrating data
   async bulkInsertLocations(locations: Location[]): Promise<void> {
     try {
-      const { error } = await supabase
-        .from('locations')
-        .insert(locations);
+      const { error } = await supabase.from('locations').insert(locations);
 
       if (error) {
         console.error('Error bulk inserting locations:', error);
@@ -701,13 +758,13 @@ class SupabaseLocationService {
       createdAt: data.created_at,
       updatedAt: data.updated_at,
     };
-    
+
     console.log('convertToLocationConfig - Input data:', data);
     console.log('convertToLocationConfig - Output config:', config);
     console.log('convertToLocationConfig - Config is truthy:', !!config);
-    
+
     return config;
   }
 }
 
-export const supabaseLocationService = new SupabaseLocationService(); 
+export const supabaseLocationService = new SupabaseLocationService();

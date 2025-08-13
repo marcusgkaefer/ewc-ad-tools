@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
 import { XMarkIcon, MapPinIcon, CogIcon } from '@heroicons/react/24/outline';
-import type { LocationWithConfig, LocationConfig } from '../../types';
+import React, { useState, useEffect } from 'react';
+
 import { supabaseLocationService } from '../../services/supabaseLocationService';
+import type { LocationWithConfig, LocationConfig } from '../../types';
 
 interface LocationConfiguration {
   budget: number;
@@ -21,11 +22,11 @@ const LocationConfigModal: React.FC<LocationConfigModalProps> = ({
   onClose,
   location,
   onSave,
-  onError
+  onError,
 }) => {
   const [config, setConfig] = useState<LocationConfiguration>({
     budget: 100,
-    radius: 5
+    radius: 5,
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -37,18 +38,18 @@ const LocationConfigModal: React.FC<LocationConfigModalProps> = ({
       hasLocation: !!location,
       locationId: location?.id,
       hasConfig: !!location?.config,
-      config: location?.config
+      config: location?.config,
     });
-    
+
     if (location?.config) {
       setConfig({
         budget: location.config.budget || 100,
-        radius: location.config.radiusMiles || 5
+        radius: location.config.radiusMiles || 5,
       });
     } else {
       setConfig({
         budget: 100,
-        radius: 5
+        radius: 5,
       });
     }
     setError(null);
@@ -77,17 +78,20 @@ const LocationConfigModal: React.FC<LocationConfigModalProps> = ({
       // Save to Supabase
       if (location.config) {
         // Update existing config
-        updatedConfig = await supabaseLocationService.updateLocationConfig(location.id, {
-          budget: config.budget,
-          radiusMiles: config.radius,
-          isActive: true
-        });
+        updatedConfig = await supabaseLocationService.updateLocationConfig(
+          location.id,
+          {
+            budget: config.budget,
+            radiusMiles: config.radius,
+            isActive: true,
+          }
+        );
       } else {
         // Create new config
         updatedConfig = await supabaseLocationService.createLocationConfig({
           locationId: location.id,
           budget: config.budget,
-          radiusMiles: config.radius
+          radiusMiles: config.radius,
         });
       }
 
@@ -109,18 +113,18 @@ const LocationConfigModal: React.FC<LocationConfigModalProps> = ({
   if (!isOpen || !location) return null;
 
   return (
-    <div 
+    <div
       className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
-      onClick={(e) => {
+      onClick={e => {
         // Close modal when clicking on overlay, but not when loading
         if (e.target === e.currentTarget && !isLoading) {
           onClose();
         }
       }}
     >
-      <div 
+      <div
         className="bg-white rounded-2xl shadow-wax-2xl max-w-lg w-full overflow-hidden"
-        onClick={(e) => e.stopPropagation()}
+        onClick={e => e.stopPropagation()}
       >
         {/* Header */}
         <div className="px-6 py-4 border-b border-wax-gray-200 flex items-center justify-between">
@@ -129,11 +133,15 @@ const LocationConfigModal: React.FC<LocationConfigModalProps> = ({
               <CogIcon className="w-5 h-5 text-wax-red-600" />
             </div>
             <div>
-              <h3 className="text-xl font-semibold text-wax-gray-800">Configure Location</h3>
-              <p className="text-sm text-wax-gray-500">{location.name}, {location.state}</p>
+              <h3 className="text-xl font-semibold text-wax-gray-800">
+                Configure Location
+              </h3>
+              <p className="text-sm text-wax-gray-500">
+                {location.name}, {location.state}
+              </p>
             </div>
           </div>
-          <button 
+          <button
             onClick={onClose}
             disabled={isLoading}
             className="text-wax-gray-400 hover:text-wax-gray-600 transition-colors disabled:opacity-50"
@@ -159,7 +167,12 @@ const LocationConfigModal: React.FC<LocationConfigModalProps> = ({
               <input
                 type="number"
                 value={config.budget}
-                onChange={(e) => setConfig({ ...config, budget: parseFloat(e.target.value) || 0 })}
+                onChange={e =>
+                  setConfig({
+                    ...config,
+                    budget: parseFloat(e.target.value) || 0,
+                  })
+                }
                 className="w-full px-4 py-3 border-2 border-wax-gray-200 rounded-xl text-base bg-white transition-all duration-200 focus:border-wax-red-500 focus:ring-2 focus:ring-wax-red-100 focus:outline-none hover:border-wax-gray-300 disabled:opacity-50"
                 min="1"
                 step="0.01"
@@ -175,7 +188,12 @@ const LocationConfigModal: React.FC<LocationConfigModalProps> = ({
               <input
                 type="number"
                 value={config.radius}
-                onChange={(e) => setConfig({ ...config, radius: parseFloat(e.target.value) || 0 })}
+                onChange={e =>
+                  setConfig({
+                    ...config,
+                    radius: parseFloat(e.target.value) || 0,
+                  })
+                }
                 className="w-full px-4 py-3 border-2 border-wax-gray-200 rounded-xl text-base bg-white transition-all duration-200 focus:border-wax-red-500 focus:ring-2 focus:ring-wax-red-100 focus:outline-none hover:border-wax-gray-300 disabled:opacity-50"
                 min="0.1"
                 step="0.1"
@@ -187,14 +205,34 @@ const LocationConfigModal: React.FC<LocationConfigModalProps> = ({
             <div className="bg-wax-gray-50 rounded-xl p-4">
               <div className="flex items-center gap-2 mb-2">
                 <MapPinIcon className="w-4 h-4 text-wax-red-600" />
-                <span className="text-sm font-medium text-wax-gray-700">Location Details</span>
+                <span className="text-sm font-medium text-wax-gray-700">
+                  Location Details
+                </span>
               </div>
               <div className="text-sm text-wax-gray-600 space-y-1">
-                <div><strong>Address:</strong> {location.address}</div>
-                <div><strong>City:</strong> {location.city}, {location.state} {location.zipCode}</div>
-                <div><strong>Coordinates:</strong> {location.coordinates.lat}, {location.coordinates.lng}</div>
+                <div>
+                  <strong>Address:</strong> {location.address}
+                </div>
+                <div>
+                  <strong>City:</strong> {location.city}, {location.state}{' '}
+                  {location.zipCode}
+                </div>
+                <div>
+                  <strong>Coordinates:</strong> {location.coordinates.lat},{' '}
+                  {location.coordinates.lng}
+                </div>
                 {location.landing_page_url && (
-                  <div><strong>Landing Page:</strong> <a href={location.landing_page_url} target="_blank" rel="noopener noreferrer" className="text-wax-red-600 hover:underline">{location.landing_page_url}</a></div>
+                  <div>
+                    <strong>Landing Page:</strong>{' '}
+                    <a
+                      href={location.landing_page_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-wax-red-600 hover:underline"
+                    >
+                      {location.landing_page_url}
+                    </a>
+                  </div>
                 )}
               </div>
             </div>
@@ -223,4 +261,4 @@ const LocationConfigModal: React.FC<LocationConfigModalProps> = ({
   );
 };
 
-export { LocationConfigModal }; 
+export { LocationConfigModal };

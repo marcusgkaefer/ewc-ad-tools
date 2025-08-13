@@ -1,19 +1,21 @@
 import { supabase } from '../lib/supabase';
-import type { 
-  Campaign, 
+import type {
+  Campaign,
   CampaignLocation,
   CampaignWithLocations,
   CreateCampaignRequest,
   UpdateCampaignRequest,
   CreateCampaignLocationRequest,
   UpdateCampaignLocationRequest,
-  LocationSummary
+  LocationSummary,
 } from '../types';
-
 
 class SupabaseCampaignService {
   // Campaign CRUD operations
-  async createCampaign(request: CreateCampaignRequest, userId?: string): Promise<Campaign> {
+  async createCampaign(
+    request: CreateCampaignRequest,
+    userId?: string
+  ): Promise<Campaign> {
     try {
       const { data, error } = await supabase
         .from('campaigns')
@@ -98,7 +100,10 @@ class SupabaseCampaignService {
     }
   }
 
-  async updateCampaign(id: string, request: UpdateCampaignRequest): Promise<Campaign> {
+  async updateCampaign(
+    id: string,
+    request: UpdateCampaignRequest
+  ): Promise<Campaign> {
     try {
       const { data, error } = await supabase
         .from('campaigns')
@@ -152,7 +157,9 @@ class SupabaseCampaignService {
   }
 
   // Campaign Location operations
-  async addLocationToCampaign(request: CreateCampaignLocationRequest): Promise<CampaignLocation> {
+  async addLocationToCampaign(
+    request: CreateCampaignLocationRequest
+  ): Promise<CampaignLocation> {
     try {
       const { data, error } = await supabase
         .from('campaign_locations')
@@ -207,7 +214,10 @@ class SupabaseCampaignService {
     }
   }
 
-  async removeLocationFromCampaign(campaignId: string, locationId: string): Promise<void> {
+  async removeLocationFromCampaign(
+    campaignId: string,
+    locationId: string
+  ): Promise<void> {
     try {
       const { error } = await supabase
         .from('campaign_locations')
@@ -217,7 +227,9 @@ class SupabaseCampaignService {
 
       if (error) {
         console.error('Error removing location from campaign:', error);
-        throw new Error(`Failed to remove location from campaign: ${error.message}`);
+        throw new Error(
+          `Failed to remove location from campaign: ${error.message}`
+        );
       }
     } catch (error) {
       console.error('Error in removeLocationFromCampaign:', error);
@@ -225,7 +237,9 @@ class SupabaseCampaignService {
     }
   }
 
-  async getCampaignWithLocations(campaignId: string): Promise<CampaignWithLocations | null> {
+  async getCampaignWithLocations(
+    campaignId: string
+  ): Promise<CampaignWithLocations | null> {
     try {
       // Get campaign
       const campaign = await this.getCampaign(campaignId);
@@ -234,10 +248,12 @@ class SupabaseCampaignService {
       // Get campaign locations with location details
       const { data: campaignLocations, error } = await supabase
         .from('campaign_locations')
-        .select(`
+        .select(
+          `
           *,
           locations (*)
-        `)
+        `
+        )
         .eq('campaign_id', campaignId)
         .eq('is_active', true);
 
@@ -251,11 +267,16 @@ class SupabaseCampaignService {
         location: {
           id: cl.locations.id || '',
           name: cl.locations.name || 'Unknown Location',
-          displayName: cl.locations.display_name || cl.locations.name || 'Unknown Location',
+          displayName:
+            cl.locations.display_name ||
+            cl.locations.name ||
+            'Unknown Location',
           city: cl.locations.address_info?.city || 'Unknown City',
           state: cl.locations.state?.short_name || 'Unknown State',
           zipCode: cl.locations.address_info?.zip_code || '',
-          phoneNumber: cl.locations.contact_info?.phone_1?.display_number || 'No phone available',
+          phoneNumber:
+            cl.locations.contact_info?.phone_1?.display_number ||
+            'No phone available',
           address: `${cl.locations.address_info?.address_1 || 'Unknown Address'}${cl.locations.address_info?.address_2 ? ', ' + cl.locations.address_info.address_2 : ''}, ${cl.locations.address_info?.city || 'Unknown City'}, ${cl.locations.state?.short_name || 'Unknown State'} ${cl.locations.address_info?.zip_code || ''}`,
           coordinates: {
             lat: cl.locations.location?.latitude || 0,
@@ -296,7 +317,9 @@ class SupabaseCampaignService {
 
       if (error) {
         console.error('Error bulk adding locations to campaign:', error);
-        throw new Error(`Failed to bulk add locations to campaign: ${error.message}`);
+        throw new Error(
+          `Failed to bulk add locations to campaign: ${error.message}`
+        );
       }
 
       return (data || []).map(this.convertToCampaignLocation);
@@ -345,4 +368,4 @@ class SupabaseCampaignService {
   }
 }
 
-export const supabaseCampaignService = new SupabaseCampaignService(); 
+export const supabaseCampaignService = new SupabaseCampaignService();

@@ -1,5 +1,3 @@
-import React, { useState, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import {
   XMarkIcon,
   DocumentArrowDownIcon,
@@ -13,8 +11,11 @@ import {
   CurrencyDollarIcon,
   UsersIcon,
   ArrowsUpDownIcon,
-  FunnelIcon
+  FunnelIcon,
 } from '@heroicons/react/24/outline';
+import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useMemo } from 'react';
+
 import type { LocationWithConfig, CampaignConfiguration } from '../../types';
 
 interface EnhancedPreviewProps {
@@ -50,12 +51,15 @@ const generatePreviewData = (
   campaign: CampaignConfiguration
 ): PreviewRow[] => {
   const data: PreviewRow[] = [];
-  
+
   locations.forEach(location => {
     campaign.ads.forEach(ad => {
-      const landingPage = location.landing_page_url || location.config?.landingPageUrl || 'https://waxcenter.com';
+      const landingPage =
+        location.landing_page_url ||
+        location.config?.landingPageUrl ||
+        'https://waxcenter.com';
       const locationName = location.name.replace(/\s+/g, '');
-      
+
       data.push({
         location,
         campaignName: `${campaign.prefix}_${campaign.platform}_${campaign.month}${campaign.day}_${locationName}`,
@@ -71,11 +75,11 @@ const generatePreviewData = (
         caption: ad.caption,
         status: ad.status,
         estimatedReach: 15000, // Base reach estimate
-        coordinates: `${location.coordinates.lat.toFixed(4)}, ${location.coordinates.lng.toFixed(4)}`
+        coordinates: `${location.coordinates.lat.toFixed(4)}, ${location.coordinates.lng.toFixed(4)}`,
       });
     });
   });
-  
+
   return data;
 };
 
@@ -84,9 +88,9 @@ const EnhancedPreview: React.FC<EnhancedPreviewProps> = ({
   onClose,
   locations,
   campaign,
-  title = "Enhanced Campaign Preview",
+  title = 'Enhanced Campaign Preview',
   isGeneratedFile = false,
-  onDownloadFile
+  onDownloadFile,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -96,8 +100,8 @@ const EnhancedPreview: React.FC<EnhancedPreviewProps> = ({
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const rowsPerPage = 12;
 
-  const previewData = useMemo(() => 
-    generatePreviewData(locations, campaign), 
+  const previewData = useMemo(
+    () => generatePreviewData(locations, campaign),
     [locations, campaign]
   );
 
@@ -107,12 +111,13 @@ const EnhancedPreview: React.FC<EnhancedPreviewProps> = ({
     // Apply search filter
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(row =>
-        row.location.name.toLowerCase().includes(query) ||
-        row.location.city.toLowerCase().includes(query) ||
-        row.location.state.toLowerCase().includes(query) ||
-        row.campaignName.toLowerCase().includes(query) ||
-        row.objective.toLowerCase().includes(query)
+      filtered = filtered.filter(
+        row =>
+          row.location.name.toLowerCase().includes(query) ||
+          row.location.city.toLowerCase().includes(query) ||
+          row.location.state.toLowerCase().includes(query) ||
+          row.campaignName.toLowerCase().includes(query) ||
+          row.objective.toLowerCase().includes(query)
       );
     }
 
@@ -125,17 +130,17 @@ const EnhancedPreview: React.FC<EnhancedPreviewProps> = ({
     filtered.sort((a, b) => {
       const aValue = a[sortField];
       const bValue = b[sortField];
-      
+
       if (typeof aValue === 'string' && typeof bValue === 'string') {
         const comparison = aValue.localeCompare(bValue);
         return sortDirection === 'asc' ? comparison : -comparison;
       }
-      
+
       if (typeof aValue === 'number' && typeof bValue === 'number') {
         const comparison = aValue - bValue;
         return sortDirection === 'asc' ? comparison : -comparison;
       }
-      
+
       return 0;
     });
 
@@ -144,16 +149,29 @@ const EnhancedPreview: React.FC<EnhancedPreviewProps> = ({
 
   const totalPages = Math.ceil(filteredAndSortedData.length / rowsPerPage);
   const startIndex = (currentPage - 1) * rowsPerPage;
-  const currentData = filteredAndSortedData.slice(startIndex, startIndex + rowsPerPage);
+  const currentData = filteredAndSortedData.slice(
+    startIndex,
+    startIndex + rowsPerPage
+  );
 
-  const stats = useMemo(() => ({
-    totalLocations: locations.length,
-    totalCampaigns: previewData.length,
-    totalBudget: previewData.reduce((sum, row) => sum + row.budget, 0),
-    estimatedReach: previewData.reduce((sum, row) => sum + row.estimatedReach, 0),
-    avgBudgetPerLocation: previewData.length > 0 ? previewData.reduce((sum, row) => sum + row.budget, 0) / locations.length : 0,
-    uniqueStates: new Set(locations.map(loc => loc.state)).size
-  }), [locations, previewData]);
+  const stats = useMemo(
+    () => ({
+      totalLocations: locations.length,
+      totalCampaigns: previewData.length,
+      totalBudget: previewData.reduce((sum, row) => sum + row.budget, 0),
+      estimatedReach: previewData.reduce(
+        (sum, row) => sum + row.estimatedReach,
+        0
+      ),
+      avgBudgetPerLocation:
+        previewData.length > 0
+          ? previewData.reduce((sum, row) => sum + row.budget, 0) /
+            locations.length
+          : 0,
+      uniqueStates: new Set(locations.map(loc => loc.state)).size,
+    }),
+    [locations, previewData]
+  );
 
   const handleSort = (field: keyof PreviewRow) => {
     if (sortField === field) {
@@ -181,7 +199,7 @@ const EnhancedPreview: React.FC<EnhancedPreviewProps> = ({
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
           transition={{ duration: 0.3 }}
           className="w-full max-w-7xl max-h-[95vh] bg-white rounded-3xl shadow-wax-2xl border border-wax-gray-200 flex flex-col"
-          onClick={(e) => e.stopPropagation()}
+          onClick={e => e.stopPropagation()}
         >
           {/* Header */}
           <div className="flex items-center justify-between p-8 border-b border-wax-gray-100 bg-wax-elegant">
@@ -198,7 +216,7 @@ const EnhancedPreview: React.FC<EnhancedPreviewProps> = ({
                 </p>
               </div>
             </div>
-            
+
             <motion.button
               onClick={onClose}
               className="p-3 text-wax-gray-500 bg-white/80 backdrop-blur-sm border border-wax-gray-200/50 rounded-xl transition-all duration-200 hover:bg-white hover:text-wax-gray-700 hover:shadow-wax-md focus:outline-none focus:ring-2 focus:ring-wax-red-500 focus:ring-offset-2"
@@ -212,57 +230,69 @@ const EnhancedPreview: React.FC<EnhancedPreviewProps> = ({
           {/* Enhanced Stats Dashboard */}
           <div className="p-6 bg-wax-red-50/50 border-b border-wax-gray-100">
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-              <motion.div 
+              <motion.div
                 className="bg-white rounded-xl p-4 text-center shadow-wax-sm border border-wax-gray-100"
                 whileHover={{ scale: 1.02 }}
               >
                 <MapPinIcon className="w-6 h-6 text-wax-red-600 mx-auto mb-2" />
-                <div className="text-2xl font-bold text-wax-gray-900">{stats.totalLocations}</div>
+                <div className="text-2xl font-bold text-wax-gray-900">
+                  {stats.totalLocations}
+                </div>
                 <div className="text-xs text-wax-gray-600">Locations</div>
               </motion.div>
-              
-              <motion.div 
+
+              <motion.div
                 className="bg-white rounded-xl p-4 text-center shadow-wax-sm border border-wax-gray-100"
                 whileHover={{ scale: 1.02 }}
               >
                 <ChartBarIcon className="w-6 h-6 text-wax-red-600 mx-auto mb-2" />
-                <div className="text-2xl font-bold text-wax-gray-900">{stats.totalCampaigns}</div>
+                <div className="text-2xl font-bold text-wax-gray-900">
+                  {stats.totalCampaigns}
+                </div>
                 <div className="text-xs text-wax-gray-600">Campaigns</div>
               </motion.div>
-              
-              <motion.div 
+
+              <motion.div
                 className="bg-white rounded-xl p-4 text-center shadow-wax-sm border border-wax-gray-100"
                 whileHover={{ scale: 1.02 }}
               >
                 <CurrencyDollarIcon className="w-6 h-6 text-wax-red-600 mx-auto mb-2" />
-                <div className="text-2xl font-bold text-wax-gray-900">${stats.totalBudget.toFixed(0)}</div>
+                <div className="text-2xl font-bold text-wax-gray-900">
+                  ${stats.totalBudget.toFixed(0)}
+                </div>
                 <div className="text-xs text-wax-gray-600">Total Budget</div>
               </motion.div>
-              
-              <motion.div 
+
+              <motion.div
                 className="bg-white rounded-xl p-4 text-center shadow-wax-sm border border-wax-gray-100"
                 whileHover={{ scale: 1.02 }}
               >
                 <UsersIcon className="w-6 h-6 text-wax-red-600 mx-auto mb-2" />
-                <div className="text-2xl font-bold text-wax-gray-900">{stats.estimatedReach.toLocaleString()}</div>
+                <div className="text-2xl font-bold text-wax-gray-900">
+                  {stats.estimatedReach.toLocaleString()}
+                </div>
                 <div className="text-xs text-wax-gray-600">Est. Reach</div>
               </motion.div>
-              
-              <motion.div 
+
+              <motion.div
                 className="bg-white rounded-xl p-4 text-center shadow-wax-sm border border-wax-gray-100"
                 whileHover={{ scale: 1.02 }}
               >
                 <CurrencyDollarIcon className="w-6 h-6 text-wax-red-600 mx-auto mb-2" />
-                <div className="text-2xl font-bold text-wax-gray-900">${stats.avgBudgetPerLocation.toFixed(0)}</div>
+                <div className="text-2xl font-bold text-wax-gray-900">
+                  ${stats.avgBudgetPerLocation.toFixed(0)}
+                </div>
                 <div className="text-xs text-wax-gray-600">Avg/Location</div>
               </motion.div>
-              
-              <motion.div 
+
+              <motion.div
                 className="bg-white rounded-xl p-4 text-center shadow-wax-sm border border-wax-gray-100"
                 whileHover={{ scale: 1.02 }}
               >
                 <MapPinIcon className="w-6 h-6 text-wax-red-600 mx-auto mb-2" />
-                <div className="text-2xl font-bold text-wax-gray-900">{stats.uniqueStates}</div>
+                <div className="text-2xl font-bold text-wax-gray-900">
+                  {stats.uniqueStates}
+                </div>
                 <div className="text-xs text-wax-gray-600">States</div>
               </motion.div>
             </div>
@@ -279,17 +309,17 @@ const EnhancedPreview: React.FC<EnhancedPreviewProps> = ({
                     type="text"
                     placeholder="Search campaigns, locations..."
                     value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onChange={e => setSearchQuery(e.target.value)}
                     className="w-full pl-10 pr-4 py-3 border-2 border-wax-gray-200 rounded-xl focus:border-wax-red-500 focus:ring-4 focus:ring-wax-red-100 focus:outline-none transition-all duration-200"
                   />
                 </div>
-                
+
                 {/* Status Filter */}
                 <div className="relative">
                   <FunnelIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-wax-gray-400" />
                   <select
                     value={filterStatus}
-                    onChange={(e) => setFilterStatus(e.target.value)}
+                    onChange={e => setFilterStatus(e.target.value)}
                     className="pl-10 pr-8 py-3 border-2 border-wax-gray-200 rounded-xl focus:border-wax-red-500 focus:ring-4 focus:ring-wax-red-100 focus:outline-none transition-all duration-200 bg-white"
                   >
                     <option value="all">All Status</option>
@@ -299,7 +329,7 @@ const EnhancedPreview: React.FC<EnhancedPreviewProps> = ({
                   </select>
                 </div>
               </div>
-              
+
               <div className="flex items-center gap-4">
                 {/* View Mode Toggle */}
                 <div className="flex bg-wax-gray-100 rounded-lg p-1">
@@ -324,11 +354,12 @@ const EnhancedPreview: React.FC<EnhancedPreviewProps> = ({
                     Table
                   </button>
                 </div>
-                
+
                 <div className="text-sm text-wax-gray-600">
-                  {filteredAndSortedData.length} of {previewData.length} campaigns
+                  {filteredAndSortedData.length} of {previewData.length}{' '}
+                  campaigns
                 </div>
-                
+
                 <motion.button
                   className="flex items-center gap-2 px-4 py-3 bg-wax-red-600 text-white font-semibold rounded-xl shadow-wax-md transition-all duration-200 hover:bg-wax-red-700 hover:shadow-wax-lg focus:outline-none focus:ring-2 focus:ring-wax-red-500 focus:ring-offset-2"
                   whileHover={{ scale: 1.05 }}
@@ -372,44 +403,62 @@ const EnhancedPreview: React.FC<EnhancedPreviewProps> = ({
                           <p className="text-xs text-wax-gray-600 mb-2">
                             {row.location.name}
                           </p>
-                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                            row.status === 'Active' 
-                              ? 'bg-emerald-100 text-emerald-800'
-                              : row.status === 'Paused'
-                              ? 'bg-yellow-100 text-yellow-800'
-                              : 'bg-wax-gray-100 text-wax-gray-800'
-                          }`}>
-                            {row.status === 'Active' && <CheckCircleIcon className="w-3 h-3 mr-1" />}
-                            {row.status === 'Paused' && <ExclamationTriangleIcon className="w-3 h-3 mr-1" />}
-                            {row.status === 'Draft' && <InformationCircleIcon className="w-3 h-3 mr-1" />}
+                          <span
+                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                              row.status === 'Active'
+                                ? 'bg-emerald-100 text-emerald-800'
+                                : row.status === 'Paused'
+                                  ? 'bg-yellow-100 text-yellow-800'
+                                  : 'bg-wax-gray-100 text-wax-gray-800'
+                            }`}
+                          >
+                            {row.status === 'Active' && (
+                              <CheckCircleIcon className="w-3 h-3 mr-1" />
+                            )}
+                            {row.status === 'Paused' && (
+                              <ExclamationTriangleIcon className="w-3 h-3 mr-1" />
+                            )}
+                            {row.status === 'Draft' && (
+                              <InformationCircleIcon className="w-3 h-3 mr-1" />
+                            )}
                             {row.status}
                           </span>
                         </div>
                       </div>
-                      
+
                       <div className="space-y-3 text-sm">
                         <div className="flex justify-between">
                           <span className="text-wax-gray-600">Budget:</span>
-                          <span className="font-semibold text-wax-red-600">${row.budget.toFixed(2)}</span>
+                          <span className="font-semibold text-wax-red-600">
+                            ${row.budget.toFixed(2)}
+                          </span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-wax-gray-600">Objective:</span>
-                          <span className="font-medium text-wax-gray-900">{row.objective}</span>
+                          <span className="font-medium text-wax-gray-900">
+                            {row.objective}
+                          </span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-wax-gray-600">Location:</span>
-                          <span className="font-medium text-wax-gray-900">{row.location.city}, {row.location.state}</span>
+                          <span className="font-medium text-wax-gray-900">
+                            {row.location.city}, {row.location.state}
+                          </span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-wax-gray-600">Radius:</span>
-                          <span className="font-medium text-wax-gray-900">{row.radius}</span>
+                          <span className="font-medium text-wax-gray-900">
+                            {row.radius}
+                          </span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-wax-gray-600">Est. Reach:</span>
-                          <span className="font-medium text-wax-gray-900">{row.estimatedReach.toLocaleString()}</span>
+                          <span className="font-medium text-wax-gray-900">
+                            {row.estimatedReach.toLocaleString()}
+                          </span>
                         </div>
                       </div>
-                      
+
                       <div className="mt-4 pt-3 border-t border-wax-gray-100">
                         <p className="text-xs text-wax-gray-600 truncate">
                           {row.caption}
@@ -425,7 +474,7 @@ const EnhancedPreview: React.FC<EnhancedPreviewProps> = ({
                 <table className="w-full">
                   <thead className="bg-wax-gray-50 sticky top-0">
                     <tr>
-                      <th 
+                      <th
                         className="px-4 py-3 text-left text-xs font-semibold text-wax-gray-700 uppercase tracking-wider border-b border-wax-gray-200 cursor-pointer hover:bg-wax-gray-100"
                         onClick={() => handleSort('campaignName')}
                       >
@@ -434,7 +483,7 @@ const EnhancedPreview: React.FC<EnhancedPreviewProps> = ({
                           <ArrowsUpDownIcon className="w-3 h-3" />
                         </div>
                       </th>
-                      <th 
+                      <th
                         className="px-4 py-3 text-left text-xs font-semibold text-wax-gray-700 uppercase tracking-wider border-b border-wax-gray-200 cursor-pointer hover:bg-wax-gray-100"
                         onClick={() => handleSort('location')}
                       >
@@ -443,7 +492,7 @@ const EnhancedPreview: React.FC<EnhancedPreviewProps> = ({
                           <ArrowsUpDownIcon className="w-3 h-3" />
                         </div>
                       </th>
-                      <th 
+                      <th
                         className="px-4 py-3 text-left text-xs font-semibold text-wax-gray-700 uppercase tracking-wider border-b border-wax-gray-200 cursor-pointer hover:bg-wax-gray-100"
                         onClick={() => handleSort('budget')}
                       >
@@ -452,8 +501,12 @@ const EnhancedPreview: React.FC<EnhancedPreviewProps> = ({
                           <ArrowsUpDownIcon className="w-3 h-3" />
                         </div>
                       </th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-wax-gray-700 uppercase tracking-wider border-b border-wax-gray-200">Status</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-wax-gray-700 uppercase tracking-wider border-b border-wax-gray-200">Details</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-wax-gray-700 uppercase tracking-wider border-b border-wax-gray-200">
+                        Status
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-wax-gray-700 uppercase tracking-wider border-b border-wax-gray-200">
+                        Details
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-wax-gray-200">
@@ -466,34 +519,52 @@ const EnhancedPreview: React.FC<EnhancedPreviewProps> = ({
                         className="hover:bg-wax-red-50 transition-colors duration-200"
                       >
                         <td className="px-4 py-4 text-sm">
-                          <div className="font-medium text-wax-gray-900 truncate max-w-xs">{row.campaignName}</div>
-                          <div className="text-wax-gray-500 text-xs">{row.objective}</div>
+                          <div className="font-medium text-wax-gray-900 truncate max-w-xs">
+                            {row.campaignName}
+                          </div>
+                          <div className="text-wax-gray-500 text-xs">
+                            {row.objective}
+                          </div>
                         </td>
                         <td className="px-4 py-4 text-sm">
-                          <div className="font-medium text-wax-gray-900">{row.location.name}</div>
-                          <div className="text-wax-gray-500 text-xs">{row.location.city}, {row.location.state}</div>
+                          <div className="font-medium text-wax-gray-900">
+                            {row.location.name}
+                          </div>
+                          <div className="text-wax-gray-500 text-xs">
+                            {row.location.city}, {row.location.state}
+                          </div>
                         </td>
                         <td className="px-4 py-4 text-sm font-semibold text-wax-red-600">
                           ${row.budget.toFixed(2)}
                         </td>
                         <td className="px-4 py-4 text-sm">
-                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                            row.status === 'Active' 
-                              ? 'bg-emerald-100 text-emerald-800'
-                              : row.status === 'Paused'
-                              ? 'bg-yellow-100 text-yellow-800'
-                              : 'bg-wax-gray-100 text-wax-gray-800'
-                          }`}>
-                            {row.status === 'Active' && <CheckCircleIcon className="w-3 h-3 mr-1" />}
-                            {row.status === 'Paused' && <ExclamationTriangleIcon className="w-3 h-3 mr-1" />}
-                            {row.status === 'Draft' && <InformationCircleIcon className="w-3 h-3 mr-1" />}
+                          <span
+                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                              row.status === 'Active'
+                                ? 'bg-emerald-100 text-emerald-800'
+                                : row.status === 'Paused'
+                                  ? 'bg-yellow-100 text-yellow-800'
+                                  : 'bg-wax-gray-100 text-wax-gray-800'
+                            }`}
+                          >
+                            {row.status === 'Active' && (
+                              <CheckCircleIcon className="w-3 h-3 mr-1" />
+                            )}
+                            {row.status === 'Paused' && (
+                              <ExclamationTriangleIcon className="w-3 h-3 mr-1" />
+                            )}
+                            {row.status === 'Draft' && (
+                              <InformationCircleIcon className="w-3 h-3 mr-1" />
+                            )}
                             {row.status}
                           </span>
                         </td>
                         <td className="px-4 py-4 text-sm text-wax-gray-500">
                           <div className="space-y-1">
                             <div>Radius: {row.radius}</div>
-                            <div>Reach: {row.estimatedReach.toLocaleString()}</div>
+                            <div>
+                              Reach: {row.estimatedReach.toLocaleString()}
+                            </div>
                           </div>
                         </td>
                       </motion.tr>
@@ -508,9 +579,14 @@ const EnhancedPreview: React.FC<EnhancedPreviewProps> = ({
           {totalPages > 1 && (
             <div className="flex items-center justify-between p-6 border-t border-wax-gray-100 bg-wax-gray-50">
               <div className="text-sm text-wax-gray-600">
-                Showing {startIndex + 1}-{Math.min(startIndex + rowsPerPage, filteredAndSortedData.length)} of {filteredAndSortedData.length} campaigns
+                Showing {startIndex + 1}-
+                {Math.min(
+                  startIndex + rowsPerPage,
+                  filteredAndSortedData.length
+                )}{' '}
+                of {filteredAndSortedData.length} campaigns
               </div>
-              
+
               <div className="flex items-center gap-2">
                 <motion.button
                   onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
@@ -525,7 +601,7 @@ const EnhancedPreview: React.FC<EnhancedPreviewProps> = ({
                 >
                   Previous
                 </motion.button>
-                
+
                 <div className="flex items-center gap-1">
                   {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                     const page = i + 1;
@@ -547,9 +623,11 @@ const EnhancedPreview: React.FC<EnhancedPreviewProps> = ({
                     );
                   })}
                 </div>
-                
+
                 <motion.button
-                  onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                  onClick={() =>
+                    setCurrentPage(Math.min(totalPages, currentPage + 1))
+                  }
                   disabled={currentPage === totalPages}
                   className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
                     currentPage === totalPages
@@ -570,4 +648,4 @@ const EnhancedPreview: React.FC<EnhancedPreviewProps> = ({
   );
 };
 
-export default EnhancedPreview; 
+export default EnhancedPreview;

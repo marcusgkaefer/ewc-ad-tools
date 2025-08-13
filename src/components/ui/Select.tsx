@@ -1,7 +1,7 @@
+import { ChevronDownIcon, CheckIcon } from '@heroicons/react/24/solid';
+import { motion, AnimatePresence } from 'framer-motion';
 import React, { useState, useRef, useEffect } from 'react';
 import type { KeyboardEvent } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDownIcon, CheckIcon } from '@heroicons/react/24/solid';
 
 export interface Option {
   value: string;
@@ -39,7 +39,10 @@ const Select: React.FC<SelectProps> = ({
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (selectRef.current && !selectRef.current.contains(event.target as Node)) {
+      if (
+        selectRef.current &&
+        !selectRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
         setHighlightedIndex(-1);
       }
@@ -121,7 +124,7 @@ const Select: React.FC<SelectProps> = ({
           {label}
         </label>
       )}
-      
+
       <div className="relative">
         <button
           type="button"
@@ -132,14 +135,18 @@ const Select: React.FC<SelectProps> = ({
             disabled
               ? 'bg-neutral-100 text-neutral-400 cursor-not-allowed border-neutral-200'
               : error
-              ? 'border-error-500 focus:border-error-600 focus:ring-4 focus:ring-error-100'
-              : isOpen 
-              ? 'border-primary-500 shadow-lg' 
-              : 'border-neutral-200 hover:border-primary-300 hover:bg-white focus:border-primary-500 focus:ring-4 focus:ring-primary-100'
+                ? 'border-error-500 focus:border-error-600 focus:ring-4 focus:ring-error-100'
+                : isOpen
+                  ? 'border-primary-500 shadow-lg'
+                  : 'border-neutral-200 hover:border-primary-300 hover:bg-white focus:border-primary-500 focus:ring-4 focus:ring-primary-100'
           }`}
         >
           <div className="flex items-center justify-between">
-            <span className={selectedOption ? 'text-neutral-800' : 'text-neutral-400'}>
+            <span
+              className={
+                selectedOption ? 'text-neutral-800' : 'text-neutral-400'
+              }
+            >
               {selectedOption ? selectedOption.label : placeholder}
             </span>
             <motion.div
@@ -170,15 +177,15 @@ const Select: React.FC<SelectProps> = ({
                     option.disabled
                       ? 'text-neutral-300 cursor-not-allowed bg-neutral-50'
                       : highlightedIndex === index
-                      ? 'bg-primary-50 text-primary-700'
-                      : option.value === value
-                      ? 'bg-primary-100 text-primary-800'
-                      : 'bg-transparent text-neutral-700 hover:bg-primary-50'
-                  } ${
-                    !option.disabled ? 'hover:bg-primary-50' : ''
-                  }`}
+                        ? 'bg-primary-50 text-primary-700'
+                        : option.value === value
+                          ? 'bg-primary-100 text-primary-800'
+                          : 'bg-transparent text-neutral-700 hover:bg-primary-50'
+                  } ${!option.disabled ? 'hover:bg-primary-50' : ''}`}
                   onClick={() => handleOptionClick(option)}
-                  onMouseEnter={() => !option.disabled && setHighlightedIndex(index)}
+                  onMouseEnter={() =>
+                    !option.disabled && setHighlightedIndex(index)
+                  }
                   disabled={option.disabled}
                 >
                   <div className="flex items-center justify-between">
@@ -207,4 +214,4 @@ const Select: React.FC<SelectProps> = ({
   );
 };
 
-export default Select; 
+export default Select;

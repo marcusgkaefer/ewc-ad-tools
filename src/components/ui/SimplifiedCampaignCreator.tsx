@@ -1,5 +1,3 @@
-import React, { useState, useEffect, useMemo, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import {
   ChevronDownIcon,
   MapPinIcon,
@@ -18,23 +16,27 @@ import {
   LinkIcon,
   CubeTransparentIcon,
   PhotoIcon,
-} from "@heroicons/react/24/outline";
-import { supabaseLocationService } from "../../services/supabaseLocationService";
-import { mockApi } from "../../services/mockApi";
-import type {
-  LocationWithConfig,
-  CampaignConfiguration,
-  GenerationJob,
-} from "../../types";
-import EnhancedPreview from "./EnhancedPreview";
-import FileComparisonModal from "./FileComparisonModal";
-import { LocationConfigModal } from "./LocationConfigModal";
-import ModernDatePicker from "./ModernDatePicker";
+} from '@heroicons/react/24/outline';
+import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
+
 import {
   REFERENCE_AD_TEMPLATE,
   REFERENCE_CAMPAIGN_SETTINGS,
   REFERENCE_ADSET_SETTINGS,
-} from "../../constants/hardcodedAdValues";
+} from '../../constants/hardcodedAdValues';
+import { mockApi } from '../../services/mockApi';
+import { supabaseLocationService } from '../../services/supabaseLocationService';
+import type {
+  LocationWithConfig,
+  CampaignConfiguration,
+  GenerationJob,
+} from '../../types';
+
+import EnhancedPreview from './EnhancedPreview';
+import FileComparisonModal from './FileComparisonModal';
+import { LocationConfigModal } from './LocationConfigModal';
+import ModernDatePicker from './ModernDatePicker';
 
 // Boolean Checkbox Component
 interface BooleanCheckboxProps {
@@ -56,9 +58,9 @@ const BooleanCheckbox: React.FC<BooleanCheckboxProps> = ({
         <div
           className={`w-6 h-6 rounded border-2 transition-all duration-200 flex items-center justify-center ${
             checked
-              ? "border-wax-red-500 bg-wax-red-500"
-              : "border-wax-gray-300 bg-white hover:border-wax-red-300"
-          } ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+              ? 'border-wax-red-500 bg-wax-red-500'
+              : 'border-wax-gray-300 bg-white hover:border-wax-red-300'
+          } ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
           onClick={() => !disabled && onChange(!checked)}
         >
           {checked && <CheckIcon className="w-4 h-4 text-white" />}
@@ -76,7 +78,7 @@ interface CollapsibleSectionProps {
   isOpen: boolean;
   onToggle: () => void;
   children: React.ReactNode;
-  status?: "pending" | "completed" | "error";
+  status?: 'pending' | 'completed' | 'error';
   completionCount?: string;
 }
 
@@ -86,7 +88,7 @@ const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
   isOpen,
   onToggle,
   children,
-  status = "pending",
+  status = 'pending',
   completionCount,
 }) => {
   return (
@@ -112,15 +114,15 @@ const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
           </div>
         </div>
         <div className="flex items-center gap-3">
-          {status === "completed" && (
+          {status === 'completed' && (
             <CheckCircleIcon className="w-5 h-5 text-green-500" />
           )}
-          {status === "error" && (
+          {status === 'error' && (
             <XCircleIcon className="w-5 h-5 text-red-500" />
           )}
           <ChevronDownIcon
             className={`w-5 h-5 text-wax-gray-400 transition-transform duration-200 ${
-              isOpen ? "rotate-180" : ""
+              isOpen ? 'rotate-180' : ''
             }`}
           />
         </div>
@@ -129,7 +131,7 @@ const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
         {isOpen && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
+            animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3 }}
             className="overflow-hidden"
@@ -165,8 +167,8 @@ const LocationItem: React.FC<LocationItemProps> = ({
         <div
           className={`w-5 h-5 rounded border-2 transition-all duration-200 flex items-center justify-center cursor-pointer ${
             isSelected
-              ? "border-wax-red-500 bg-wax-red-500"
-              : "border-wax-gray-300 hover:border-wax-red-300"
+              ? 'border-wax-red-500 bg-wax-red-500'
+              : 'border-wax-gray-300 hover:border-wax-red-300'
           }`}
           onClick={onToggle}
         >
@@ -203,39 +205,39 @@ const SimplifiedCampaignCreator: React.FC = () => {
   const [selectedLocationIds, setSelectedLocationIds] = useState<Set<string>>(
     new Set()
   );
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const [configFilter, setConfigFilter] = useState<
-    "all" | "configured" | "not-configured"
-  >("all");
+    'all' | 'configured' | 'not-configured'
+  >('all');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   // Campaign settings
   const [campaignConfig, setCampaignConfig] = useState<CampaignConfiguration>({
-    prefix: "EWC",
-    platform: "Meta",
+    prefix: 'EWC',
+    platform: 'Meta',
     selectedDate: new Date(),
-    month: new Date().toLocaleString("default", { month: "long" }),
+    month: new Date().toLocaleString('default', { month: 'long' }),
     day: new Date().getDate().toString(),
-    objective: "Engagement",
-    testType: "LocalTest",
-    duration: "Evergreen",
+    objective: 'Engagement',
+    testType: 'LocalTest',
+    duration: 'Evergreen',
     budget: 50,
-    bidStrategy: "Highest volume or value",
+    bidStrategy: 'Highest volume or value',
     startDate: new Date().toLocaleDateString(),
     endDate: new Date(
       Date.now() + 30 * 24 * 60 * 60 * 1000
     ).toLocaleDateString(),
     ads: [
       {
-        id: "ad-1",
-        name: "Primary Ad",
-        templateId: "template_1",
-        radius: "+4m",
-        caption: "Experience premium waxing services",
-        additionalNotes: "",
+        id: 'ad-1',
+        name: 'Primary Ad',
+        templateId: 'template_1',
+        radius: '+4m',
+        caption: 'Experience premium waxing services',
+        additionalNotes: '',
         scheduledDate: new Date().toLocaleDateString(),
-        status: "Active",
+        status: 'Active',
       },
     ],
     radius: 5,
@@ -308,10 +310,10 @@ const SimplifiedCampaignCreator: React.FC = () => {
         const data = await supabaseLocationService.getLocationsWithConfigs();
         setLocations(data);
         // Select all locations by default
-        setSelectedLocationIds(new Set(data.map((loc) => loc.id)));
+        setSelectedLocationIds(new Set(data.map(loc => loc.id)));
       } catch (err) {
-        setError("Failed to load locations");
-        console.error("Error loading locations:", err);
+        setError('Failed to load locations');
+        console.error('Error loading locations:', err);
       } finally {
         setIsLoading(false);
       }
@@ -324,28 +326,28 @@ const SimplifiedCampaignCreator: React.FC = () => {
   useEffect(() => {
     const date = campaignConfig.selectedDate;
     const monthNames = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
     ];
     const month = monthNames[date.getMonth()];
     const day = date.getDate().toString();
-    const scheduledDate = date.toLocaleDateString("en-US");
+    const scheduledDate = date.toLocaleDateString('en-US');
 
-    setCampaignConfig((prev) => ({
+    setCampaignConfig(prev => ({
       ...prev,
       month,
       day,
-      ads: prev.ads.map((ad) => ({ ...ad, scheduledDate })),
+      ads: prev.ads.map(ad => ({ ...ad, scheduledDate })),
     }));
   }, [campaignConfig.selectedDate]);
 
@@ -364,7 +366,7 @@ const SimplifiedCampaignCreator: React.FC = () => {
 
   // Filtered and selected locations
   const filteredLocations = useMemo(() => {
-    return locations.filter((location) => {
+    return locations.filter(location => {
       // Search filter
       const searchMatch =
         location.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -373,25 +375,25 @@ const SimplifiedCampaignCreator: React.FC = () => {
 
       // Configuration filter
       const configMatch =
-        configFilter === "all" ||
-        (configFilter === "configured" && location.config) ||
-        (configFilter === "not-configured" && !location.config);
+        configFilter === 'all' ||
+        (configFilter === 'configured' && location.config) ||
+        (configFilter === 'not-configured' && !location.config);
 
       return searchMatch && configMatch;
     });
   }, [locations, searchQuery, configFilter]);
 
   const selectedLocations = useMemo(() => {
-    return locations.filter((location) => selectedLocationIds.has(location.id));
+    return locations.filter(location => selectedLocationIds.has(location.id));
   }, [locations, selectedLocationIds]);
 
   // Handlers
   const toggleSection = (section: keyof typeof openSections) => {
-    setOpenSections((prev) => ({ ...prev, [section]: !prev[section] }));
+    setOpenSections(prev => ({ ...prev, [section]: !prev[section] }));
   };
 
   const toggleLocationSelection = (locationId: string) => {
-    setSelectedLocationIds((prev) => {
+    setSelectedLocationIds(prev => {
       const newSet = new Set(prev);
       if (newSet.has(locationId)) {
         newSet.delete(locationId);
@@ -403,7 +405,7 @@ const SimplifiedCampaignCreator: React.FC = () => {
   };
 
   const selectAllLocations = () => {
-    setSelectedLocationIds(new Set(filteredLocations.map((loc) => loc.id)));
+    setSelectedLocationIds(new Set(filteredLocations.map(loc => loc.id)));
   };
 
   const clearAllSelections = () => {
@@ -421,27 +423,27 @@ const SimplifiedCampaignCreator: React.FC = () => {
       const data = await supabaseLocationService.getLocationsWithConfigs();
       setLocations(data);
     } catch (err) {
-      console.error("Error reloading locations:", err);
+      console.error('Error reloading locations:', err);
     }
   };
 
   const handleGenerateCampaigns = async () => {
     if (selectedLocations.length === 0) {
-      setError("Please select at least one location");
+      setError('Please select at least one location');
       return;
     }
 
     try {
       setIsGenerating(true);
       setError(null);
-      const templateIds = campaignConfig.ads.map((ad) => ad.templateId);
+      const templateIds = campaignConfig.ads.map(ad => ad.templateId);
       const result = await mockApi.generateAds(
         Array.from(selectedLocationIds),
         templateIds,
         {
-          format: "csv",
+          format: 'csv',
           includeHeaders: true,
-          customFields: ["radius", "caption"],
+          customFields: ['radius', 'caption'],
           fileName: `${campaignConfig.prefix}_${campaignConfig.platform}_${campaignConfig.month}${campaignConfig.day}_AllCampaigns.csv`,
           campaign: campaignConfig,
         }
@@ -457,15 +459,15 @@ const SimplifiedCampaignCreator: React.FC = () => {
           locationCount: selectedLocations.length,
           jobId: result.data.id,
         };
-        setGeneratedFiles((prev) => [newFile, ...prev]);
+        setGeneratedFiles(prev => [newFile, ...prev]);
 
         setShowSuccessNotification(true);
         // Auto-hide notification after 5 seconds
         setTimeout(() => setShowSuccessNotification(false), 5000);
       }
     } catch (err) {
-      setError("Failed to generate campaigns");
-      console.error("Generation error:", err);
+      setError('Failed to generate campaigns');
+      console.error('Generation error:', err);
     } finally {
       setIsGenerating(false);
     }
@@ -478,23 +480,23 @@ const SimplifiedCampaignCreator: React.FC = () => {
       const response = await mockApi.downloadGeneratedFile(generationJob.id);
       if (response.success && response.data) {
         // Cache the blob in the generated files list
-        setGeneratedFiles((prev) =>
-          prev.map((f) =>
+        setGeneratedFiles(prev =>
+          prev.map(f =>
             f.jobId === generationJob.id ? { ...f, blob: response.data } : f
           )
         );
 
         const url = URL.createObjectURL(response.data);
-        const link = document.createElement("a");
+        const link = document.createElement('a');
         link.href = url;
         link.download =
-          generationJob.options?.fileName || "Campaign_Export.csv";
+          generationJob.options?.fileName || 'Campaign_Export.csv';
         link.click();
         URL.revokeObjectURL(url);
       }
     } catch (err) {
-      setError("Failed to download CSV");
-      console.error("Download error:", err);
+      setError('Failed to download CSV');
+      console.error('Download error:', err);
     }
   };
 
@@ -503,7 +505,7 @@ const SimplifiedCampaignCreator: React.FC = () => {
       // If we have the blob cached, use it
       if (file.blob) {
         const url = URL.createObjectURL(file.blob);
-        const link = document.createElement("a");
+        const link = document.createElement('a');
         link.href = url;
         link.download = file.name;
         link.click();
@@ -515,22 +517,20 @@ const SimplifiedCampaignCreator: React.FC = () => {
       const response = await mockApi.downloadGeneratedFile(file.jobId);
       if (response.success && response.data) {
         // Cache the blob for future downloads
-        setGeneratedFiles((prev) =>
-          prev.map((f) =>
-            f.id === file.id ? { ...f, blob: response.data } : f
-          )
+        setGeneratedFiles(prev =>
+          prev.map(f => (f.id === file.id ? { ...f, blob: response.data } : f))
         );
 
         const url = URL.createObjectURL(response.data);
-        const link = document.createElement("a");
+        const link = document.createElement('a');
         link.href = url;
         link.download = file.name;
         link.click();
         URL.revokeObjectURL(url);
       }
     } catch (err) {
-      setError("Failed to download file");
-      console.error("Download error:", err);
+      setError('Failed to download file');
+      console.error('Download error:', err);
     }
   };
 
@@ -616,8 +616,8 @@ const SimplifiedCampaignCreator: React.FC = () => {
                       if (newShowFilesList) {
                         setTimeout(() => {
                           generatedFilesRef.current?.scrollIntoView({
-                            behavior: "smooth",
-                            block: "start",
+                            behavior: 'smooth',
+                            block: 'start',
                           });
                         }, 100); // Small delay to ensure the element is rendered
                       }
@@ -651,7 +651,7 @@ const SimplifiedCampaignCreator: React.FC = () => {
                     type="text"
                     placeholder="Search locations..."
                     value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onChange={e => setSearchQuery(e.target.value)}
                     className="w-full pl-10 pr-4 py-3 border-2 border-wax-gray-200 rounded-xl text-base bg-white transition-all duration-200 focus:border-wax-red-500 focus:ring-2 focus:ring-wax-red-100 focus:outline-none"
                   />
                 </div>
@@ -660,31 +660,31 @@ const SimplifiedCampaignCreator: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center bg-wax-gray-100 rounded-xl p-1">
                     <button
-                      onClick={() => setConfigFilter("all")}
+                      onClick={() => setConfigFilter('all')}
                       className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
-                        configFilter === "all"
-                          ? "bg-white text-wax-red-600 shadow-sm"
-                          : "text-wax-gray-600 hover:text-wax-gray-800"
+                        configFilter === 'all'
+                          ? 'bg-white text-wax-red-600 shadow-sm'
+                          : 'text-wax-gray-600 hover:text-wax-gray-800'
                       }`}
                     >
                       All
                     </button>
                     <button
-                      onClick={() => setConfigFilter("configured")}
+                      onClick={() => setConfigFilter('configured')}
                       className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
-                        configFilter === "configured"
-                          ? "bg-white text-wax-red-600 shadow-sm"
-                          : "text-wax-gray-600 hover:text-wax-gray-800"
+                        configFilter === 'configured'
+                          ? 'bg-white text-wax-red-600 shadow-sm'
+                          : 'text-wax-gray-600 hover:text-wax-gray-800'
                       }`}
                     >
                       Configured
                     </button>
                     <button
-                      onClick={() => setConfigFilter("not-configured")}
+                      onClick={() => setConfigFilter('not-configured')}
                       className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
-                        configFilter === "not-configured"
-                          ? "bg-white text-wax-red-600 shadow-sm"
-                          : "text-wax-gray-600 hover:text-wax-gray-800"
+                        configFilter === 'not-configured'
+                          ? 'bg-white text-wax-red-600 shadow-sm'
+                          : 'text-wax-gray-600 hover:text-wax-gray-800'
                       }`}
                     >
                       Not Configured
@@ -719,7 +719,7 @@ const SimplifiedCampaignCreator: React.FC = () => {
                     </p>
                   </div>
                 ) : (
-                  filteredLocations.map((location) => (
+                  filteredLocations.map(location => (
                     <LocationItem
                       key={location.id}
                       location={location}
@@ -780,7 +780,7 @@ const SimplifiedCampaignCreator: React.FC = () => {
                       </h3>
                       <p className="text-sm text-wax-gray-500">
                         {generatedFiles.length} file
-                        {generatedFiles.length !== 1 ? "s" : ""} available this
+                        {generatedFiles.length !== 1 ? 's' : ''} available this
                         session
                       </p>
                     </div>
@@ -795,7 +795,7 @@ const SimplifiedCampaignCreator: React.FC = () => {
               </div>
               <div className="px-6 py-6">
                 <div className="space-y-3">
-                  {generatedFiles.map((file) => (
+                  {generatedFiles.map(file => (
                     <div
                       key={file.id}
                       className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors duration-200"
@@ -851,11 +851,11 @@ const SimplifiedCampaignCreator: React.FC = () => {
                   <span className="text-sm text-wax-gray-600">Status</span>
                   <span
                     className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                      generationJob.status === "completed"
-                        ? "bg-green-100 text-green-800"
-                        : generationJob.status === "failed"
-                        ? "bg-red-100 text-red-800"
-                        : "bg-yellow-100 text-yellow-800"
+                      generationJob.status === 'completed'
+                        ? 'bg-green-100 text-green-800'
+                        : generationJob.status === 'failed'
+                          ? 'bg-red-100 text-red-800'
+                          : 'bg-yellow-100 text-yellow-800'
                     }`}
                   >
                     {generationJob.status}
@@ -928,7 +928,7 @@ const SimplifiedCampaignCreator: React.FC = () => {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
               className="bg-white rounded-2xl shadow-wax-xl max-w-4xl w-full max-h-[90vh] overflow-hidden"
-              onClick={(e) => e.stopPropagation()}
+              onClick={e => e.stopPropagation()}
             >
               {/* Modal Header */}
               <div className="px-6 py-4 border-b border-wax-gray-200 flex items-center justify-between">
@@ -951,7 +951,7 @@ const SimplifiedCampaignCreator: React.FC = () => {
                     title="Campaign Settings"
                     icon={AdjustmentsHorizontalIcon}
                     isOpen={openSections.campaignConfig}
-                    onToggle={() => toggleSection("campaignConfig")}
+                    onToggle={() => toggleSection('campaignConfig')}
                     status="completed"
                   >
                     <div className="space-y-4">
@@ -963,7 +963,7 @@ const SimplifiedCampaignCreator: React.FC = () => {
                           <input
                             type="text"
                             value={campaignConfig.prefix}
-                            onChange={(e) =>
+                            onChange={e =>
                               setCampaignConfig({
                                 ...campaignConfig,
                                 prefix: e.target.value,
@@ -993,10 +993,12 @@ const SimplifiedCampaignCreator: React.FC = () => {
                           </label>
                           <ModernDatePicker
                             value={campaignConfig.selectedDate}
-                            onChange={(date: Date) => setCampaignConfig({
-                              ...campaignConfig,
-                              selectedDate: date
-                            })}
+                            onChange={(date: Date) =>
+                              setCampaignConfig({
+                                ...campaignConfig,
+                                selectedDate: date,
+                              })
+                            }
                             className="[&>button]:!px-4 [&>button]:!py-3"
                           />
                         </div>
@@ -1007,7 +1009,7 @@ const SimplifiedCampaignCreator: React.FC = () => {
                           <input
                             type="number"
                             value={campaignConfig.budget}
-                            onChange={(e) =>
+                            onChange={e =>
                               setCampaignConfig({
                                 ...campaignConfig,
                                 budget: parseFloat(e.target.value) || 0,
@@ -1096,8 +1098,8 @@ const SimplifiedCampaignCreator: React.FC = () => {
                           <BooleanCheckbox
                             label="New Objective"
                             checked={booleanFields.newObjective}
-                            onChange={(checked) =>
-                              setBooleanFields((prev) => ({
+                            onChange={checked =>
+                              setBooleanFields(prev => ({
                                 ...prev,
                                 newObjective: checked,
                               }))
@@ -1122,8 +1124,8 @@ const SimplifiedCampaignCreator: React.FC = () => {
                           <BooleanCheckbox
                             label="Budget Scheduling Enabled"
                             checked={booleanFields.budgetSchedulingEnabled}
-                            onChange={(checked) =>
-                              setBooleanFields((prev) => ({
+                            onChange={checked =>
+                              setBooleanFields(prev => ({
                                 ...prev,
                                 budgetSchedulingEnabled: checked,
                               }))
@@ -1162,7 +1164,7 @@ const SimplifiedCampaignCreator: React.FC = () => {
                     title="Ad Set Configuration"
                     icon={PresentationChartLineIcon}
                     isOpen={openSections.adSetConfig}
-                    onToggle={() => toggleSection("adSetConfig")}
+                    onToggle={() => toggleSection('adSetConfig')}
                     status="completed"
                   >
                     <div className="space-y-4">
@@ -1256,8 +1258,8 @@ const SimplifiedCampaignCreator: React.FC = () => {
                           <BooleanCheckbox
                             label="Use Accelerated Delivery"
                             checked={booleanFields.useAcceleratedDelivery}
-                            onChange={(checked) =>
-                              setBooleanFields((prev) => ({
+                            onChange={checked =>
+                              setBooleanFields(prev => ({
                                 ...prev,
                                 useAcceleratedDelivery: checked,
                               }))
@@ -1269,8 +1271,8 @@ const SimplifiedCampaignCreator: React.FC = () => {
                           <BooleanCheckbox
                             label="Budget Scheduling (Ad Set)"
                             checked={booleanFields.budgetSchedulingAdSet}
-                            onChange={(checked) =>
-                              setBooleanFields((prev) => ({
+                            onChange={checked =>
+                              setBooleanFields(prev => ({
                                 ...prev,
                                 budgetSchedulingAdSet: checked,
                               }))
@@ -1335,7 +1337,7 @@ const SimplifiedCampaignCreator: React.FC = () => {
                     title="Targeting Configuration"
                     icon={UserGroupIcon}
                     isOpen={openSections.targetingConfig}
-                    onToggle={() => toggleSection("targetingConfig")}
+                    onToggle={() => toggleSection('targetingConfig')}
                     status="completed"
                   >
                     <div className="space-y-4">
@@ -1463,7 +1465,7 @@ const SimplifiedCampaignCreator: React.FC = () => {
                     title="Creative Configuration"
                     icon={PhotoIcon}
                     isOpen={openSections.creativeConfig}
-                    onToggle={() => toggleSection("creativeConfig")}
+                    onToggle={() => toggleSection('creativeConfig')}
                     status="completed"
                   >
                     <div className="space-y-4">
@@ -1737,7 +1739,7 @@ const SimplifiedCampaignCreator: React.FC = () => {
                     title="Tracking & Attribution"
                     icon={LinkIcon}
                     isOpen={openSections.trackingConfig}
-                    onToggle={() => toggleSection("trackingConfig")}
+                    onToggle={() => toggleSection('trackingConfig')}
                     status="completed"
                   >
                     <div className="space-y-4">
@@ -1808,7 +1810,7 @@ const SimplifiedCampaignCreator: React.FC = () => {
                     title="Platform Specific Settings"
                     icon={CubeTransparentIcon}
                     isOpen={openSections.platformConfig}
-                    onToggle={() => toggleSection("platformConfig")}
+                    onToggle={() => toggleSection('platformConfig')}
                     status="completed"
                   >
                     <div className="space-y-4">
@@ -1817,8 +1819,8 @@ const SimplifiedCampaignCreator: React.FC = () => {
                           <BooleanCheckbox
                             label="Video Retargeting"
                             checked={booleanFields.videoRetargeting}
-                            onChange={(checked) =>
-                              setBooleanFields((prev) => ({
+                            onChange={checked =>
+                              setBooleanFields(prev => ({
                                 ...prev,
                                 videoRetargeting: checked,
                               }))
@@ -1830,8 +1832,8 @@ const SimplifiedCampaignCreator: React.FC = () => {
                           <BooleanCheckbox
                             label="Use Page as Actor"
                             checked={booleanFields.usePageAsActor}
-                            onChange={(checked) =>
-                              setBooleanFields((prev) => ({
+                            onChange={checked =>
+                              setBooleanFields(prev => ({
                                 ...prev,
                                 usePageAsActor: checked,
                               }))
@@ -1845,8 +1847,8 @@ const SimplifiedCampaignCreator: React.FC = () => {
                           <BooleanCheckbox
                             label="Optimize Text per Person"
                             checked={booleanFields.optimizeTextPerPerson}
-                            onChange={(checked) =>
-                              setBooleanFields((prev) => ({
+                            onChange={checked =>
+                              setBooleanFields(prev => ({
                                 ...prev,
                                 optimizeTextPerPerson: checked,
                               }))
@@ -1909,7 +1911,7 @@ const SimplifiedCampaignCreator: React.FC = () => {
         title={
           previewGeneratedFile
             ? `File Preview: ${previewGeneratedFile.name}`
-            : "Campaign Preview"
+            : 'Campaign Preview'
         }
         isGeneratedFile={!!previewGeneratedFile}
         onDownloadFile={

@@ -5,14 +5,21 @@ export const buttonVariants = cva(
   {
     variants: {
       variant: {
-        primary: 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 shadow-sm hover:shadow-md',
-        secondary: 'bg-gray-100 text-gray-900 hover:bg-gray-200 focus:ring-gray-500',
-        success: 'bg-green-600 text-white hover:bg-green-700 focus:ring-green-500 shadow-sm hover:shadow-md',
-        danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 shadow-sm hover:shadow-md',
-        warning: 'bg-yellow-600 text-white hover:bg-yellow-700 focus:ring-yellow-500 shadow-sm hover:shadow-md',
+        primary:
+          'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 shadow-sm hover:shadow-md',
+        secondary:
+          'bg-gray-100 text-gray-900 hover:bg-gray-200 focus:ring-gray-500',
+        success:
+          'bg-green-600 text-white hover:bg-green-700 focus:ring-green-500 shadow-sm hover:shadow-md',
+        danger:
+          'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 shadow-sm hover:shadow-md',
+        warning:
+          'bg-yellow-600 text-white hover:bg-yellow-700 focus:ring-yellow-500 shadow-sm hover:shadow-md',
         ghost: 'text-gray-700 hover:bg-gray-100 focus:ring-gray-500',
-        outline: 'border border-gray-300 text-gray-700 hover:bg-gray-50 focus:ring-gray-500',
-        gradient: 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 shadow-sm hover:shadow-md',
+        outline:
+          'border border-gray-300 text-gray-700 hover:bg-gray-50 focus:ring-gray-500',
+        gradient:
+          'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 shadow-sm hover:shadow-md',
       },
       size: {
         sm: 'px-3 py-1.5 text-xs h-8',
@@ -25,7 +32,8 @@ export const buttonVariants = cva(
         bounce: 'hover:animate-bounce-gentle',
         scale: 'hover:scale-105 active:scale-95',
         glow: 'hover:animate-glow',
-        shimmer: 'before:absolute before:inset-0 before:bg-shimmer before:animate-shimmer',
+        shimmer:
+          'before:absolute before:inset-0 before:bg-shimmer before:animate-shimmer',
       },
     },
     defaultVariants: {
@@ -34,4 +42,4 @@ export const buttonVariants = cva(
       animation: 'scale',
     },
   }
-); 
+);

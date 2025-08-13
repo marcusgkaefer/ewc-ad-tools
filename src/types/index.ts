@@ -100,14 +100,14 @@ export interface LocationConfig {
   customSettings?: Record<string, unknown> | null;
   notes?: string | null;
   isActive: boolean;
-  
+
   // New targeting fields
   primaryLat?: number | null;
   primaryLng?: number | null;
   radiusMiles?: number | null;
   coordinateList?: Array<{ lat: number; lng: number; radius?: number }> | null;
   landingPageUrl?: string | null;
-  
+
   createdAt: string;
   updatedAt: string;
 }
@@ -121,7 +121,7 @@ export interface CreateLocationConfigRequest {
   budget?: number;
   customSettings?: Record<string, unknown>;
   notes?: string;
-  
+
   // New targeting fields
   primaryLat?: number;
   primaryLng?: number;
@@ -135,7 +135,7 @@ export interface UpdateLocationConfigRequest {
   customSettings?: Record<string, unknown>;
   notes?: string;
   isActive?: boolean;
-  
+
   // New targeting fields
   primaryLat?: number;
   primaryLng?: number;
@@ -383,7 +383,7 @@ export interface CampaignConfiguration {
   endDate: string; // e.g., "07/26/2025 11:59:00 pm"
   ads: AdConfiguration[];
   radius: number; // Default radius in miles, e.g., 5
-  
+
   // Enhanced with database campaign id
   campaignId?: string;
 }
@@ -578,21 +578,21 @@ export interface AppStore {
   locations: Location[];
   selectedLocationIds: string[];
   locationFilters: LocationFilters;
-  
+
   // Template state
   templates: AdTemplate[];
   selectedTemplateIds: string[];
   variableMappings: Record<string, string>;
-  
+
   // Generation state
   currentJob?: GenerationJob;
   generationHistory: GenerationJob[];
-  
+
   // UI state
   isLoading: boolean;
   error?: string;
   notifications: Notification[];
-  
+
   // Actions
   setLocations: (locations: Location[]) => void;
   setSelectedLocationIds: (ids: string[]) => void;
@@ -605,4 +605,4 @@ export interface AppStore {
   removeNotification: (id: string) => void;
   setLoading: (loading: boolean) => void;
   setError: (error?: string) => void;
-} 
+}
