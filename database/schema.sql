@@ -85,6 +85,29 @@ CREATE TABLE campaign_locations (
   UNIQUE(campaign_id, location_id)
 );
 
+-- Create location_groups table for grouping locations
+CREATE TABLE location_groups (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  name VARCHAR(255) NOT NULL,
+  description TEXT,
+  user_id UUID, -- Can be NULL for global groups
+  is_active BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create location_group_members table for many-to-many relationship
+CREATE TABLE location_group_members (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  group_id UUID NOT NULL REFERENCES location_groups(id) ON DELETE CASCADE,
+  location_id UUID NOT NULL REFERENCES locations(id) ON DELETE CASCADE,
+  is_active BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  
+  -- Ensure unique group-location combination
+  UNIQUE(group_id, location_id)
+);
+
 -- Create indexes for better performance
 CREATE INDEX idx_locations_code ON locations(code);
 CREATE INDEX idx_locations_name ON locations(name);
@@ -106,6 +129,13 @@ CREATE INDEX idx_campaign_locations_campaign_id ON campaign_locations(campaign_i
 CREATE INDEX idx_campaign_locations_location_id ON campaign_locations(location_id);
 CREATE INDEX idx_campaign_locations_active ON campaign_locations(is_active);
 
+-- Create indexes for location groups
+CREATE INDEX idx_location_groups_user_id ON location_groups(user_id);
+CREATE INDEX idx_location_groups_active ON location_groups(is_active);
+CREATE INDEX idx_location_group_members_group_id ON location_group_members(group_id);
+CREATE INDEX idx_location_group_members_location_id ON location_group_members(location_id);
+CREATE INDEX idx_location_group_members_active ON location_group_members(is_active);
+
 -- Create trigger to update updated_at timestamp
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
@@ -124,11 +154,17 @@ CREATE TRIGGER update_location_configs_updated_at BEFORE UPDATE ON location_conf
 CREATE TRIGGER update_campaigns_updated_at BEFORE UPDATE ON campaigns
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
+-- Create trigger to update updated_at timestamp for location_groups
+CREATE TRIGGER update_location_groups_updated_at BEFORE UPDATE ON location_groups
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
 -- Add Row Level Security (RLS) policies
 ALTER TABLE locations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE location_configs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE campaigns ENABLE ROW LEVEL SECURITY;
 ALTER TABLE campaign_locations ENABLE ROW LEVEL SECURITY;
+ALTER TABLE location_groups ENABLE ROW LEVEL SECURITY;
+ALTER TABLE location_group_members ENABLE ROW LEVEL SECURITY;
 
 -- Public read access to locations (adjust as needed for your security requirements)
 CREATE POLICY "Locations are viewable by everyone" ON locations
@@ -189,9 +225,53 @@ CREATE POLICY "Users can delete campaign locations for their campaigns" ON campa
     AND (campaigns.user_id = auth.uid() OR campaigns.user_id IS NULL)
   ));
 
+-- Location group policies
+CREATE POLICY "Users can view their own location groups" ON location_groups
+  FOR SELECT USING (auth.uid() = user_id OR user_id IS NULL);
+
+CREATE POLICY "Users can insert their own location groups" ON location_groups
+  FOR INSERT WITH CHECK (auth.uid() = user_id OR user_id IS NULL);
+
+CREATE POLICY "Users can update their own location groups" ON location_groups
+  FOR UPDATE USING (auth.uid() = user_id OR user_id IS NULL);
+
+CREATE POLICY "Users can delete their own location groups" ON location_groups
+  FOR DELETE USING (auth.uid() = user_id OR user_id IS NULL);
+
+-- Location group member policies
+CREATE POLICY "Users can view group members for their groups" ON location_group_members
+  FOR SELECT USING (EXISTS (
+    SELECT 1 FROM location_groups 
+    WHERE location_groups.id = location_group_members.group_id 
+    AND (location_groups.user_id = auth.uid() OR location_groups.user_id IS NULL)
+  ));
+
+CREATE POLICY "Users can insert group members for their groups" ON location_group_members
+  FOR INSERT WITH CHECK (EXISTS (
+    SELECT 1 FROM location_groups 
+    WHERE location_groups.id = location_group_members.group_id 
+    AND (location_groups.user_id = auth.uid() OR location_groups.user_id IS NULL)
+  ));
+
+CREATE POLICY "Users can update group members for their groups" ON location_group_members
+  FOR UPDATE USING (EXISTS (
+    SELECT 1 FROM location_groups 
+    WHERE location_groups.id = location_group_members.group_id 
+    AND (location_groups.user_id = auth.uid() OR location_groups.user_id IS NULL)
+  ));
+
+CREATE POLICY "Users can delete group members for their groups" ON location_group_members
+  FOR DELETE USING (EXISTS (
+    SELECT 1 FROM location_groups 
+    WHERE location_groups.id = location_group_members.group_id 
+    AND (location_groups.user_id = auth.uid() OR location_groups.user_id IS NULL)
+  ));
+
 -- Grant necessary permissions
 GRANT USAGE ON SCHEMA public TO anon, authenticated;
 GRANT SELECT ON locations TO anon, authenticated;
 GRANT ALL ON location_configs TO authenticated;
 GRANT ALL ON campaigns TO authenticated;
-GRANT ALL ON campaign_locations TO authenticated; 
+GRANT ALL ON campaign_locations TO authenticated;
+GRANT ALL ON location_groups TO authenticated;
+GRANT ALL ON location_group_members TO authenticated; 

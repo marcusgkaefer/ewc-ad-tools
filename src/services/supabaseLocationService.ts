@@ -211,6 +211,37 @@ class SupabaseLocationService {
     }
   }
 
+  // Get locations by group ID
+  async getLocationsByGroupId(groupId: string): Promise<LocationSummary[]> {
+    try {
+      const { data, error } = await supabase
+        .from('location_group_members')
+        .select(`
+          locations(*)
+        `)
+        .eq('group_id', groupId)
+        .eq('is_active', true);
+
+      if (error) {
+        console.error('Error fetching locations by group:', error);
+        throw new Error(`Failed to fetch locations by group: ${error.message}`);
+      }
+
+      // Extract and convert location data
+      const locations = data
+        ?.map(item => item.locations)
+        .filter(Boolean) as any[];
+
+      return locations
+        .filter((location: Location) => location.code !== 'CORP')
+        .map(convertToLocationSummary)
+        .sort((a: LocationSummary, b: LocationSummary) => a.name.localeCompare(b.name));
+    } catch (error) {
+      console.error('Error in getLocationsByGroupId:', error);
+      throw error;
+    }
+  }
+
   // Get unique states from EWC centers JSON file
   private async getEwcCentersUniqueStates(): Promise<string[]> {
     try {
