@@ -100,16 +100,16 @@ export const REFERENCE_ADSET_SETTINGS = {
 } as const
 
 // Function to generate ad name from location (same as Ad Set Name pattern)
-export function generateAdName(locationName: string): string {
-  return `EWC_Meta_June25_Engagement_LocalTest_${locationName}_June`
+export function generateAdName(locationName: string, month: string = "June", day: string = "25"): string {
+  return `EWC_Meta_${month}${day}_Engagement_LocalTest_${locationName}_${month}`;
 }
 
 // Function to generate campaign name from location  
-export function generateCampaignName(locationName: string): string {
-  return `EWC_Meta_June25_Engagement_LocalTest_${locationName}`
+export function generateCampaignName(locationName: string, month: string = "June", day: string = "25"): string {
+  return `EWC_Meta_${month}${day}_Engagement_LocalTest_${locationName}`;
 }
 
 // Function to generate ad set name from location
-export function generateAdSetName(locationName: string): string {
-  return `EWC_Meta_June25_Engagement_LocalTest_${locationName}_June`
+export function generateAdSetName(locationName: string, month: string = "June", day: string = "25"): string {
+  return `EWC_Meta_${month}${day}_Engagement_LocalTest_${locationName}_${month}`;
 } 

@@ -78,7 +78,7 @@ function App() {
   const [hasGenerated, setHasGenerated] = useState(false);
   const [showLocationConfigModal, setShowLocationConfigModal] = useState(false);
   const [selectedLocationToConfigure, setSelectedLocationToConfigure] = useState<LocationWithConfig | null>(null);
-  const [useSimplifiedVersion, setUseSimplifiedVersion] = useState(true);
+  const useSimplifiedVersion = true; // Always use simplified version
   const [showLocationConfigSuccess, setShowLocationConfigSuccess] = useState(false);
   const [configSuccessMessage, setConfigSuccessMessage] = useState('');
   const [showLocationConfigError, setShowLocationConfigError] = useState(false);
@@ -140,7 +140,7 @@ function App() {
     if (templates.length > 0 && campaignConfig.ads.length === 0) {
       const defaultAd: AdConfiguration = {
         id: 'ad-1',
-        name: generateAdName('Template'), // Auto-generated using reference template
+        name: generateAdName('Template', campaignConfig.month, campaignConfig.day), // Auto-generated using reference template
         templateId: templates[0]?.id || '',
         radius: '+4m',
         caption: 'You learn something new everyday', // Fixed from reference template
@@ -150,7 +150,7 @@ function App() {
       };
       setCampaignConfig(prev => ({ ...prev, ads: [defaultAd] }));
     }
-  }, [templates, campaignConfig.ads.length]);
+  }, [templates, campaignConfig.ads.length, campaignConfig.month, campaignConfig.day]);
 
   // Update date fields when selectedDate changes
   useEffect(() => {
@@ -392,9 +392,15 @@ function App() {
         >
           {/* App Header */}
           <AppHeader 
-            onSettingsClick={() => setShowCampaignSettings(true)} 
-            useSimplifiedVersion={useSimplifiedVersion}
-            onVersionToggle={() => setUseSimplifiedVersion(!useSimplifiedVersion)}
+            onSettingsClick={() => {
+              if (useSimplifiedVersion) {
+                // For simplified version, we need to trigger the settings modal from within that component
+                // We'll use a custom event to communicate with the SimplifiedCampaignCreator
+                window.dispatchEvent(new CustomEvent('openSettingsModal'));
+              } else {
+                setShowCampaignSettings(true);
+              }
+            }} 
           />
 
           {/* Progress Steps - only show in professional mode */}

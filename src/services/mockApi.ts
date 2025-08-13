@@ -611,7 +611,7 @@ class MockApiService {
       "Preview Link",
       "Instagram Preview Link",
       "Ad Name",
-      "Dynamic Creative Ad Format",
+      "Automatic Format",
       "Title",
       "Title Placement",
       "Body",
@@ -712,11 +712,11 @@ class MockApiService {
           this.substituteVariables(template.fields.landingPageUrl, location) ||
           "https://waxcenter.com"; // Default fallback
 
-        // Generate dynamic names using hard-coded reference template
+        // Generate dynamic names using campaign date
         const locationName = location.name.replace(/\s+/g, "");
-        const campaignName = generateCampaignName(locationName);
-        const adSetName = generateAdSetName(locationName);
-        const adName = generateAdName(locationName);
+        const campaignName = generateCampaignName(locationName, campaign.month, campaign.day);
+        const adSetName = generateAdSetName(locationName, campaign.month, campaign.day);
+        const adName = generateAdName(locationName, campaign.month, campaign.day);
 
         // Create readable row object
         const rowData = {
@@ -767,7 +767,7 @@ class MockApiService {
           billingEvent: "IMPRESSIONS",
 
           // Ad Fields
-          adId: "a:120228258706880508",
+          adId: "",
           adStatus: "ACTIVE",
           previewLink: "https://www.facebook.com/?feed_demo_ad=120228258706880508&h=AQCXa9GVq2c5YDX-hxc",
           instagramPreviewLink: "https://www.instagram.com/p/DLShxy_sE-_/",
