@@ -83,6 +83,11 @@ function App() {
   const [configSuccessMessage, setConfigSuccessMessage] = useState('');
   const [showLocationConfigError, setShowLocationConfigError] = useState(false);
   const [configErrorMessage, setConfigErrorMessage] = useState('');
+  
+  // Download state management
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [downloadSuccess, setDownloadSuccess] = useState(false);
+  const [autoDownloadTriggered, setAutoDownloadTriggered] = useState(false);
 
   const [campaignConfig, setCampaignConfig] = useState<CampaignConfiguration>({
     prefix: 'EWC',
@@ -175,6 +180,108 @@ function App() {
       setHasReviewed(true);
     }
   }, [currentStep, hasReviewed]);
+
+  // Poll generation job status and auto-download when complete
+  useEffect(() => {
+    let pollInterval: NodeJS.Timeout | null = null;
+
+    const pollJobStatus = async () => {
+      if (generationJob && (generationJob.status === 'pending' || generationJob.status === 'processing')) {
+        try {
+          const response = await mockApi.getGenerationStatus(generationJob.id);
+          if (response.success && response.data) {
+            setGenerationJob(response.data);
+          }
+        } catch (error) {
+          console.error('Error polling job status:', error);
+        }
+      }
+    };
+
+    const triggerAutoDownload = async () => {
+      console.log('🔍 Auto-download check:', {
+        jobStatus: generationJob?.status,
+        autoDownloadTriggered,
+        hasGenerated,
+        shouldTrigger: generationJob?.status === 'completed' && !autoDownloadTriggered && hasGenerated
+      });
+      
+      if (generationJob?.status === 'completed' && !autoDownloadTriggered && hasGenerated) {
+        console.log('🚀 Triggering auto-download!');
+        setAutoDownloadTriggered(true);
+        setIsDownloading(true);
+        
+        // Small delay for better UX
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        try {
+          const response = await mockApi.downloadGeneratedFile(generationJob.id);
+          if (response.success && response.data) {
+            const url = URL.createObjectURL(response.data);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = generationJob.options?.fileName || 'Campaign_Export.csv';
+            link.click();
+            URL.revokeObjectURL(url);
+            
+            setDownloadSuccess(true);
+            console.log('✅ Auto-download completed successfully!');
+            // Reset success state after animation
+            setTimeout(() => setDownloadSuccess(false), 3000);
+          }
+        } catch (error) {
+          console.error('Auto-download error:', error);
+        } finally {
+          setIsDownloading(false);
+        }
+      }
+    };
+
+    // Start polling if we have an active job
+    if (generationJob && (generationJob.status === 'pending' || generationJob.status === 'processing')) {
+      pollInterval = setInterval(pollJobStatus, 500); // Poll every 500ms
+    }
+
+    // Trigger auto-download if job is completed
+    if (generationJob?.status === 'completed') {
+      triggerAutoDownload();
+    }
+
+    // Cleanup
+    return () => {
+      if (pollInterval) {
+        clearInterval(pollInterval);
+      }
+    };
+  }, [generationJob?.status, generationJob?.id, autoDownloadTriggered, hasGenerated, generationJob?.options?.fileName]);
+
+  // Enhanced download handler
+  const handleDownload = async () => {
+    if (!generationJob) return;
+    
+    setIsDownloading(true);
+    try {
+      const response = await mockApi.downloadGeneratedFile(generationJob.id);
+      if (response.success && response.data) {
+        const url = URL.createObjectURL(response.data);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = generationJob.options?.fileName || 'Campaign_Export.csv';
+        link.click();
+        URL.revokeObjectURL(url);
+        
+        setDownloadSuccess(true);
+        // Reset success state after animation
+        setTimeout(() => setDownloadSuccess(false), 3000);
+      } else {
+        console.error('Failed to download file:', response.error);
+      }
+    } catch (error) {
+      console.error('Download error:', error);
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
   // Smart location filtering
   const filteredLocations = useMemo(() => {
@@ -1076,36 +1183,54 @@ function App() {
                         // Reset to start over
                         setCurrentStep(1);
                         setGenerationJob(null);
+                        setAutoDownloadTriggered(false);
+                        setDownloadSuccess(false);
+                        setIsDownloading(false);
                       }}
                       className="inline-flex items-center gap-2 px-6 py-3 bg-white/90 backdrop-blur-xl text-neutral-700 font-semibold rounded-xl border border-neutral-200 shadow-lg shadow-black/5 transition-all duration-300 hover:bg-white hover:border-neutral-300 hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:ring-offset-2"
                     >
                       Create New Campaign
                     </button>
 
-                    <button
-                      onClick={async () => {
-                        try {
-                          // Download the file using the mock API
-                          const response = await mockApi.downloadGeneratedFile(generationJob.id);
-                          if (response.success && response.data) {
-                            const url = URL.createObjectURL(response.data);
-                            const link = document.createElement('a');
-                            link.href = url;
-                            link.download = generationJob.options?.fileName || 'Campaign_Export.csv';
-                            link.click();
-                            URL.revokeObjectURL(url);
-                          } else {
-                            console.error('Failed to download file:', response.error);
-                          }
-                        } catch (error) {
-                          console.error('Download error:', error);
-                        }
-                      }}
-                      className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-success-500 to-success-600 text-white font-semibold rounded-2xl shadow-lg shadow-success-500/25 transition-all duration-300 hover:from-success-600 hover:to-success-700 hover:-translate-y-1 hover:shadow-xl hover:shadow-success-500/30 focus:outline-none focus:ring-2 focus:ring-success-500 focus:ring-offset-2 text-lg"
+                    <motion.button
+                      onClick={handleDownload}
+                      disabled={isDownloading}
+                      whileHover={{ scale: downloadSuccess ? 1 : isDownloading ? 1 : 1.05 }}
+                      whileTap={{ scale: downloadSuccess ? 1 : isDownloading ? 1 : 0.95 }}
+                      animate={downloadSuccess ? { 
+                        scale: [1, 1.1, 1],
+                        rotate: [0, 5, -5, 0]
+                      } : {}}
+                      transition={{ duration: 0.5 }}
+                      className={`inline-flex items-center gap-2 px-8 py-4 font-semibold rounded-2xl shadow-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 text-lg ${
+                        downloadSuccess 
+                          ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-green-500/25 ring-green-500'
+                          : isDownloading
+                          ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-indigo-500/25 ring-indigo-500 opacity-75 cursor-not-allowed'
+                          : 'bg-gradient-to-r from-success-500 to-success-600 text-white shadow-success-500/25 hover:from-success-600 hover:to-success-700 hover:-translate-y-1 hover:shadow-xl hover:shadow-success-500/30 ring-success-500'
+                      }`}
                     >
-                      <DownloadIcon className="w-5 h-5" />
-                      Download File
-                    </button>
+                      {downloadSuccess ? (
+                        <>
+                          <CheckCircleIcon className="w-5 h-5" />
+                          Downloaded!
+                        </>
+                      ) : isDownloading ? (
+                        <>
+                          <motion.div
+                            animate={{ rotate: 360 }}
+                            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                            className="w-5 h-5 border-2 border-white border-t-transparent rounded-full"
+                          />
+                          Downloading...
+                        </>
+                      ) : (
+                        <>
+                          <DownloadIcon className="w-5 h-5" />
+                          Download File
+                        </>
+                      )}
+                    </motion.button>
                   </div>
                 </div>
               </motion.div>

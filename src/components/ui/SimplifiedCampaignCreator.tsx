@@ -300,6 +300,11 @@ const SimplifiedCampaignCreator: React.FC = () => {
   const [showFilesList, setShowFilesList] = useState(false);
   const generatedFilesRef = useRef<HTMLDivElement>(null);
 
+  // Download state management
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [downloadSuccess, setDownloadSuccess] = useState(false);
+  const [autoDownloadTriggered, setAutoDownloadTriggered] = useState(false);
+
   // Load locations
   useEffect(() => {
     const loadLocations = async () => {
@@ -361,6 +366,91 @@ const SimplifiedCampaignCreator: React.FC = () => {
       window.removeEventListener('openSettingsModal', handleOpenSettingsModal);
     };
   }, []);
+
+  // Poll generation job status and auto-download when complete
+  useEffect(() => {
+    let pollInterval: NodeJS.Timeout | null = null;
+
+    const pollJobStatus = async () => {
+      if (generationJob && (generationJob.status === 'pending' || generationJob.status === 'processing')) {
+        try {
+          const response = await mockApi.getGenerationStatus(generationJob.id);
+          if (response.success && response.data) {
+            console.log('📊 SimplifiedCampaignCreator Job status update:', {
+              oldStatus: generationJob.status,
+              newStatus: response.data.status,
+              progress: `${response.data.processedAds}/${response.data.totalAds}`
+            });
+            setGenerationJob(response.data);
+          }
+        } catch (error) {
+          console.error('Error polling job status:', error);
+        }
+      }
+    };
+
+    const triggerAutoDownload = async () => {
+      console.log('🔍 SimplifiedCampaignCreator Auto-download check:', {
+        jobStatus: generationJob?.status,
+        autoDownloadTriggered,
+        shouldTrigger: generationJob?.status === 'completed' && !autoDownloadTriggered
+      });
+      
+      if (generationJob?.status === 'completed' && !autoDownloadTriggered) {
+        console.log('🚀 SimplifiedCampaignCreator Triggering auto-download!');
+        setAutoDownloadTriggered(true);
+        setIsDownloading(true);
+        
+        // Small delay for better UX
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        try {
+          const response = await mockApi.downloadGeneratedFile(generationJob.id);
+          if (response.success && response.data) {
+            // Cache the blob in the generated files list
+            setGeneratedFiles((prev) =>
+              prev.map((f) =>
+                f.jobId === generationJob.id ? { ...f, blob: response.data } : f
+              )
+            );
+            
+            const url = URL.createObjectURL(response.data);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = generationJob.options?.fileName || "Campaign_Export.csv";
+            link.click();
+            URL.revokeObjectURL(url);
+            
+            setDownloadSuccess(true);
+            console.log('✅ SimplifiedCampaignCreator Auto-download completed successfully!');
+            // Reset success state after animation
+            setTimeout(() => setDownloadSuccess(false), 3000);
+          }
+        } catch (error) {
+          console.error('Auto-download error:', error);
+        } finally {
+          setIsDownloading(false);
+        }
+      }
+    };
+
+    // Start polling if we have an active job
+    if (generationJob && (generationJob.status === 'pending' || generationJob.status === 'processing')) {
+      pollInterval = setInterval(pollJobStatus, 500); // Poll every 500ms
+    }
+
+    // Trigger auto-download if job is completed
+    if (generationJob?.status === 'completed') {
+      triggerAutoDownload();
+    }
+
+    // Cleanup
+    return () => {
+      if (pollInterval) {
+        clearInterval(pollInterval);
+      }
+    };
+  }, [generationJob?.status, generationJob?.id, autoDownloadTriggered, generationJob?.options?.fileName]);
 
   // Filtered and selected locations
   const filteredLocations = useMemo(() => {
@@ -474,6 +564,7 @@ const SimplifiedCampaignCreator: React.FC = () => {
   const handleDownloadCSV = async () => {
     if (!generationJob) return;
 
+    setIsDownloading(true);
     try {
       const response = await mockApi.downloadGeneratedFile(generationJob.id);
       if (response.success && response.data) {
@@ -491,10 +582,16 @@ const SimplifiedCampaignCreator: React.FC = () => {
           generationJob.options?.fileName || "Campaign_Export.csv";
         link.click();
         URL.revokeObjectURL(url);
+        
+        setDownloadSuccess(true);
+        // Reset success state after animation
+        setTimeout(() => setDownloadSuccess(false), 3000);
       }
     } catch (err) {
       setError("Failed to download CSV");
       console.error("Download error:", err);
+    } finally {
+      setIsDownloading(false);
     }
   };
 
@@ -747,13 +844,45 @@ const SimplifiedCampaignCreator: React.FC = () => {
                       </p>
                     </div>
                   </div>
-                  <button
+                  <motion.button
                     onClick={handleDownloadCSV}
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-green-600 text-white font-semibold rounded-xl shadow-lg transition-all duration-300 hover:bg-green-700 hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                    disabled={isDownloading}
+                    whileHover={{ scale: downloadSuccess ? 1 : isDownloading ? 1 : 1.05 }}
+                    whileTap={{ scale: downloadSuccess ? 1 : isDownloading ? 1 : 0.95 }}
+                    animate={downloadSuccess ? { 
+                      scale: [1, 1.1, 1],
+                      rotate: [0, 5, -5, 0]
+                    } : {}}
+                    transition={{ duration: 0.5 }}
+                    className={`inline-flex items-center gap-2 px-6 py-3 font-semibold rounded-xl shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                      downloadSuccess 
+                        ? 'bg-emerald-600 text-white ring-emerald-500 hover:bg-emerald-700'
+                        : isDownloading
+                        ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white ring-indigo-500 opacity-75 cursor-not-allowed'
+                        : 'bg-green-600 text-white ring-green-500 hover:bg-green-700'
+                    }`}
                   >
-                    <DocumentArrowDownIcon className="w-4 h-4" />
-                    Download CSV
-                  </button>
+                    {downloadSuccess ? (
+                      <>
+                        <CheckCircleIcon className="w-4 h-4" />
+                        Downloaded!
+                      </>
+                    ) : isDownloading ? (
+                      <>
+                        <motion.div
+                          animate={{ rotate: 360 }}
+                          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                          className="w-4 h-4 border-2 border-white border-t-transparent rounded-full"
+                        />
+                        Downloading...
+                      </>
+                    ) : (
+                      <>
+                        <DocumentArrowDownIcon className="w-4 h-4" />
+                        Download CSV
+                      </>
+                    )}
+                  </motion.button>
                 </div>
               </div>
             )}
