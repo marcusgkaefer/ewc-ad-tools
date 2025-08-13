@@ -33,6 +33,7 @@
     "react-hot-toast": "^2.5.2",
     "react-router-dom": "^7.7.0",
     "tailwind-merge": "^2.5.4",
+    "uuid": "^11.1.0",
     "zod": "^3.25.68",
     "zustand": "^5.0.6"
   },

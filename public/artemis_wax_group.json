@@ -481,9 +481,9 @@
         "short_name": "NY"
       },
       "location": {
-        "lattitude": 41.4550012,
-        "latitude": 41.4550012,
-        "longitude": -74.3788477,
+        "lattitude": 41.45503,
+        "latitude": 41.45503,
+        "longitude": -74.378246,
         "time_zone": {
           "id": 15,
           "name": "(UTC-05:00) Eastern Time (US & Canada)",
@@ -1246,9 +1246,9 @@
         "short_name": "NJ"
       },
       "location": {
-        "lattitude": 39.8482901065881,
-        "latitude": 39.8482901065881,
-        "longitude": -74.9772456576719,
+        "lattitude": 39.847727,
+        "latitude": 39.847727,
+        "longitude": -74.977457,
         "time_zone": {
           "id": 15,
           "name": "(UTC-05:00) Eastern Time (US & Canada)",
@@ -1705,9 +1705,9 @@
         "short_name": "MD"
       },
       "location": {
-        "lattitude": 39.055759,
-        "latitude": 39.055759,
-        "longitude": -76.969314,
+        "lattitude": 39.055468,
+        "latitude": 39.055468,
+        "longitude": -76.969793,
         "time_zone": {
           "id": 15,
           "name": "(UTC-05:00) Eastern Time (US & Canada)",
@@ -5530,9 +5530,9 @@
         "short_name": "MD"
       },
       "location": {
-        "lattitude": 39.2991302349219,
-        "latitude": 39.2991302349219,
-        "longitude": -76.8975193014372,
+        "lattitude": 39.298904,
+        "latitude": 39.298904,
+        "longitude": -76.897495,
         "time_zone": {
           "id": 15,
           "name": "(UTC-05:00) Eastern Time (US & Canada)",
@@ -5683,9 +5683,9 @@
         "short_name": "CT"
       },
       "location": {
-        "lattitude": 41.6136889720528,
-        "latitude": 41.6136889720528,
-        "longitude": -72.9008116847589,
+        "lattitude": 41.613894,
+        "latitude": 41.613894,
+        "longitude": -72.900435,
         "time_zone": {
           "id": 15,
           "name": "(UTC-05:00) Eastern Time (US & Canada)",
@@ -5836,9 +5836,9 @@
         "short_name": "PA"
       },
       "location": {
-        "lattitude": 39.9653997555096,
-        "latitude": 39.9653997555096,
-        "longitude": -75.5268263715709,
+        "lattitude": 39.965288,
+        "latitude": 39.965288,
+        "longitude": -75.525609,
         "time_zone": {
           "id": 15,
           "name": "(UTC-05:00) Eastern Time (US & Canada)",
@@ -5989,9 +5989,9 @@
         "short_name": "GA"
       },
       "location": {
-        "lattitude": 33.3949749901334,
-        "latitude": 33.3949749901334,
-        "longitude": -84.5909182725389,
+        "lattitude": 33.394728,
+        "latitude": 33.394728,
+        "longitude": -84.590923,
         "time_zone": {
           "id": 15,
           "name": "(UTC-05:00) Eastern Time (US & Canada)",
@@ -6142,9 +6142,9 @@
         "short_name": "PA"
       },
       "location": {
-        "lattitude": 40.0013866,
-        "latitude": 40.0013866,
-        "longitude": -75.2732167,
+        "lattitude": 40.001377,
+        "latitude": 40.001377,
+        "longitude": -75.273288,
         "time_zone": {
           "id": 15,
           "name": "(UTC-05:00) Eastern Time (US & Canada)",
@@ -6295,9 +6295,9 @@
         "short_name": "GA"
       },
       "location": {
-        "lattitude": 33.3899143968944,
-        "latitude": 33.3899143968944,
-        "longitude": -84.7642337,
+        "lattitude": 33.38951,
+        "latitude": 33.38951,
+        "longitude": -84.765068,
         "time_zone": {
           "id": 15,
           "name": "(UTC-05:00) Eastern Time (US & Canada)",
@@ -6448,9 +6448,9 @@
         "short_name": "CT"
       },
       "location": {
-        "lattitude": 41.4789843313008,
-        "latitude": 41.4789843313008,
-        "longitude": -73.2126272516655,
+        "lattitude": 41.479084,
+        "latitude": 41.479084,
+        "longitude": -73.212456,
         "time_zone": {
           "id": 15,
           "name": "(UTC-05:00) Eastern Time (US & Canada)",
@@ -6601,9 +6601,9 @@
         "short_name": "PA"
       },
       "location": {
-        "lattitude": 40.0634417,
-        "latitude": 40.0634417,
-        "longitude": -75.2381398,
+        "lattitude": 40.064319,
+        "latitude": 40.064319,
+        "longitude": -75.236768,
         "time_zone": {
           "id": 15,
           "name": "(UTC-05:00) Eastern Time (US & Canada)",
@@ -6731,11 +6731,2459 @@
       "is_fbe_enabled": false,
       "is_hc_call_center": false,
       "landing_page_url": "https://locations.waxcenter.com/pa/philadelphia/philadelphia-andorra-shopping-center-1145.html"
+    },
+    {
+      "id": "ee45875d-148d-4fdc-8588-462385bcd4f8",
+      "code": "0062",
+      "name": "Stony Brook - 0062",
+      "display_name": "Stony Brook",
+      "description": "",
+      "online_booking_start_date": "2020-01-27T00:00:00",
+      "enable_parallel_services_at_center": true,
+      "country": {
+        "id": 225,
+        "code": "US",
+        "name": "United States",
+        "phone_code": 1,
+        "nationality": "American"
+      },
+      "state": {
+        "id": 67,
+        "code": "US36",
+        "name": "New York",
+        "short_name": "NY"
+      },
+      "location": {
+        "lattitude": 40.873667,
+        "latitude": 40.873667,
+        "longitude": -73.12618,
+        "time_zone": {
+          "id": 15,
+          "name": "(UTC-05:00) Eastern Time (US & Canada)",
+          "standard_name": "Eastern Standard Time",
+          "symbol": "Eastern Standard Time"
+        }
+      },
+      "currency": {
+        "id": 148,
+        "name": "United States Dollar",
+        "code": "USD",
+        "symbol": "0024"
+      },
+      "address_info": {
+        "address_1": "",
+        "address_2": "",
+        "city": "Stony Brook",
+        "zip_code": ""
+      },
+      "settings": null,
+      "contact_info": {
+        "phone_1": {
+          "country_id": 225,
+          "number": "",
+          "display_number": ""
+        },
+        "phone_2": null,
+        "email": ""
+      },
+      "working_hours": [
+        {
+          "day_of_week": "Monday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Tuesday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Wednesday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Thursday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Friday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Saturday",
+          "start_time": "800",
+          "end_time": "1800",
+          "offline_start_time": "800",
+          "offline_end_time": "1800",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "1800",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Sunday",
+          "start_time": "800",
+          "end_time": "1800",
+          "offline_start_time": "800",
+          "offline_end_time": "1800",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "1800",
+          "is_closed": false
+        }
+      ],
+      "additional_info": {
+        "service_tax_no": null,
+        "tin": null,
+        "vat": null,
+        "cst": null,
+        "can_book": false,
+        "collect_feedback": null,
+        "services_available": false,
+        "available_services": null,
+        "unavailable_services": null,
+        "categories_available": false,
+        "available_categories": null,
+        "unavailable_categories": null,
+        "is_add_ons_available": false,
+        "feedback_link": null,
+        "feedback_label": null,
+        "is_global_tokenization_supported": false,
+        "is_auto_pay_enabled_at_center": false,
+        "cancellation_fee_duration": -1,
+        "is_center_amenities_enabled": false,
+        "center_amenities": "{\"centerAmenitiesSection\":[],\"order\":[]}"
+      },
+      "culture_code_at_center": "en-US",
+      "is_fbe_enabled": false,
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/ny/stony-brook/stony-brook-0062.html"
+    },
+    {
+      "id": "69f68696-343e-4e64-b184-b0ae32b6ae35",
+      "code": "0119",
+      "name": "Greenvale - 0119",
+      "display_name": "Greenvale",
+      "description": "",
+      "online_booking_start_date": "2020-01-27T00:00:00",
+      "enable_parallel_services_at_center": true,
+      "country": {
+        "id": 225,
+        "code": "US",
+        "name": "United States",
+        "phone_code": 1,
+        "nationality": "American"
+      },
+      "state": {
+        "id": 67,
+        "code": "US36",
+        "name": "New York",
+        "short_name": "NY"
+      },
+      "location": {
+        "lattitude": 40.807443,
+        "latitude": 40.807443,
+        "longitude": -73.627249,
+        "time_zone": {
+          "id": 15,
+          "name": "(UTC-05:00) Eastern Time (US & Canada)",
+          "standard_name": "Eastern Standard Time",
+          "symbol": "Eastern Standard Time"
+        }
+      },
+      "currency": {
+        "id": 148,
+        "name": "United States Dollar",
+        "code": "USD",
+        "symbol": "0024"
+      },
+      "address_info": {
+        "address_1": "",
+        "address_2": "",
+        "city": "Greenvale",
+        "zip_code": ""
+      },
+      "settings": null,
+      "contact_info": {
+        "phone_1": {
+          "country_id": 225,
+          "number": "",
+          "display_number": ""
+        },
+        "phone_2": null,
+        "email": ""
+      },
+      "working_hours": [
+        {
+          "day_of_week": "Monday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Tuesday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Wednesday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Thursday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Friday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Saturday",
+          "start_time": "800",
+          "end_time": "1800",
+          "offline_start_time": "800",
+          "offline_end_time": "1800",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "1800",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Sunday",
+          "start_time": "800",
+          "end_time": "1800",
+          "offline_start_time": "800",
+          "offline_end_time": "1800",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "1800",
+          "is_closed": false
+        }
+      ],
+      "additional_info": {
+        "service_tax_no": null,
+        "tin": null,
+        "vat": null,
+        "cst": null,
+        "can_book": false,
+        "collect_feedback": null,
+        "services_available": false,
+        "available_services": null,
+        "unavailable_services": null,
+        "categories_available": false,
+        "available_categories": null,
+        "unavailable_categories": null,
+        "is_add_ons_available": false,
+        "feedback_link": null,
+        "feedback_label": null,
+        "is_global_tokenization_supported": false,
+        "is_auto_pay_enabled_at_center": false,
+        "cancellation_fee_duration": -1,
+        "is_center_amenities_enabled": false,
+        "center_amenities": "{\"centerAmenitiesSection\":[],\"order\":[]}"
+      },
+      "culture_code_at_center": "en-US",
+      "is_fbe_enabled": false,
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/ny/greenvale/greenvale-0119.html"
+    },
+    {
+      "id": "62bb3da5-af50-4b65-bdda-da53f1c70c77",
+      "code": "0218",
+      "name": "Miller Place - 0218",
+      "display_name": "Miller Place",
+      "description": "",
+      "online_booking_start_date": "2020-01-27T00:00:00",
+      "enable_parallel_services_at_center": true,
+      "country": {
+        "id": 225,
+        "code": "US",
+        "name": "United States",
+        "phone_code": 1,
+        "nationality": "American"
+      },
+      "state": {
+        "id": 67,
+        "code": "US36",
+        "name": "New York",
+        "short_name": "NY"
+      },
+      "location": {
+        "lattitude": 40.941742,
+        "latitude": 40.941742,
+        "longitude": -72.987731,
+        "time_zone": {
+          "id": 15,
+          "name": "(UTC-05:00) Eastern Time (US & Canada)",
+          "standard_name": "Eastern Standard Time",
+          "symbol": "Eastern Standard Time"
+        }
+      },
+      "currency": {
+        "id": 148,
+        "name": "United States Dollar",
+        "code": "USD",
+        "symbol": "0024"
+      },
+      "address_info": {
+        "address_1": "",
+        "address_2": "",
+        "city": "Miller Place",
+        "zip_code": ""
+      },
+      "settings": null,
+      "contact_info": {
+        "phone_1": {
+          "country_id": 225,
+          "number": "",
+          "display_number": ""
+        },
+        "phone_2": null,
+        "email": ""
+      },
+      "working_hours": [
+        {
+          "day_of_week": "Monday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Tuesday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Wednesday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Thursday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Friday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Saturday",
+          "start_time": "800",
+          "end_time": "1800",
+          "offline_start_time": "800",
+          "offline_end_time": "1800",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "1800",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Sunday",
+          "start_time": "800",
+          "end_time": "1800",
+          "offline_start_time": "800",
+          "offline_end_time": "1800",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "1800",
+          "is_closed": false
+        }
+      ],
+      "additional_info": {
+        "service_tax_no": null,
+        "tin": null,
+        "vat": null,
+        "cst": null,
+        "can_book": false,
+        "collect_feedback": null,
+        "services_available": false,
+        "available_services": null,
+        "unavailable_services": null,
+        "categories_available": false,
+        "available_categories": null,
+        "unavailable_categories": null,
+        "is_add_ons_available": false,
+        "feedback_link": null,
+        "feedback_label": null,
+        "is_global_tokenization_supported": false,
+        "is_auto_pay_enabled_at_center": false,
+        "cancellation_fee_duration": -1,
+        "is_center_amenities_enabled": false,
+        "center_amenities": "{\"centerAmenitiesSection\":[],\"order\":[]}"
+      },
+      "culture_code_at_center": "en-US",
+      "is_fbe_enabled": false,
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/ny/miller-place/miller-place-0218.html"
+    },
+    {
+      "id": "7ebfc680-0234-4965-90f5-2e0010d832e7",
+      "code": "0219",
+      "name": "Oceanside - Long Beach Road - 0219",
+      "display_name": "Oceanside - Long Beach Road",
+      "description": "",
+      "online_booking_start_date": "2020-01-27T00:00:00",
+      "enable_parallel_services_at_center": true,
+      "country": {
+        "id": 225,
+        "code": "US",
+        "name": "United States",
+        "phone_code": 1,
+        "nationality": "American"
+      },
+      "state": {
+        "id": 67,
+        "code": "US36",
+        "name": "New York",
+        "short_name": "NY"
+      },
+      "location": {
+        "lattitude": 40.642849,
+        "latitude": 40.642849,
+        "longitude": -73.640339,
+        "time_zone": {
+          "id": 15,
+          "name": "(UTC-05:00) Eastern Time (US & Canada)",
+          "standard_name": "Eastern Standard Time",
+          "symbol": "Eastern Standard Time"
+        }
+      },
+      "currency": {
+        "id": 148,
+        "name": "United States Dollar",
+        "code": "USD",
+        "symbol": "0024"
+      },
+      "address_info": {
+        "address_1": "",
+        "address_2": "",
+        "city": "Oceanside",
+        "zip_code": ""
+      },
+      "settings": null,
+      "contact_info": {
+        "phone_1": {
+          "country_id": 225,
+          "number": "",
+          "display_number": ""
+        },
+        "phone_2": null,
+        "email": ""
+      },
+      "working_hours": [
+        {
+          "day_of_week": "Monday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Tuesday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Wednesday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Thursday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Friday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Saturday",
+          "start_time": "800",
+          "end_time": "1800",
+          "offline_start_time": "800",
+          "offline_end_time": "1800",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "1800",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Sunday",
+          "start_time": "800",
+          "end_time": "1800",
+          "offline_start_time": "800",
+          "offline_end_time": "1800",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "1800",
+          "is_closed": false
+        }
+      ],
+      "additional_info": {
+        "service_tax_no": null,
+        "tin": null,
+        "vat": null,
+        "cst": null,
+        "can_book": false,
+        "collect_feedback": null,
+        "services_available": false,
+        "available_services": null,
+        "unavailable_services": null,
+        "categories_available": false,
+        "available_categories": null,
+        "unavailable_categories": null,
+        "is_add_ons_available": false,
+        "feedback_link": null,
+        "feedback_label": null,
+        "is_global_tokenization_supported": false,
+        "is_auto_pay_enabled_at_center": false,
+        "cancellation_fee_duration": -1,
+        "is_center_amenities_enabled": false,
+        "center_amenities": "{\"centerAmenitiesSection\":[],\"order\":[]}"
+      },
+      "culture_code_at_center": "en-US",
+      "is_fbe_enabled": false,
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/ny/oceanside/oceanside---long-beach-road-0219.html"
+    },
+    {
+      "id": "2b2a6b33-37d2-4682-b65a-23fcaa7d0eac",
+      "code": "0261",
+      "name": "Garden City - 0261",
+      "display_name": "Garden City",
+      "description": "",
+      "online_booking_start_date": "2020-01-27T00:00:00",
+      "enable_parallel_services_at_center": true,
+      "country": {
+        "id": 225,
+        "code": "US",
+        "name": "United States",
+        "phone_code": 1,
+        "nationality": "American"
+      },
+      "state": {
+        "id": 67,
+        "code": "US36",
+        "name": "New York",
+        "short_name": "NY"
+      },
+      "location": {
+        "lattitude": 40.731789,
+        "latitude": 40.731789,
+        "longitude": -73.608419,
+        "time_zone": {
+          "id": 15,
+          "name": "(UTC-05:00) Eastern Time (US & Canada)",
+          "standard_name": "Eastern Standard Time",
+          "symbol": "Eastern Standard Time"
+        }
+      },
+      "currency": {
+        "id": 148,
+        "name": "United States Dollar",
+        "code": "USD",
+        "symbol": "0024"
+      },
+      "address_info": {
+        "address_1": "",
+        "address_2": "",
+        "city": "Garden City",
+        "zip_code": ""
+      },
+      "settings": null,
+      "contact_info": {
+        "phone_1": {
+          "country_id": 225,
+          "number": "",
+          "display_number": ""
+        },
+        "phone_2": null,
+        "email": ""
+      },
+      "working_hours": [
+        {
+          "day_of_week": "Monday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Tuesday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Wednesday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Thursday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Friday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Saturday",
+          "start_time": "800",
+          "end_time": "1800",
+          "offline_start_time": "800",
+          "offline_end_time": "1800",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "1800",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Sunday",
+          "start_time": "800",
+          "end_time": "1800",
+          "offline_start_time": "800",
+          "offline_end_time": "1800",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "1800",
+          "is_closed": false
+        }
+      ],
+      "additional_info": {
+        "service_tax_no": null,
+        "tin": null,
+        "vat": null,
+        "cst": null,
+        "can_book": false,
+        "collect_feedback": null,
+        "services_available": false,
+        "available_services": null,
+        "unavailable_services": null,
+        "categories_available": false,
+        "available_categories": null,
+        "unavailable_categories": null,
+        "is_add_ons_available": false,
+        "feedback_link": null,
+        "feedback_label": null,
+        "is_global_tokenization_supported": false,
+        "is_auto_pay_enabled_at_center": false,
+        "cancellation_fee_duration": -1,
+        "is_center_amenities_enabled": false,
+        "center_amenities": "{\"centerAmenitiesSection\":[],\"order\":[]}"
+      },
+      "culture_code_at_center": "en-US",
+      "is_fbe_enabled": false,
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/ny/garden-city/garden-city-0261.html"
+    },
+    {
+      "id": "08183e9e-a407-4899-8a20-553faa74ca3b",
+      "code": "0329",
+      "name": "Huntington - Green Street - 0329",
+      "display_name": "Huntington - Green Street",
+      "description": "",
+      "online_booking_start_date": "2020-01-27T00:00:00",
+      "enable_parallel_services_at_center": true,
+      "country": {
+        "id": 225,
+        "code": "US",
+        "name": "United States",
+        "phone_code": 1,
+        "nationality": "American"
+      },
+      "state": {
+        "id": 67,
+        "code": "US36",
+        "name": "New York",
+        "short_name": "NY"
+      },
+      "location": {
+        "lattitude": 40.870186,
+        "latitude": 40.870186,
+        "longitude": -73.428674,
+        "time_zone": {
+          "id": 15,
+          "name": "(UTC-05:00) Eastern Time (US & Canada)",
+          "standard_name": "Eastern Standard Time",
+          "symbol": "Eastern Standard Time"
+        }
+      },
+      "currency": {
+        "id": 148,
+        "name": "United States Dollar",
+        "code": "USD",
+        "symbol": "0024"
+      },
+      "address_info": {
+        "address_1": "",
+        "address_2": "",
+        "city": "Huntington",
+        "zip_code": ""
+      },
+      "settings": null,
+      "contact_info": {
+        "phone_1": {
+          "country_id": 225,
+          "number": "",
+          "display_number": ""
+        },
+        "phone_2": null,
+        "email": ""
+      },
+      "working_hours": [
+        {
+          "day_of_week": "Monday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Tuesday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Wednesday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Thursday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Friday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Saturday",
+          "start_time": "800",
+          "end_time": "1800",
+          "offline_start_time": "800",
+          "offline_end_time": "1800",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "1800",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Sunday",
+          "start_time": "800",
+          "end_time": "1800",
+          "offline_start_time": "800",
+          "offline_end_time": "1800",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "1800",
+          "is_closed": false
+        }
+      ],
+      "additional_info": {
+        "service_tax_no": null,
+        "tin": null,
+        "vat": null,
+        "cst": null,
+        "can_book": false,
+        "collect_feedback": null,
+        "services_available": false,
+        "available_services": null,
+        "unavailable_services": null,
+        "categories_available": false,
+        "available_categories": null,
+        "unavailable_categories": null,
+        "is_add_ons_available": false,
+        "feedback_link": null,
+        "feedback_label": null,
+        "is_global_tokenization_supported": false,
+        "is_auto_pay_enabled_at_center": false,
+        "cancellation_fee_duration": -1,
+        "is_center_amenities_enabled": false,
+        "center_amenities": "{\"centerAmenitiesSection\":[],\"order\":[]}"
+      },
+      "culture_code_at_center": "en-US",
+      "is_fbe_enabled": false,
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/ny/huntington/huntington---green-street-0329.html"
+    },
+    {
+      "id": "554a76ca-9150-45e7-9fca-2291a4235ada",
+      "code": "0336",
+      "name": "West Babylon - 0336",
+      "display_name": "West Babylon",
+      "description": "",
+      "online_booking_start_date": "2020-01-27T00:00:00",
+      "enable_parallel_services_at_center": true,
+      "country": {
+        "id": 225,
+        "code": "US",
+        "name": "United States",
+        "phone_code": 1,
+        "nationality": "American"
+      },
+      "state": {
+        "id": 67,
+        "code": "US36",
+        "name": "New York",
+        "short_name": "NY"
+      },
+      "location": {
+        "lattitude": 40.684631,
+        "latitude": 40.684631,
+        "longitude": -73.351272,
+        "time_zone": {
+          "id": 15,
+          "name": "(UTC-05:00) Eastern Time (US & Canada)",
+          "standard_name": "Eastern Standard Time",
+          "symbol": "Eastern Standard Time"
+        }
+      },
+      "currency": {
+        "id": 148,
+        "name": "United States Dollar",
+        "code": "USD",
+        "symbol": "0024"
+      },
+      "address_info": {
+        "address_1": "",
+        "address_2": "",
+        "city": "West Babylon",
+        "zip_code": ""
+      },
+      "settings": null,
+      "contact_info": {
+        "phone_1": {
+          "country_id": 225,
+          "number": "",
+          "display_number": ""
+        },
+        "phone_2": null,
+        "email": ""
+      },
+      "working_hours": [
+        {
+          "day_of_week": "Monday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Tuesday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Wednesday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Thursday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Friday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Saturday",
+          "start_time": "800",
+          "end_time": "1800",
+          "offline_start_time": "800",
+          "offline_end_time": "1800",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "1800",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Sunday",
+          "start_time": "800",
+          "end_time": "1800",
+          "offline_start_time": "800",
+          "offline_end_time": "1800",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "1800",
+          "is_closed": false
+        }
+      ],
+      "additional_info": {
+        "service_tax_no": null,
+        "tin": null,
+        "vat": null,
+        "cst": null,
+        "can_book": false,
+        "collect_feedback": null,
+        "services_available": false,
+        "available_services": null,
+        "unavailable_services": null,
+        "categories_available": false,
+        "available_categories": null,
+        "unavailable_categories": null,
+        "is_add_ons_available": false,
+        "feedback_link": null,
+        "feedback_label": null,
+        "is_global_tokenization_supported": false,
+        "is_auto_pay_enabled_at_center": false,
+        "cancellation_fee_duration": -1,
+        "is_center_amenities_enabled": false,
+        "center_amenities": "{\"centerAmenitiesSection\":[],\"order\":[]}"
+      },
+      "culture_code_at_center": "en-US",
+      "is_fbe_enabled": false,
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/ny/west-babylon/west-babylon-0336.html"
+    },
+    {
+      "id": "f576b6f7-29d7-4f50-a042-8a628e63481a",
+      "code": "0342",
+      "name": "Patchogue - 0342",
+      "display_name": "Patchogue",
+      "description": "",
+      "online_booking_start_date": "2020-01-27T00:00:00",
+      "enable_parallel_services_at_center": true,
+      "country": {
+        "id": 225,
+        "code": "US",
+        "name": "United States",
+        "phone_code": 1,
+        "nationality": "American"
+      },
+      "state": {
+        "id": 67,
+        "code": "US36",
+        "name": "New York",
+        "short_name": "NY"
+      },
+      "location": {
+        "lattitude": 40.777449,
+        "latitude": 40.777449,
+        "longitude": -73.036604,
+        "time_zone": {
+          "id": 15,
+          "name": "(UTC-05:00) Eastern Time (US & Canada)",
+          "standard_name": "Eastern Standard Time",
+          "symbol": "Eastern Standard Time"
+        }
+      },
+      "currency": {
+        "id": 148,
+        "name": "United States Dollar",
+        "code": "USD",
+        "symbol": "0024"
+      },
+      "address_info": {
+        "address_1": "",
+        "address_2": "",
+        "city": "Patchogue",
+        "zip_code": ""
+      },
+      "settings": null,
+      "contact_info": {
+        "phone_1": {
+          "country_id": 225,
+          "number": "",
+          "display_number": ""
+        },
+        "phone_2": null,
+        "email": ""
+      },
+      "working_hours": [
+        {
+          "day_of_week": "Monday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Tuesday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Wednesday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Thursday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Friday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Saturday",
+          "start_time": "800",
+          "end_time": "1800",
+          "offline_start_time": "800",
+          "offline_end_time": "1800",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "1800",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Sunday",
+          "start_time": "800",
+          "end_time": "1800",
+          "offline_start_time": "800",
+          "offline_end_time": "1800",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "1800",
+          "is_closed": false
+        }
+      ],
+      "additional_info": {
+        "service_tax_no": null,
+        "tin": null,
+        "vat": null,
+        "cst": null,
+        "can_book": false,
+        "collect_feedback": null,
+        "services_available": false,
+        "available_services": null,
+        "unavailable_services": null,
+        "categories_available": false,
+        "available_categories": null,
+        "unavailable_categories": null,
+        "is_add_ons_available": false,
+        "feedback_link": null,
+        "feedback_label": null,
+        "is_global_tokenization_supported": false,
+        "is_auto_pay_enabled_at_center": false,
+        "cancellation_fee_duration": -1,
+        "is_center_amenities_enabled": false,
+        "center_amenities": "{\"centerAmenitiesSection\":[],\"order\":[]}"
+      },
+      "culture_code_at_center": "en-US",
+      "is_fbe_enabled": false,
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/ny/patchogue/patchogue-0342.html"
+    },
+    {
+      "id": "ffbb9111-856f-446a-a3ce-66fa46238544",
+      "code": "0418",
+      "name": "Rego Park - 0418",
+      "display_name": "Rego Park",
+      "description": "",
+      "online_booking_start_date": "2020-01-27T00:00:00",
+      "enable_parallel_services_at_center": true,
+      "country": {
+        "id": 225,
+        "code": "US",
+        "name": "United States",
+        "phone_code": 1,
+        "nationality": "American"
+      },
+      "state": {
+        "id": 67,
+        "code": "US36",
+        "name": "New York",
+        "short_name": "NY"
+      },
+      "location": {
+        "lattitude": 40.73333,
+        "latitude": 40.73333,
+        "longitude": -73.863572,
+        "time_zone": {
+          "id": 15,
+          "name": "(UTC-05:00) Eastern Time (US & Canada)",
+          "standard_name": "Eastern Standard Time",
+          "symbol": "Eastern Standard Time"
+        }
+      },
+      "currency": {
+        "id": 148,
+        "name": "United States Dollar",
+        "code": "USD",
+        "symbol": "0024"
+      },
+      "address_info": {
+        "address_1": "",
+        "address_2": "",
+        "city": "Rego Park",
+        "zip_code": ""
+      },
+      "settings": null,
+      "contact_info": {
+        "phone_1": {
+          "country_id": 225,
+          "number": "",
+          "display_number": ""
+        },
+        "phone_2": null,
+        "email": ""
+      },
+      "working_hours": [
+        {
+          "day_of_week": "Monday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Tuesday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Wednesday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Thursday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Friday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Saturday",
+          "start_time": "800",
+          "end_time": "1800",
+          "offline_start_time": "800",
+          "offline_end_time": "1800",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "1800",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Sunday",
+          "start_time": "800",
+          "end_time": "1800",
+          "offline_start_time": "800",
+          "offline_end_time": "1800",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "1800",
+          "is_closed": false
+        }
+      ],
+      "additional_info": {
+        "service_tax_no": null,
+        "tin": null,
+        "vat": null,
+        "cst": null,
+        "can_book": false,
+        "collect_feedback": null,
+        "services_available": false,
+        "available_services": null,
+        "unavailable_services": null,
+        "categories_available": false,
+        "available_categories": null,
+        "unavailable_categories": null,
+        "is_add_ons_available": false,
+        "feedback_link": null,
+        "feedback_label": null,
+        "is_global_tokenization_supported": false,
+        "is_auto_pay_enabled_at_center": false,
+        "cancellation_fee_duration": -1,
+        "is_center_amenities_enabled": false,
+        "center_amenities": "{\"centerAmenitiesSection\":[],\"order\":[]}"
+      },
+      "culture_code_at_center": "en-US",
+      "is_fbe_enabled": false,
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/ny/rego-park/rego-park-0418.html"
+    },
+    {
+      "id": "709fab13-a570-4363-9930-0e8f9e012bc6",
+      "code": "0419",
+      "name": "Long Island City - 0419",
+      "display_name": "Long Island City",
+      "description": "",
+      "online_booking_start_date": "2020-01-27T00:00:00",
+      "enable_parallel_services_at_center": true,
+      "country": {
+        "id": 225,
+        "code": "US",
+        "name": "United States",
+        "phone_code": 1,
+        "nationality": "American"
+      },
+      "state": {
+        "id": 67,
+        "code": "US36",
+        "name": "New York",
+        "short_name": "NY"
+      },
+      "location": {
+        "lattitude": 40.7480973,
+        "latitude": 40.7480973,
+        "longitude": -73.9564142,
+        "time_zone": {
+          "id": 15,
+          "name": "(UTC-05:00) Eastern Time (US & Canada)",
+          "standard_name": "Eastern Standard Time",
+          "symbol": "Eastern Standard Time"
+        }
+      },
+      "currency": {
+        "id": 148,
+        "name": "United States Dollar",
+        "code": "USD",
+        "symbol": "0024"
+      },
+      "address_info": {
+        "address_1": "",
+        "address_2": "",
+        "city": "Long Island City",
+        "zip_code": ""
+      },
+      "settings": null,
+      "contact_info": {
+        "phone_1": {
+          "country_id": 225,
+          "number": "",
+          "display_number": ""
+        },
+        "phone_2": null,
+        "email": ""
+      },
+      "working_hours": [
+        {
+          "day_of_week": "Monday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Tuesday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Wednesday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Thursday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Friday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Saturday",
+          "start_time": "800",
+          "end_time": "1800",
+          "offline_start_time": "800",
+          "offline_end_time": "1800",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "1800",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Sunday",
+          "start_time": "800",
+          "end_time": "1800",
+          "offline_start_time": "800",
+          "offline_end_time": "1800",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "1800",
+          "is_closed": false
+        }
+      ],
+      "additional_info": {
+        "service_tax_no": null,
+        "tin": null,
+        "vat": null,
+        "cst": null,
+        "can_book": false,
+        "collect_feedback": null,
+        "services_available": false,
+        "available_services": null,
+        "unavailable_services": null,
+        "categories_available": false,
+        "available_categories": null,
+        "unavailable_categories": null,
+        "is_add_ons_available": false,
+        "feedback_link": null,
+        "feedback_label": null,
+        "is_global_tokenization_supported": false,
+        "is_auto_pay_enabled_at_center": false,
+        "cancellation_fee_duration": -1,
+        "is_center_amenities_enabled": false,
+        "center_amenities": "{\"centerAmenitiesSection\":[],\"order\":[]}"
+      },
+      "culture_code_at_center": "en-US",
+      "is_fbe_enabled": false,
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/ny/long-island-city/long-island-city-0419.html"
+    },
+    {
+      "id": "a87ee082-f09e-4b01-83bb-3fb4caa0dafe",
+      "code": "0477",
+      "name": "Great Neck - 0477",
+      "display_name": "Great Neck",
+      "description": "",
+      "online_booking_start_date": "2020-01-27T00:00:00",
+      "enable_parallel_services_at_center": true,
+      "country": {
+        "id": 225,
+        "code": "US",
+        "name": "United States",
+        "phone_code": 1,
+        "nationality": "American"
+      },
+      "state": {
+        "id": 67,
+        "code": "US36",
+        "name": "New York",
+        "short_name": "NY"
+      },
+      "location": {
+        "lattitude": 40.7858,
+        "latitude": 40.7858,
+        "longitude": -73.726102,
+        "time_zone": {
+          "id": 15,
+          "name": "(UTC-05:00) Eastern Time (US & Canada)",
+          "standard_name": "Eastern Standard Time",
+          "symbol": "Eastern Standard Time"
+        }
+      },
+      "currency": {
+        "id": 148,
+        "name": "United States Dollar",
+        "code": "USD",
+        "symbol": "0024"
+      },
+      "address_info": {
+        "address_1": "",
+        "address_2": "",
+        "city": "Great Neck",
+        "zip_code": ""
+      },
+      "settings": null,
+      "contact_info": {
+        "phone_1": {
+          "country_id": 225,
+          "number": "",
+          "display_number": ""
+        },
+        "phone_2": null,
+        "email": ""
+      },
+      "working_hours": [
+        {
+          "day_of_week": "Monday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Tuesday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Wednesday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Thursday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Friday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Saturday",
+          "start_time": "800",
+          "end_time": "1800",
+          "offline_start_time": "800",
+          "offline_end_time": "1800",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "1800",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Sunday",
+          "start_time": "800",
+          "end_time": "1800",
+          "offline_start_time": "800",
+          "offline_end_time": "1800",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "1800",
+          "is_closed": false
+        }
+      ],
+      "additional_info": {
+        "service_tax_no": null,
+        "tin": null,
+        "vat": null,
+        "cst": null,
+        "can_book": false,
+        "collect_feedback": null,
+        "services_available": false,
+        "available_services": null,
+        "unavailable_services": null,
+        "categories_available": false,
+        "available_categories": null,
+        "unavailable_categories": null,
+        "is_add_ons_available": false,
+        "feedback_link": null,
+        "feedback_label": null,
+        "is_global_tokenization_supported": false,
+        "is_auto_pay_enabled_at_center": false,
+        "cancellation_fee_duration": -1,
+        "is_center_amenities_enabled": false,
+        "center_amenities": "{\"centerAmenitiesSection\":[],\"order\":[]}"
+      },
+      "culture_code_at_center": "en-US",
+      "is_fbe_enabled": false,
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/ny/great-neck/great-neck-0477.html"
+    },
+    {
+      "id": "434887bd-cdef-4531-8403-5e641e9adcea",
+      "code": "0523",
+      "name": "Farmingdale - 0523",
+      "display_name": "Farmingdale",
+      "description": "",
+      "online_booking_start_date": "2020-01-27T00:00:00",
+      "enable_parallel_services_at_center": true,
+      "country": {
+        "id": 225,
+        "code": "US",
+        "name": "United States",
+        "phone_code": 1,
+        "nationality": "American"
+      },
+      "state": {
+        "id": 67,
+        "code": "US36",
+        "name": "New York",
+        "short_name": "NY"
+      },
+      "location": {
+        "lattitude": 40.739421,
+        "latitude": 40.739421,
+        "longitude": -73.417248,
+        "time_zone": {
+          "id": 15,
+          "name": "(UTC-05:00) Eastern Time (US & Canada)",
+          "standard_name": "Eastern Standard Time",
+          "symbol": "Eastern Standard Time"
+        }
+      },
+      "currency": {
+        "id": 148,
+        "name": "United States Dollar",
+        "code": "USD",
+        "symbol": "0024"
+      },
+      "address_info": {
+        "address_1": "",
+        "address_2": "",
+        "city": "Farmingdale",
+        "zip_code": ""
+      },
+      "settings": null,
+      "contact_info": {
+        "phone_1": {
+          "country_id": 225,
+          "number": "",
+          "display_number": ""
+        },
+        "phone_2": null,
+        "email": ""
+      },
+      "working_hours": [
+        {
+          "day_of_week": "Monday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Tuesday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Wednesday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Thursday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Friday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Saturday",
+          "start_time": "800",
+          "end_time": "1800",
+          "offline_start_time": "800",
+          "offline_end_time": "1800",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "1800",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Sunday",
+          "start_time": "800",
+          "end_time": "1800",
+          "offline_start_time": "800",
+          "offline_end_time": "1800",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "1800",
+          "is_closed": false
+        }
+      ],
+      "additional_info": {
+        "service_tax_no": null,
+        "tin": null,
+        "vat": null,
+        "cst": null,
+        "can_book": false,
+        "collect_feedback": null,
+        "services_available": false,
+        "available_services": null,
+        "unavailable_services": null,
+        "categories_available": false,
+        "available_categories": null,
+        "unavailable_categories": null,
+        "is_add_ons_available": false,
+        "feedback_link": null,
+        "feedback_label": null,
+        "is_global_tokenization_supported": false,
+        "is_auto_pay_enabled_at_center": false,
+        "cancellation_fee_duration": -1,
+        "is_center_amenities_enabled": false,
+        "center_amenities": "{\"centerAmenitiesSection\":[],\"order\":[]}"
+      },
+      "culture_code_at_center": "en-US",
+      "is_fbe_enabled": false,
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/ny/farmingdale/farmingdale-0523.html"
+    },
+    {
+      "id": "25f7fbc3-4015-4105-808c-16c410c8a763",
+      "code": "0887",
+      "name": "Riverhead - The Shops at Riverhead - 0887",
+      "display_name": "Riverhead - The Shops at Riverhead",
+      "description": "",
+      "online_booking_start_date": "2020-01-27T00:00:00",
+      "enable_parallel_services_at_center": true,
+      "country": {
+        "id": 225,
+        "code": "US",
+        "name": "United States",
+        "phone_code": 1,
+        "nationality": "American"
+      },
+      "state": {
+        "id": 67,
+        "code": "US36",
+        "name": "New York",
+        "short_name": "NY"
+      },
+      "location": {
+        "lattitude": 40.9249697,
+        "latitude": 40.9249697,
+        "longitude": -72.7053502,
+        "time_zone": {
+          "id": 15,
+          "name": "(UTC-05:00) Eastern Time (US & Canada)",
+          "standard_name": "Eastern Standard Time",
+          "symbol": "Eastern Standard Time"
+        }
+      },
+      "currency": {
+        "id": 148,
+        "name": "United States Dollar",
+        "code": "USD",
+        "symbol": "0024"
+      },
+      "address_info": {
+        "address_1": "",
+        "address_2": "",
+        "city": "Riverhead",
+        "zip_code": ""
+      },
+      "settings": null,
+      "contact_info": {
+        "phone_1": {
+          "country_id": 225,
+          "number": "",
+          "display_number": ""
+        },
+        "phone_2": null,
+        "email": ""
+      },
+      "working_hours": [
+        {
+          "day_of_week": "Monday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Tuesday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Wednesday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Thursday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Friday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Saturday",
+          "start_time": "800",
+          "end_time": "1800",
+          "offline_start_time": "800",
+          "offline_end_time": "1800",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "1800",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Sunday",
+          "start_time": "800",
+          "end_time": "1800",
+          "offline_start_time": "800",
+          "offline_end_time": "1800",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "1800",
+          "is_closed": false
+        }
+      ],
+      "additional_info": {
+        "service_tax_no": null,
+        "tin": null,
+        "vat": null,
+        "cst": null,
+        "can_book": false,
+        "collect_feedback": null,
+        "services_available": false,
+        "available_services": null,
+        "unavailable_services": null,
+        "categories_available": false,
+        "available_categories": null,
+        "unavailable_categories": null,
+        "is_add_ons_available": false,
+        "feedback_link": null,
+        "feedback_label": null,
+        "is_global_tokenization_supported": false,
+        "is_auto_pay_enabled_at_center": false,
+        "cancellation_fee_duration": -1,
+        "is_center_amenities_enabled": false,
+        "center_amenities": "{\"centerAmenitiesSection\":[],\"order\":[]}"
+      },
+      "culture_code_at_center": "en-US",
+      "is_fbe_enabled": false,
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/ny/riverhead/riverhead---the-shops-at-riverhead-0887.html"
+    },
+    {
+      "id": "53a3e266-79eb-498d-a811-58dbe0536007",
+      "code": "1167",
+      "name": "Lynbrook - Philips Plaza - 1167",
+      "display_name": "Lynbrook - Philips Plaza",
+      "description": "",
+      "online_booking_start_date": "2020-01-27T00:00:00",
+      "enable_parallel_services_at_center": true,
+      "country": {
+        "id": 225,
+        "code": "US",
+        "name": "United States",
+        "phone_code": 1,
+        "nationality": "American"
+      },
+      "state": {
+        "id": 67,
+        "code": "US36",
+        "name": "New York",
+        "short_name": "NY"
+      },
+      "location": {
+        "lattitude": 40.654621,
+        "latitude": 40.654621,
+        "longitude": -73.675507,
+        "time_zone": {
+          "id": 15,
+          "name": "(UTC-05:00) Eastern Time (US & Canada)",
+          "standard_name": "Eastern Standard Time",
+          "symbol": "Eastern Standard Time"
+        }
+      },
+      "currency": {
+        "id": 148,
+        "name": "United States Dollar",
+        "code": "USD",
+        "symbol": "0024"
+      },
+      "address_info": {
+        "address_1": "",
+        "address_2": "",
+        "city": "Lynbrook",
+        "zip_code": ""
+      },
+      "settings": null,
+      "contact_info": {
+        "phone_1": {
+          "country_id": 225,
+          "number": "",
+          "display_number": ""
+        },
+        "phone_2": null,
+        "email": ""
+      },
+      "working_hours": [
+        {
+          "day_of_week": "Monday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Tuesday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Wednesday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Thursday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Friday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Saturday",
+          "start_time": "800",
+          "end_time": "1800",
+          "offline_start_time": "800",
+          "offline_end_time": "1800",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "1800",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Sunday",
+          "start_time": "800",
+          "end_time": "1800",
+          "offline_start_time": "800",
+          "offline_end_time": "1800",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "1800",
+          "is_closed": false
+        }
+      ],
+      "additional_info": {
+        "service_tax_no": null,
+        "tin": null,
+        "vat": null,
+        "cst": null,
+        "can_book": false,
+        "collect_feedback": null,
+        "services_available": false,
+        "available_services": null,
+        "unavailable_services": null,
+        "categories_available": false,
+        "available_categories": null,
+        "unavailable_categories": null,
+        "is_add_ons_available": false,
+        "feedback_link": null,
+        "feedback_label": null,
+        "is_global_tokenization_supported": false,
+        "is_auto_pay_enabled_at_center": false,
+        "cancellation_fee_duration": -1,
+        "is_center_amenities_enabled": false,
+        "center_amenities": "{\"centerAmenitiesSection\":[],\"order\":[]}"
+      },
+      "culture_code_at_center": "en-US",
+      "is_fbe_enabled": false,
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/ny/lynbrook/lynbrook---philips-plaza-1167.html"
+    },
+    {
+      "id": "61dd12c2-bb90-4c76-a9cc-4bd65c744457",
+      "code": "1433",
+      "name": "Walt Whitman Road - Huntington - 1433",
+      "display_name": "Walt Whitman Road - Huntington",
+      "description": "",
+      "online_booking_start_date": "2020-01-27T00:00:00",
+      "enable_parallel_services_at_center": true,
+      "country": {
+        "id": 225,
+        "code": "US",
+        "name": "United States",
+        "phone_code": 1,
+        "nationality": "American"
+      },
+      "state": {
+        "id": 67,
+        "code": "US36",
+        "name": "New York",
+        "short_name": "NY"
+      },
+      "location": {
+        "lattitude": 40.817847,
+        "latitude": 40.817847,
+        "longitude": -73.410608,
+        "time_zone": {
+          "id": 15,
+          "name": "(UTC-05:00) Eastern Time (US & Canada)",
+          "standard_name": "Eastern Standard Time",
+          "symbol": "Eastern Standard Time"
+        }
+      },
+      "currency": {
+        "id": 148,
+        "name": "United States Dollar",
+        "code": "USD",
+        "symbol": "0024"
+      },
+      "address_info": {
+        "address_1": "",
+        "address_2": "",
+        "city": "Walt Whitman Road",
+        "zip_code": ""
+      },
+      "settings": null,
+      "contact_info": {
+        "phone_1": {
+          "country_id": 225,
+          "number": "",
+          "display_number": ""
+        },
+        "phone_2": null,
+        "email": ""
+      },
+      "working_hours": [
+        {
+          "day_of_week": "Monday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Tuesday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Wednesday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Thursday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Friday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Saturday",
+          "start_time": "800",
+          "end_time": "1800",
+          "offline_start_time": "800",
+          "offline_end_time": "1800",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "1800",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Sunday",
+          "start_time": "800",
+          "end_time": "1800",
+          "offline_start_time": "800",
+          "offline_end_time": "1800",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "1800",
+          "is_closed": false
+        }
+      ],
+      "additional_info": {
+        "service_tax_no": null,
+        "tin": null,
+        "vat": null,
+        "cst": null,
+        "can_book": false,
+        "collect_feedback": null,
+        "services_available": false,
+        "available_services": null,
+        "unavailable_services": null,
+        "categories_available": false,
+        "available_categories": null,
+        "unavailable_categories": null,
+        "is_add_ons_available": false,
+        "feedback_link": null,
+        "feedback_label": null,
+        "is_global_tokenization_supported": false,
+        "is_auto_pay_enabled_at_center": false,
+        "cancellation_fee_duration": -1,
+        "is_center_amenities_enabled": false,
+        "center_amenities": "{\"centerAmenitiesSection\":[],\"order\":[]}"
+      },
+      "culture_code_at_center": "en-US",
+      "is_fbe_enabled": false,
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/ny/walt-whitman-road/walt-whitman-road---huntington-1433.html"
+    },
+    {
+      "id": "8c38b02b-0979-4ecf-b434-b82aef9d859a",
+      "code": "1437",
+      "name": "Bayside - Bay Terrace Shopping Center - 1437",
+      "display_name": "Bayside - Bay Terrace Shopping Center",
+      "description": "",
+      "online_booking_start_date": "2020-01-27T00:00:00",
+      "enable_parallel_services_at_center": true,
+      "country": {
+        "id": 225,
+        "code": "US",
+        "name": "United States",
+        "phone_code": 1,
+        "nationality": "American"
+      },
+      "state": {
+        "id": 67,
+        "code": "US36",
+        "name": "New York",
+        "short_name": "NY"
+      },
+      "location": {
+        "lattitude": 40.780659,
+        "latitude": 40.780659,
+        "longitude": -73.775811,
+        "time_zone": {
+          "id": 15,
+          "name": "(UTC-05:00) Eastern Time (US & Canada)",
+          "standard_name": "Eastern Standard Time",
+          "symbol": "Eastern Standard Time"
+        }
+      },
+      "currency": {
+        "id": 148,
+        "name": "United States Dollar",
+        "code": "USD",
+        "symbol": "0024"
+      },
+      "address_info": {
+        "address_1": "",
+        "address_2": "",
+        "city": "Bayside",
+        "zip_code": ""
+      },
+      "settings": null,
+      "contact_info": {
+        "phone_1": {
+          "country_id": 225,
+          "number": "",
+          "display_number": ""
+        },
+        "phone_2": null,
+        "email": ""
+      },
+      "working_hours": [
+        {
+          "day_of_week": "Monday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Tuesday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Wednesday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Thursday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Friday",
+          "start_time": "800",
+          "end_time": "2100",
+          "offline_start_time": "800",
+          "offline_end_time": "2100",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2100",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Saturday",
+          "start_time": "800",
+          "end_time": "1800",
+          "offline_start_time": "800",
+          "offline_end_time": "1800",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "1800",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Sunday",
+          "start_time": "800",
+          "end_time": "1800",
+          "offline_start_time": "800",
+          "offline_end_time": "1800",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "1800",
+          "is_closed": false
+        }
+      ],
+      "additional_info": {
+        "service_tax_no": null,
+        "tin": null,
+        "vat": null,
+        "cst": null,
+        "can_book": false,
+        "collect_feedback": null,
+        "services_available": false,
+        "available_services": null,
+        "unavailable_services": null,
+        "categories_available": false,
+        "available_categories": null,
+        "unavailable_categories": null,
+        "is_add_ons_available": false,
+        "feedback_link": null,
+        "feedback_label": null,
+        "is_global_tokenization_supported": false,
+        "is_auto_pay_enabled_at_center": false,
+        "cancellation_fee_duration": -1,
+        "is_center_amenities_enabled": false,
+        "center_amenities": "{\"centerAmenitiesSection\":[],\"order\":[]}"
+      },
+      "culture_code_at_center": "en-US",
+      "is_fbe_enabled": false,
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/ny/bayside/bayside---bay-terrace-shopping-center-1437.html"
     }
   ],
   "error": null,
   "page_info": {
-    "total": 44,
+    "total": 60,
     "page": -1,
     "size": -1
   },
