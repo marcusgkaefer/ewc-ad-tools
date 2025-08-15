@@ -610,7 +610,7 @@ class MockApiService {
       "Preview Link",
       "Instagram Preview Link",
       "Ad Name",
-      "Automatic Format",
+      "Dynamic Creative Ad Format",
       "Title",
       "Title Placement",
       "Body",
