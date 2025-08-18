@@ -24,6 +24,7 @@ import {
   generateAdName,
   generateCampaignName,
   generateAdSetName,
+  cleanLocationName,
 } from "../constants/hardcodedAdValues";
 import Papa from "papaparse";
 
@@ -711,11 +712,12 @@ class MockApiService {
           this.substituteVariables(template.fields.landingPageUrl, location) ||
           "https://waxcenter.com"; // Default fallback
 
-        // Generate dynamic names using campaign date
-        const locationName = location.name.replace(/\s+/g, "");
-        const campaignName = generateCampaignName(locationName, campaign.month, campaign.day);
-        const adSetName = generateAdSetName(locationName, campaign.month, campaign.day);
-        const adName = generateAdName(locationName, campaign.month, campaign.day);
+        // Generate dynamic names using campaign season and year
+        // Remove location code suffix (e.g., "Atlanta-Brookhaven-0368" -> "Atlanta-Brookhaven")
+        const locationName = cleanLocationName(location.name);
+        const campaignName = generateCampaignName(locationName, campaign.season, campaign.shortYear);
+        const adSetName = generateAdSetName(locationName, campaign.season, campaign.shortYear);
+        const adName = generateAdName(locationName, campaign.season, campaign.shortYear);
 
         // Create readable row object
         const rowData = {

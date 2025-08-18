@@ -216,6 +216,8 @@ const CampaignCreator: React.FC<CampaignCreatorProps> = ({
     prefix: 'EWC',
     platform: 'Meta',
     selectedDate: new Date(),
+    season: 'Summer',
+    shortYear: new Date().getFullYear().toString().slice(-2),
     month: new Date().toLocaleString('default', { month: 'long' }),
     day: new Date().getDate().toString(),
     objective: 'Engagement',
@@ -512,7 +514,7 @@ const CampaignCreator: React.FC<CampaignCreatorProps> = ({
           format: 'csv',
           includeHeaders: true,
           customFields: ['radius', 'caption'],
-          fileName: `${campaignConfig.prefix}_${campaignConfig.platform}_${campaignConfig.month}${campaignConfig.day}_AllCampaigns.csv`,
+          fileName: `${campaignConfig.prefix}_${campaignConfig.platform}_${campaignConfig.season}${campaignConfig.shortYear}_AllCampaigns.csv`,
           campaign: campaignConfig
         }
       );
@@ -522,7 +524,7 @@ const CampaignCreator: React.FC<CampaignCreatorProps> = ({
           // Add to generated files list
           const newFile: GeneratedFile = {
             id: result.data.id,
-            name: `${campaignConfig.prefix}_${campaignConfig.platform}_${campaignConfig.month}${campaignConfig.day}_AllCampaigns.csv`,
+            name: `${campaignConfig.prefix}_${campaignConfig.platform}_${campaignConfig.season}${campaignConfig.shortYear}_AllCampaigns.csv`,
             timestamp: new Date(),
             locationCount: selectedLocations.length,
             jobId: result.data.id

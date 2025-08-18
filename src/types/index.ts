@@ -91,6 +91,53 @@ export interface LocationSummary {
   landing_page_url?: string; // Center Landing Page URL
 }
 
+// Location Group Models
+export interface LocationGroup {
+  id: string;
+  name: string;
+  description?: string;
+  userId?: string | null;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  locationCount?: number; // Computed field for UI display
+}
+
+export interface LocationGroupMember {
+  id: string;
+  groupId: string;
+  locationId: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface LocationGroupWithMembers extends LocationGroup {
+  members: LocationGroupMember[];
+  locations?: LocationSummary[]; // Associated locations for convenience
+}
+
+export interface CreateLocationGroupRequest {
+  name: string;
+  description?: string;
+  locationIds?: string[]; // Optional initial locations to add
+}
+
+export interface UpdateLocationGroupRequest {
+  name?: string;
+  description?: string;
+  isActive?: boolean;
+}
+
+export interface AddLocationToGroupRequest {
+  groupId: string;
+  locationIds: string[];
+}
+
+export interface RemoveLocationFromGroupRequest {
+  groupId: string;
+  locationIds: string[];
+}
+
 // Location Configuration Models
 export interface LocationConfig {
   id: string;
@@ -372,8 +419,10 @@ export interface CampaignConfiguration {
   prefix: string; // Base prefix, e.g., "EWC"
   platform: string; // e.g., "Meta"
   selectedDate: Date; // Selected date for campaign
-  month: string; // e.g., "June" (extracted from selectedDate)
-  day: string; // e.g., "25" (extracted from selectedDate)
+  season: string; // e.g., "Spring", "Summer", "Fall", "Winter" - manually entered
+  shortYear: string; // e.g., "25" (extracted from selectedDate)
+  month: string; // e.g., "June" (extracted from selectedDate) - kept for backward compatibility
+  day: string; // e.g., "25" (extracted from selectedDate) - kept for backward compatibility
   objective: string; // e.g., "Engagement" - now customizable
   testType: string; // e.g., "LocalTest"
   duration: string; // e.g., "Evergreen"

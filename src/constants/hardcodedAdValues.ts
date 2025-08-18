@@ -2,8 +2,8 @@
 // These values should not be editable by users - they represent the reference template
 
 export const REFERENCE_AD_TEMPLATE = {
-  // Ad naming pattern: EWC_Meta_Spring25_Engagement_LocalTest_{Location}_6.26.25_BehindTheScenes
-  adNamePattern: 'EWC_Meta_Spring25_Engagement_LocalTest_{location}_6.26.25_BehindTheScenes',
+  // Ad naming pattern: EWC_Meta_{Season}{shortYear}_Engagement_LocalTest_{Location}_{Season}
+  adNamePattern: 'EWC_Meta_Summer25_Engagement_LocalTest_{location}_Summer',
   
   // Creative content - fixed values from example
   title: 'Get your First Wax Free',
@@ -100,16 +100,22 @@ export const REFERENCE_ADSET_SETTINGS = {
 } as const
 
 // Function to generate ad name from location (same as Ad Set Name pattern)
-export function generateAdName(locationName: string, month: string = "June", day: string = "25"): string {
-  return `EWC_Meta_${month}${day}_Engagement_LocalTest_${locationName}_${month}`;
+export function generateAdName(locationName: string, season: string = "Summer", shortYear: string = "25"): string {
+  return `EWC_Meta_${season}${shortYear}_Engagement_LocalTest_${locationName}_${season}`;
 }
 
 // Function to generate campaign name from location  
-export function generateCampaignName(locationName: string, month: string = "June", day: string = "25"): string {
-  return `EWC_Meta_${month}${day}_Engagement_LocalTest_${locationName}`;
+export function generateCampaignName(locationName: string, season: string = "Summer", shortYear: string = "25"): string {
+  return `EWC_Meta_${season}${shortYear}_Engagement_LocalTest_${locationName}`;
 }
 
 // Function to generate ad set name from location
-export function generateAdSetName(locationName: string, month: string = "June", day: string = "25"): string {
-  return `EWC_Meta_${month}${day}_Engagement_LocalTest_${locationName}_${month}`;
+export function generateAdSetName(locationName: string, season: string = "Summer", shortYear: string = "25"): string {
+  return `EWC_Meta_${season}${shortYear}_Engagement_LocalTest_${locationName}_${season}`;
+}
+
+// Helper function to clean location names by removing code suffixes
+export function cleanLocationName(locationName: string): string {
+  // Remove only the numeric code suffix (e.g., "-0368", "-1234") while preserving spaces
+  return locationName.replace(/-\d+$/, "");
 } 

@@ -42,6 +42,7 @@ import { generateAdName } from './constants/hardcodedAdValues';
 
 // Add import for the new simplified creator at the top
 import SimplifiedCampaignCreator from './components/ui/SimplifiedCampaignCreator';
+import LocationGroupsPage from './components/pages/LocationGroupsPage';
 
 // Animation variants
 const containerVariants = {
@@ -83,6 +84,7 @@ function App() {
   const [configSuccessMessage, setConfigSuccessMessage] = useState('');
   const [showLocationConfigError, setShowLocationConfigError] = useState(false);
   const [configErrorMessage, setConfigErrorMessage] = useState('');
+  const [currentView, setCurrentView] = useState<'campaign' | 'groups'>('campaign');
   
   // Download state management
   const [isDownloading, setIsDownloading] = useState(false);
@@ -93,6 +95,8 @@ function App() {
     prefix: 'EWC',
     platform: 'Meta',
     selectedDate: new Date('2025-06-25'),
+    season: 'Summer',
+    shortYear: '25',
     month: 'June',
     day: '25',
     objective: 'Engagement',
@@ -145,7 +149,7 @@ function App() {
     if (templates.length > 0 && campaignConfig.ads.length === 0) {
       const defaultAd: AdConfiguration = {
         id: 'ad-1',
-        name: generateAdName('Template', campaignConfig.month, campaignConfig.day), // Auto-generated using reference template
+        name: generateAdName('Template', campaignConfig.season, campaignConfig.shortYear), // Auto-generated using reference template
         templateId: templates[0]?.id || '',
         radius: '+4m',
         caption: 'You learn something new everyday', // Fixed from reference template
@@ -155,7 +159,7 @@ function App() {
       };
       setCampaignConfig(prev => ({ ...prev, ads: [defaultAd] }));
     }
-  }, [templates, campaignConfig.ads.length, campaignConfig.month, campaignConfig.day]);
+  }, [templates, campaignConfig.ads.length, campaignConfig.season, campaignConfig.shortYear]);
 
   // Update date fields when selectedDate changes
   useEffect(() => {
@@ -164,12 +168,14 @@ function App() {
       'July', 'August', 'September', 'October', 'November', 'December'];
     const month = monthNames[date.getMonth()];
     const day = date.getDate().toString();
+    const shortYear = date.getFullYear().toString().slice(-2); // Extract last 2 digits of year
     const scheduledDate = date.toLocaleDateString('en-US');
     
     setCampaignConfig(prev => ({
       ...prev,
       month,
       day,
+      shortYear,
       ads: prev.ads.map(ad => ({ ...ad, scheduledDate }))
     }));
   }, [campaignConfig.selectedDate]);
@@ -408,7 +414,7 @@ function App() {
           format: 'csv',
           includeHeaders: true,
           customFields: ['radius', 'caption', 'additionalNotes', 'scheduledDate', 'status'],
-          fileName: `${campaignConfig.prefix}_${campaignConfig.platform}_${campaignConfig.month}${campaignConfig.day}_AllCampaigns.csv`,
+          fileName: `${campaignConfig.prefix}_${campaignConfig.platform}_${campaignConfig.season}${campaignConfig.shortYear}_AllCampaigns.csv`,
           campaign: campaignConfig
         }
       );
@@ -519,9 +525,39 @@ function App() {
             />
           )}
 
+          {/* Navigation Tabs */}
+          <div className="mb-8">
+            <div className="border-b border-gray-200">
+              <nav className="-mb-px flex space-x-8">
+                <button
+                  onClick={() => setCurrentView('campaign')}
+                  className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                    currentView === 'campaign'
+                      ? 'border-blue-500 text-blue-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  }`}
+                >
+                  Campaign Creator
+                </button>
+                <button
+                  onClick={() => setCurrentView('groups')}
+                  className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                    currentView === 'groups'
+                      ? 'border-blue-500 text-blue-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  }`}
+                >
+                  Location Groups
+                </button>
+              </nav>
+            </div>
+          </div>
+
           {/* Main Content Area */}
           <AnimatePresence mode="wait">
-            {useSimplifiedVersion ? (
+            {currentView === 'groups' ? (
+              <LocationGroupsPage />
+            ) : useSimplifiedVersion ? (
               <SimplifiedCampaignCreator />
             ) : (
               <>
@@ -826,6 +862,19 @@ function App() {
                             onChange={(date: Date) => setCampaignConfig(prev => ({ ...prev, selectedDate: date }))}
                           />
                         </div>
+
+                        <div className="space-y-2">
+                          <label className="block font-semibold text-neutral-700 text-sm uppercase tracking-wide">
+                            Season
+                          </label>
+                          <input
+                            type="text"
+                            value={campaignConfig.season}
+                            onChange={(e) => setCampaignConfig(prev => ({ ...prev, season: e.target.value }))}
+                            className="w-full px-6 py-4 border-2 border-neutral-200 rounded-2xl text-base bg-white/90 backdrop-blur-xl transition-all duration-300 focus:border-primary-500 focus:ring-4 focus:ring-primary-100 focus:-translate-y-0.5 focus:outline-none hover:bg-white"
+                            placeholder="Summer"
+                          />
+                        </div>
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -1090,7 +1139,7 @@ function App() {
                         `${stats.totalFiles} comprehensive CSV file containing all campaigns`,
                         `${stats.totalCampaigns.toLocaleString()} total Meta campaign settings`,
                         'Complete 73-column campaign import format',
-                        `File name: ${campaignConfig.prefix}_${campaignConfig.platform}_${campaignConfig.month}${campaignConfig.day}_AllCampaigns.csv`,
+                        `File name: ${campaignConfig.prefix}_${campaignConfig.platform}_${campaignConfig.season}${campaignConfig.shortYear}_AllCampaigns.csv`,
                         'Location-specific targeting coordinates and demographics',
                         'All ad variations organized in a single file',
                         'Ready for Meta Ads Manager bulk import'

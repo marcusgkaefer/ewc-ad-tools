@@ -215,6 +215,8 @@ const SimplifiedCampaignCreator: React.FC = () => {
     prefix: "EWC",
     platform: "Meta",
     selectedDate: new Date(),
+    season: "Summer",
+    shortYear: new Date().getFullYear().toString().slice(-2),
     month: new Date().toLocaleString("default", { month: "long" }),
     day: new Date().getDate().toString(),
     objective: "Engagement",
@@ -344,12 +346,14 @@ const SimplifiedCampaignCreator: React.FC = () => {
     ];
     const month = monthNames[date.getMonth()];
     const day = date.getDate().toString();
+    const shortYear = date.getFullYear().toString().slice(-2); // Extract last 2 digits of year
     const scheduledDate = date.toLocaleDateString("en-US");
 
     setCampaignConfig((prev) => ({
       ...prev,
       month,
       day,
+      shortYear,
       ads: prev.ads.map((ad) => ({ ...ad, scheduledDate })),
     }));
   }, [campaignConfig.selectedDate]);
@@ -532,7 +536,7 @@ const SimplifiedCampaignCreator: React.FC = () => {
           format: "csv",
           includeHeaders: true,
           customFields: ["radius", "caption"],
-          fileName: `${campaignConfig.prefix}_${campaignConfig.platform}_${campaignConfig.month}${campaignConfig.day}_AllCampaigns.csv`,
+          fileName: `${campaignConfig.prefix}_${campaignConfig.platform}_${campaignConfig.season}${campaignConfig.shortYear}_AllCampaigns.csv`,
           campaign: campaignConfig,
         }
       );
@@ -542,7 +546,7 @@ const SimplifiedCampaignCreator: React.FC = () => {
         // Add to generated files list
         const newFile: GeneratedFile = {
           id: result.data.id,
-          name: `${campaignConfig.prefix}_${campaignConfig.platform}_${campaignConfig.month}${campaignConfig.day}_AllCampaigns.csv`,
+          name: `${campaignConfig.prefix}_${campaignConfig.platform}_${campaignConfig.season}${campaignConfig.shortYear}_AllCampaigns.csv`,
           timestamp: new Date(),
           locationCount: selectedLocations.length,
           jobId: result.data.id,
@@ -1127,6 +1131,22 @@ const SimplifiedCampaignCreator: React.FC = () => {
                               selectedDate: date
                             })}
                             className="[&>button]:!px-4 [&>button]:!py-3"
+                          />
+                        </div>
+                        <div>
+                          <label className="block font-medium text-wax-gray-700 mb-2 text-sm">
+                            Season *
+                          </label>
+                          <input
+                            type="text"
+                            value={campaignConfig.season}
+                            onChange={(e) => setCampaignConfig({
+                              ...campaignConfig,
+                              season: e.target.value
+                            })}
+                            className="w-full px-4 py-3 border-2 border-wax-gray-200 rounded-xl text-base bg-white transition-all duration-200 focus:border-wax-red-500 focus:ring-2 focus:ring-wax-red-100 focus:outline-none hover:border-wax-gray-300"
+                            placeholder="Summer"
+                            required
                           />
                         </div>
                         <div>

@@ -103,6 +103,19 @@ const CampaignSettingsModal: React.FC<CampaignSettingsModalProps> = ({
 
               <div className="space-y-2">
                 <label className="block font-semibold text-neutral-700 text-sm uppercase tracking-wide">
+                  Season
+                </label>
+                <input
+                  type="text"
+                  value={config.season}
+                  onChange={(e) => setConfig(prev => ({ ...prev, season: e.target.value }))}
+                  className="w-full px-4 py-3 border-2 border-neutral-200 rounded-xl text-base bg-white transition-all duration-300 focus:border-primary-500 focus:ring-4 focus:ring-primary-100 focus:outline-none hover:border-neutral-300"
+                  placeholder="Summer"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="block font-semibold text-neutral-700 text-sm uppercase tracking-wide">
                   Campaign Objective
                 </label>
                 <Select

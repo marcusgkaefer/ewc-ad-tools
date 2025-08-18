@@ -452,6 +452,8 @@ export const generateMockGenerationJob = (
         prefix: 'EWC',
         platform: 'Meta',
         selectedDate: new Date('2025-06-25'),
+        season: 'Spring',
+        shortYear: '25',
         month: 'June',
         day: '25',
         objective: 'Engagement',

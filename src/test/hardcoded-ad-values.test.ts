@@ -5,7 +5,8 @@ import {
   REFERENCE_ADSET_SETTINGS,
   generateAdName, 
   generateCampaignName, 
-  generateAdSetName 
+  generateAdSetName,
+  cleanLocationName
 } from '../constants/hardcodedAdValues'
 
 describe('Hard-coded Ad Values', () => {
@@ -18,8 +19,9 @@ describe('Hard-coded Ad Values', () => {
     })
 
     it('should have proper ad name pattern', () => {
-      expect(REFERENCE_AD_TEMPLATE.adNamePattern).toBe('EWC_Meta_Spring25_Engagement_LocalTest_{location}_6.26.25_BehindTheScenes')
+      expect(REFERENCE_AD_TEMPLATE.adNamePattern).toBe('EWC_Meta_Summer25_Engagement_LocalTest_{location}_Summer')
       expect(REFERENCE_AD_TEMPLATE.adNamePattern).toContain('{location}')
+      expect(REFERENCE_AD_TEMPLATE.adNamePattern).toContain('Summer')
     })
 
     it('should have proper technical settings', () => {
@@ -136,26 +138,52 @@ describe('Hard-coded Ad Values', () => {
     })
   })
 
+  describe('Location Name Cleaning', () => {
+    it('should remove location code suffixes', () => {
+      expect(cleanLocationName('Atlanta-Brookhaven-0368')).toBe('Atlanta-Brookhaven')
+      expect(cleanLocationName('Chicago-Downtown-1234')).toBe('Chicago-Downtown')
+      expect(cleanLocationName('New York-Midtown-5678')).toBe('New York-Midtown')
+    })
+
+    it('should handle locations without codes', () => {
+      expect(cleanLocationName('Atlanta-Brookhaven')).toBe('Atlanta-Brookhaven')
+      expect(cleanLocationName('Chicago')).toBe('Chicago')
+      expect(cleanLocationName('New York City')).toBe('New York City')
+    })
+
+    it('should remove numeric code suffixes after hyphens', () => {
+      expect(cleanLocationName('Atlanta-Brookhaven-0368')).toBe('Atlanta-Brookhaven')
+      expect(cleanLocationName('Chicago-Downtown-1234')).toBe('Chicago-Downtown')
+      expect(cleanLocationName('New York-Midtown-5678')).toBe('New York-Midtown')
+    })
+
+    it('should handle edge cases', () => {
+      expect(cleanLocationName('')).toBe('')
+      expect(cleanLocationName('Location-123')).toBe('Location')
+      expect(cleanLocationName('Location123')).toBe('Location123')
+    })
+  })
+
   describe('Name Generation Functions', () => {
     describe('generateAdName', () => {
       it('should generate correct ad name format (same as Ad Set Name)', () => {
         const result = generateAdName('Chicago')
-        expect(result).toBe('EWC_Meta_June25_Engagement_LocalTest_Chicago_June')
+        expect(result).toBe('EWC_Meta_Summer25_Engagement_LocalTest_Chicago_Summer')
       })
 
       it('should handle location names with spaces', () => {
         const result = generateAdName('New York City')
-        expect(result).toBe('EWC_Meta_June25_Engagement_LocalTest_New York City_June')
+        expect(result).toBe('EWC_Meta_Summer25_Engagement_LocalTest_New York City_Summer')
       })
 
       it('should handle empty location names', () => {
         const result = generateAdName('')
-        expect(result).toBe('EWC_Meta_June25_Engagement_LocalTest__June')
+        expect(result).toBe('EWC_Meta_Summer25_Engagement_LocalTest__Summer')
       })
 
       it('should preserve special characters in location names', () => {
         const result = generateAdName("O'Fallon")
-        expect(result).toBe("EWC_Meta_June25_Engagement_LocalTest_O'Fallon_June")
+        expect(result).toBe("EWC_Meta_Summer25_Engagement_LocalTest_O'Fallon_Summer")
       })
 
       it('should match Ad Set Name pattern exactly', () => {
@@ -169,24 +197,24 @@ describe('Hard-coded Ad Values', () => {
     describe('generateCampaignName', () => {
       it('should generate correct campaign name format', () => {
         const result = generateCampaignName('Chicago')
-        expect(result).toBe('EWC_Meta_June25_Engagement_LocalTest_Chicago')
+        expect(result).toBe('EWC_Meta_Summer25_Engagement_LocalTest_Chicago')
       })
 
       it('should handle location names with spaces', () => {
         const result = generateCampaignName('Los Angeles')
-        expect(result).toBe('EWC_Meta_June25_Engagement_LocalTest_Los Angeles')
+        expect(result).toBe('EWC_Meta_Summer25_Engagement_LocalTest_Los Angeles')
       })
     })
 
     describe('generateAdSetName', () => {
       it('should generate correct adset name format', () => {
         const result = generateAdSetName('Chicago')
-        expect(result).toBe('EWC_Meta_June25_Engagement_LocalTest_Chicago_June')
+        expect(result).toBe('EWC_Meta_Summer25_Engagement_LocalTest_Chicago_Summer')
       })
 
-      it('should include June suffix', () => {
+      it('should include Summer suffix', () => {
         const result = generateAdSetName('TestLocation')
-        expect(result.endsWith('_June')).toBe(true)
+        expect(result.endsWith('_Summer')).toBe(true)
       })
     })
 
@@ -210,7 +238,7 @@ describe('Hard-coded Ad Values', () => {
         expect(adSetName).toBe(adName)
 
         // AdSet should be based on campaign but with suffix
-        expect(adSetName).toBe(`${campaignName}_June`)
+        expect(adSetName).toBe(`${campaignName}_Summer`)
       })
 
       it('should generate deterministic names', () => {
@@ -253,9 +281,9 @@ describe('Hard-coded Ad Values', () => {
       expect(REFERENCE_AD_TEMPLATE.callToAction).toBe('BOOK_TRAVEL')
       expect(REFERENCE_AD_TEMPLATE.dynamicCreativeAdFormat).toBe('Automatic Format')
       
-      // Ad name pattern should match Ad Set Name (Campaign Name + June)
+      // Ad name pattern should match Ad Set Name (Campaign Name + Summer)
       const testAdName = generateAdName('Evergreen')
-      expect(testAdName).toBe('EWC_Meta_June25_Engagement_LocalTest_Evergreen_June')
+      expect(testAdName).toBe('EWC_Meta_Summer25_Engagement_LocalTest_Evergreen_Summer')
     })
   })
 
