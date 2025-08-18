@@ -12,7 +12,9 @@
     "test:run": "vitest run",
     "test:ui": "vitest --ui",
     "migrate-locations": "tsx scripts/migrate-locations.ts",
-    "populate-configs": "tsx scripts/populate-location-configs.ts"
+    "populate-configs": "tsx scripts/populate-location-configs.ts",
+    "fetch-zenoti": "tsx scripts/fetch-zenoti-locations.ts",
+    "test-zenoti": "tsx scripts/test-zenoti-structure.ts"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.4",

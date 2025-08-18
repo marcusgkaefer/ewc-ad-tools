@@ -85,6 +85,8 @@ CREATE TABLE campaign_locations (
   UNIQUE(campaign_id, location_id)
 );
 
+
+
 -- Create indexes for better performance
 CREATE INDEX idx_locations_code ON locations(code);
 CREATE INDEX idx_locations_name ON locations(name);
@@ -106,6 +108,8 @@ CREATE INDEX idx_campaign_locations_campaign_id ON campaign_locations(campaign_i
 CREATE INDEX idx_campaign_locations_location_id ON campaign_locations(location_id);
 CREATE INDEX idx_campaign_locations_active ON campaign_locations(is_active);
 
+
+
 -- Create trigger to update updated_at timestamp
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
@@ -124,11 +128,14 @@ CREATE TRIGGER update_location_configs_updated_at BEFORE UPDATE ON location_conf
 CREATE TRIGGER update_campaigns_updated_at BEFORE UPDATE ON campaigns
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
+
+
 -- Add Row Level Security (RLS) policies
 ALTER TABLE locations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE location_configs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE campaigns ENABLE ROW LEVEL SECURITY;
 ALTER TABLE campaign_locations ENABLE ROW LEVEL SECURITY;
+
 
 -- Public read access to locations (adjust as needed for your security requirements)
 CREATE POLICY "Locations are viewable by everyone" ON locations
@@ -189,9 +196,16 @@ CREATE POLICY "Users can delete campaign locations for their campaigns" ON campa
     AND (campaigns.user_id = auth.uid() OR campaigns.user_id IS NULL)
   ));
 
+
+
 -- Grant necessary permissions
 GRANT USAGE ON SCHEMA public TO anon, authenticated;
 GRANT SELECT ON locations TO anon, authenticated;
 GRANT ALL ON location_configs TO authenticated;
 GRANT ALL ON campaigns TO authenticated;
+<<<<<<< Current (Your changes)
 GRANT ALL ON campaign_locations TO authenticated; 
+=======
+GRANT ALL ON campaign_locations TO authenticated;
+ 
+>>>>>>> Incoming (Background Agent changes)

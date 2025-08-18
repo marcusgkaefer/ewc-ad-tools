@@ -173,12 +173,12 @@ describe('Hard-coded Ad Values', () => {
 
       it('should handle location names with spaces', () => {
         const result = generateAdName('New York City')
-        expect(result).toBe('EWC_Meta_Summer25_Engagement_LocalTest_New York City_Summer')
+        expect(result).toBe('EWC_Meta_Summer25_Engagement_LocalTest_New-York-City_Summer')
       })
 
       it('should handle empty location names', () => {
         const result = generateAdName('')
-        expect(result).toBe('EWC_Meta_Summer25_Engagement_LocalTest__Summer')
+        expect(result).toBe('EWC_Meta_Summer25_Engagement_LocalTest_Unknown_Summer')
       })
 
       it('should preserve special characters in location names', () => {
@@ -202,7 +202,7 @@ describe('Hard-coded Ad Values', () => {
 
       it('should handle location names with spaces', () => {
         const result = generateCampaignName('Los Angeles')
-        expect(result).toBe('EWC_Meta_Summer25_Engagement_LocalTest_Los Angeles')
+        expect(result).toBe('EWC_Meta_Summer25_Engagement_LocalTest_Los-Angeles')
       })
     })
 

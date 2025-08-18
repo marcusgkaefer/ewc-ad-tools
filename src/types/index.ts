@@ -91,52 +91,7 @@ export interface LocationSummary {
   landing_page_url?: string; // Center Landing Page URL
 }
 
-// Location Group Models
-export interface LocationGroup {
-  id: string;
-  name: string;
-  description?: string;
-  userId?: string | null;
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
-  locationCount?: number; // Computed field for UI display
-}
 
-export interface LocationGroupMember {
-  id: string;
-  groupId: string;
-  locationId: string;
-  isActive: boolean;
-  createdAt: string;
-}
-
-export interface LocationGroupWithMembers extends LocationGroup {
-  members: LocationGroupMember[];
-  locations?: LocationSummary[]; // Associated locations for convenience
-}
-
-export interface CreateLocationGroupRequest {
-  name: string;
-  description?: string;
-  locationIds?: string[]; // Optional initial locations to add
-}
-
-export interface UpdateLocationGroupRequest {
-  name?: string;
-  description?: string;
-  isActive?: boolean;
-}
-
-export interface AddLocationToGroupRequest {
-  groupId: string;
-  locationIds: string[];
-}
-
-export interface RemoveLocationFromGroupRequest {
-  groupId: string;
-  locationIds: string[];
-}
 
 // Location Configuration Models
 export interface LocationConfig {

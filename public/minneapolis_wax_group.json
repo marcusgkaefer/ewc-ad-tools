@@ -1,0 +1,616 @@
+{
+  "centers": [
+    {
+      "id": "default-0123",
+      "code": "0123",
+      "name": "Minneapolis - Lakes - 0123",
+      "display_name": "Minneapolis - Lakes",
+      "description": "",
+      "online_booking_start_date": "2025-01-01T00:00:00",
+      "enable_parallel_services_at_center": true,
+      "country": {
+        "id": 225,
+        "code": "US",
+        "name": "United States",
+        "phone_code": 1,
+        "nationality": "American"
+      },
+      "state": {
+        "id": 67,
+        "code": "US27",
+        "name": "Minnesota",
+        "short_name": "MN"
+      },
+      "location": {
+        "lattitude": 44.94934,
+        "latitude": 44.94934,
+        "longitude": -93.320789,
+        "time_zone": {
+          "id": 15,
+          "name": "(UTC-06:00) Central Time (US & Canada)",
+          "standard_name": "Central Standard Time",
+          "symbol": "Central Standard Time"
+        }
+      },
+      "currency": {
+        "id": 148,
+        "name": "United States Dollar",
+        "code": "USD",
+        "symbol": "0024"
+      },
+      "address_info": {
+        "address_1": "Location in Minneapolis",
+        "address_2": "",
+        "city": "Minneapolis",
+        "zip_code": "00000"
+      },
+      "settings": null,
+      "contact_info": {
+        "phone_1": {
+          "country_id": 225,
+          "number": "0000000000",
+          "display_number": "(000) 000-0000"
+        },
+        "phone_2": null,
+        "email": ""
+      },
+      "working_hours": [
+        {
+          "day_of_week": "Monday",
+          "start_time": "800",
+          "end_time": "2000",
+          "offline_start_time": "800",
+          "offline_end_time": "2000",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2000",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Tuesday",
+          "start_time": "800",
+          "end_time": "2000",
+          "offline_start_time": "800",
+          "offline_end_time": "2000",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2000",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Wednesday",
+          "start_time": "800",
+          "end_time": "2000",
+          "offline_start_time": "800",
+          "offline_end_time": "2000",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2000",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Thursday",
+          "start_time": "800",
+          "end_time": "2000",
+          "offline_start_time": "800",
+          "offline_end_time": "2000",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2000",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Friday",
+          "start_time": "800",
+          "end_time": "2000",
+          "offline_start_time": "800",
+          "offline_end_time": "2000",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2000",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Saturday",
+          "start_time": "800",
+          "end_time": "1800",
+          "offline_start_time": "800",
+          "offline_end_time": "1800",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "1800",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Sunday",
+          "start_time": "800",
+          "end_time": "1800",
+          "offline_start_time": "800",
+          "offline_end_time": "1800",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "1800",
+          "is_closed": false
+        }
+      ],
+      "additional_info": {
+        "service_tax_no": null,
+        "tin": null,
+        "vat": null,
+        "cst": null,
+        "can_book": false,
+        "collect_feedback": null,
+        "services_available": false,
+        "available_services": null,
+        "unavailable_services": null,
+        "categories_available": false,
+        "available_categories": null,
+        "unavailable_categories": null,
+        "is_add_ons_available": false,
+        "feedback_link": null,
+        "feedback_label": null,
+        "is_global_tokenization_supported": false,
+        "is_auto_pay_enabled_at_center": false,
+        "cancellation_fee_duration": -1,
+        "is_center_amenities_enabled": false,
+        "center_amenities": "{\"centerAmenitiesSection\":[],\"order\":[]}"
+      },
+      "culture_code_at_center": "en-US",
+      "is_fbe_enabled": false,
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/mn/minneapolis/minneapolis-lakes-0123.html"
+    },
+    {
+      "id": "default-0236",
+      "code": "0236",
+      "name": "Minnetonka - 0236",
+      "display_name": "Minnetonka",
+      "description": "",
+      "online_booking_start_date": "2025-01-01T00:00:00",
+      "enable_parallel_services_at_center": true,
+      "country": {
+        "id": 225,
+        "code": "US",
+        "name": "United States",
+        "phone_code": 1,
+        "nationality": "American"
+      },
+      "state": {
+        "id": 67,
+        "code": "US27",
+        "name": "Minnesota",
+        "short_name": "MN"
+      },
+      "location": {
+        "lattitude": 44.964794,
+        "latitude": 44.964794,
+        "longitude": -93.44349,
+        "time_zone": {
+          "id": 15,
+          "name": "(UTC-06:00) Central Time (US & Canada)",
+          "standard_name": "Central Standard Time",
+          "symbol": "Central Standard Time"
+        }
+      },
+      "currency": {
+        "id": 148,
+        "name": "United States Dollar",
+        "code": "USD",
+        "symbol": "0024"
+      },
+      "address_info": {
+        "address_1": "Location in Minnetonka",
+        "address_2": "",
+        "city": "Minnetonka",
+        "zip_code": "00000"
+      },
+      "settings": null,
+      "contact_info": {
+        "phone_1": {
+          "country_id": 225,
+          "number": "0000000000",
+          "display_number": "(000) 000-0000"
+        },
+        "phone_2": null,
+        "email": ""
+      },
+      "working_hours": [
+        {
+          "day_of_week": "Monday",
+          "start_time": "800",
+          "end_time": "2000",
+          "offline_start_time": "800",
+          "offline_end_time": "2000",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2000",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Tuesday",
+          "start_time": "800",
+          "end_time": "2000",
+          "offline_start_time": "800",
+          "offline_end_time": "2000",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2000",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Wednesday",
+          "start_time": "800",
+          "end_time": "2000",
+          "offline_start_time": "800",
+          "offline_end_time": "2000",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2000",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Thursday",
+          "start_time": "800",
+          "end_time": "2000",
+          "offline_start_time": "800",
+          "offline_end_time": "2000",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2000",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Friday",
+          "start_time": "800",
+          "end_time": "2000",
+          "offline_start_time": "800",
+          "offline_end_time": "2000",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2000",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Saturday",
+          "start_time": "800",
+          "end_time": "1800",
+          "offline_start_time": "800",
+          "offline_end_time": "1800",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "1800",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Sunday",
+          "start_time": "800",
+          "end_time": "1800",
+          "offline_start_time": "800",
+          "offline_end_time": "1800",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "1800",
+          "is_closed": false
+        }
+      ],
+      "additional_info": {
+        "service_tax_no": null,
+        "tin": null,
+        "vat": null,
+        "cst": null,
+        "can_book": false,
+        "collect_feedback": null,
+        "services_available": false,
+        "available_services": null,
+        "unavailable_services": null,
+        "categories_available": false,
+        "available_categories": null,
+        "unavailable_categories": null,
+        "is_add_ons_available": false,
+        "feedback_link": null,
+        "feedback_label": null,
+        "is_global_tokenization_supported": false,
+        "is_auto_pay_enabled_at_center": false,
+        "cancellation_fee_duration": -1,
+        "is_center_amenities_enabled": false,
+        "center_amenities": "{\"centerAmenitiesSection\":[],\"order\":[]}"
+      },
+      "culture_code_at_center": "en-US",
+      "is_fbe_enabled": false,
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/mn/minnetonka/minnetonka-0236.html"
+    },
+    {
+      "id": "default-0473",
+      "code": "0473",
+      "name": "St. Paul - Grand Avenue - 0473",
+      "display_name": "St. Paul - Grand Avenue",
+      "description": "",
+      "online_booking_start_date": "2025-01-01T00:00:00",
+      "enable_parallel_services_at_center": true,
+      "country": {
+        "id": 225,
+        "code": "US",
+        "name": "United States",
+        "phone_code": 1,
+        "nationality": "American"
+      },
+      "state": {
+        "id": 67,
+        "code": "US27",
+        "name": "Minnesota",
+        "short_name": "MN"
+      },
+      "location": {
+        "lattitude": 44.940366,
+        "latitude": 44.940366,
+        "longitude": -93.144397,
+        "time_zone": {
+          "id": 15,
+          "name": "(UTC-06:00) Central Time (US & Canada)",
+          "standard_name": "Central Standard Time",
+          "symbol": "Central Standard Time"
+        }
+      },
+      "currency": {
+        "id": 148,
+        "name": "United States Dollar",
+        "code": "USD",
+        "symbol": "0024"
+      },
+      "address_info": {
+        "address_1": "Location in St. Paul",
+        "address_2": "",
+        "city": "St. Paul",
+        "zip_code": "00000"
+      },
+      "settings": null,
+      "contact_info": {
+        "phone_1": {
+          "country_id": 225,
+          "number": "0000000000",
+          "display_number": "(000) 000-0000"
+        },
+        "phone_2": null,
+        "email": ""
+      },
+      "working_hours": [
+        {
+          "day_of_week": "Monday",
+          "start_time": "800",
+          "end_time": "2000",
+          "offline_start_time": "800",
+          "offline_end_time": "2000",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2000",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Tuesday",
+          "start_time": "800",
+          "end_time": "2000",
+          "offline_start_time": "800",
+          "offline_end_time": "2000",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2000",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Wednesday",
+          "start_time": "800",
+          "end_time": "2000",
+          "offline_start_time": "800",
+          "offline_end_time": "2000",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2000",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Thursday",
+          "start_time": "800",
+          "end_time": "2000",
+          "offline_start_time": "800",
+          "offline_end_time": "2000",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2000",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Friday",
+          "start_time": "800",
+          "end_time": "2000",
+          "offline_start_time": "800",
+          "offline_end_time": "2000",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2000",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Saturday",
+          "start_time": "800",
+          "end_time": "1800",
+          "offline_start_time": "800",
+          "offline_end_time": "1800",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "1800",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Sunday",
+          "start_time": "800",
+          "end_time": "1800",
+          "offline_start_time": "800",
+          "offline_end_time": "1800",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "1800",
+          "is_closed": false
+        }
+      ],
+      "additional_info": {
+        "service_tax_no": null,
+        "tin": null,
+        "vat": null,
+        "cst": null,
+        "can_book": false,
+        "collect_feedback": null,
+        "services_available": false,
+        "available_services": null,
+        "unavailable_services": null,
+        "categories_available": false,
+        "available_categories": null,
+        "unavailable_categories": null,
+        "is_add_ons_available": false,
+        "feedback_link": null,
+        "feedback_label": null,
+        "is_global_tokenization_supported": false,
+        "is_auto_pay_enabled_at_center": false,
+        "cancellation_fee_duration": -1,
+        "is_center_amenities_enabled": false,
+        "center_amenities": "{\"centerAmenitiesSection\":[],\"order\":[]}"
+      },
+      "culture_code_at_center": "en-US",
+      "is_fbe_enabled": false,
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/mn/st-paul/st.-paul-grand-avenue-0473.html"
+    },
+    {
+      "id": "default-0535",
+      "code": "0535",
+      "name": "Blaine - 0535",
+      "display_name": "Blaine",
+      "description": "",
+      "online_booking_start_date": "2025-01-01T00:00:00",
+      "enable_parallel_services_at_center": true,
+      "country": {
+        "id": 225,
+        "code": "US",
+        "name": "United States",
+        "phone_code": 1,
+        "nationality": "American"
+      },
+      "state": {
+        "id": 67,
+        "code": "US27",
+        "name": "Minnesota",
+        "short_name": "MN"
+      },
+      "location": {
+        "lattitude": 45.160371,
+        "latitude": 45.160371,
+        "longitude": -93.233505,
+        "time_zone": {
+          "id": 15,
+          "name": "(UTC-06:00) Central Time (US & Canada)",
+          "standard_name": "Central Standard Time",
+          "symbol": "Central Standard Time"
+        }
+      },
+      "currency": {
+        "id": 148,
+        "name": "United States Dollar",
+        "code": "USD",
+        "symbol": "0024"
+      },
+      "address_info": {
+        "address_1": "Location in Blaine",
+        "address_2": "",
+        "city": "Blaine",
+        "zip_code": "00000"
+      },
+      "settings": null,
+      "contact_info": {
+        "phone_1": {
+          "country_id": 225,
+          "number": "0000000000",
+          "display_number": "(000) 000-0000"
+        },
+        "phone_2": null,
+        "email": ""
+      },
+      "working_hours": [
+        {
+          "day_of_week": "Monday",
+          "start_time": "800",
+          "end_time": "2000",
+          "offline_start_time": "800",
+          "offline_end_time": "2000",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2000",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Tuesday",
+          "start_time": "800",
+          "end_time": "2000",
+          "offline_start_time": "800",
+          "offline_end_time": "2000",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2000",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Wednesday",
+          "start_time": "800",
+          "end_time": "2000",
+          "offline_start_time": "800",
+          "offline_end_time": "2000",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2000",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Thursday",
+          "start_time": "800",
+          "end_time": "2000",
+          "offline_start_time": "800",
+          "offline_end_time": "2000",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2000",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Friday",
+          "start_time": "800",
+          "end_time": "2000",
+          "offline_start_time": "800",
+          "offline_end_time": "2000",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "2000",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Saturday",
+          "start_time": "800",
+          "end_time": "1800",
+          "offline_start_time": "800",
+          "offline_end_time": "1800",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "1800",
+          "is_closed": false
+        },
+        {
+          "day_of_week": "Sunday",
+          "start_time": "800",
+          "end_time": "1800",
+          "offline_start_time": "800",
+          "offline_end_time": "1800",
+          "off_peak_start_time": "800",
+          "off_peak_end_time": "1800",
+          "is_closed": false
+        }
+      ],
+      "additional_info": {
+        "service_tax_no": null,
+        "tin": null,
+        "vat": null,
+        "cst": null,
+        "can_book": false,
+        "collect_feedback": null,
+        "services_available": false,
+        "available_services": null,
+        "unavailable_services": null,
+        "categories_available": false,
+        "available_categories": null,
+        "unavailable_categories": null,
+        "is_add_ons_available": false,
+        "feedback_link": null,
+        "feedback_label": null,
+        "is_global_tokenization_supported": false,
+        "is_auto_pay_enabled_at_center": false,
+        "cancellation_fee_duration": -1,
+        "is_center_amenities_enabled": false,
+        "center_amenities": "{\"centerAmenitiesSection\":[],\"order\":[]}"
+      },
+      "culture_code_at_center": "en-US",
+      "is_fbe_enabled": false,
+      "is_hc_call_center": false,
+      "landing_page_url": "https://locations.waxcenter.com/mn/blaine/blaine-0535.html"
+    }
+  ]
+}

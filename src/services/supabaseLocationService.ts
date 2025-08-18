@@ -211,6 +211,8 @@ class SupabaseLocationService {
     }
   }
 
+
+
   // Get unique states from EWC centers JSON file
   private async getEwcCentersUniqueStates(): Promise<string[]> {
     try {
@@ -636,29 +638,24 @@ class SupabaseLocationService {
         return [];
       }
 
-      // Get only the location IDs that have active configs
-      const activeLocationIds = configs.map(config => config.location_id);
-
       // Get all locations (from JSON or database based on environment variable)
       const allLocations = await this.getAllLocations();
 
-      // Filter to only locations that have active configs
-      const locationsWithActiveConfigs = allLocations.filter(location => 
-        activeLocationIds.includes(location.id)
-      );
-
-      console.log(`🔍 Filtered to ${locationsWithActiveConfigs.length} locations with active configs`);
-
-      // Map configs to locations
+      // Create a map of configs by location ID
       const configMap = new Map<string, LocationConfig>();
       configs.forEach(config => {
         configMap.set(config.location_id, this.convertToLocationConfig(config));
       });
 
-      return locationsWithActiveConfigs.map(location => ({
+      // Return ALL locations, with configs if they exist
+      const allLocationsWithConfigs = allLocations.map(location => ({
         ...location,
-        config: configMap.get(location.id),
+        config: configMap.get(location.id), // undefined if no config exists
       }));
+
+      console.log(`🔍 Returning ${allLocationsWithConfigs.length} total locations (${configs?.length || 0} with active configs)`);
+
+      return allLocationsWithConfigs;
     } catch (error) {
       console.error('Error in getLocationsWithConfigs:', error);
       throw error;

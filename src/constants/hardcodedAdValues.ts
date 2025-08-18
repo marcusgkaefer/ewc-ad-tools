@@ -101,21 +101,27 @@ export const REFERENCE_ADSET_SETTINGS = {
 
 // Function to generate ad name from location (same as Ad Set Name pattern)
 export function generateAdName(locationName: string, season: string = "Summer", shortYear: string = "25"): string {
-  return `EWC_Meta_${season}${shortYear}_Engagement_LocalTest_${locationName}_${season}`;
+  if (!locationName) return `EWC_Meta_${season}${shortYear}_Engagement_LocalTest_Unknown_${season}`;
+  const cleanName = cleanLocationName(locationName).replace(/[\s-]+/g, '-');
+  return `EWC_Meta_${season}${shortYear}_Engagement_LocalTest_${cleanName}_${season}`;
 }
 
 // Function to generate campaign name from location  
 export function generateCampaignName(locationName: string, season: string = "Summer", shortYear: string = "25"): string {
-  return `EWC_Meta_${season}${shortYear}_Engagement_LocalTest_${locationName}`;
+  if (!locationName) return `EWC_Meta_${season}${shortYear}_Engagement_LocalTest_Unknown`;
+  const cleanName = cleanLocationName(locationName).replace(/[\s-]+/g, '-');
+  return `EWC_Meta_${season}${shortYear}_Engagement_LocalTest_${cleanName}`;
 }
 
 // Function to generate ad set name from location
 export function generateAdSetName(locationName: string, season: string = "Summer", shortYear: string = "25"): string {
-  return `EWC_Meta_${season}${shortYear}_Engagement_LocalTest_${locationName}_${season}`;
+  if (!locationName) return `EWC_Meta_${season}${shortYear}_Engagement_LocalTest_Unknown_${season}`;
+  const cleanName = cleanLocationName(locationName).replace(/[\s-]+/g, '-');
+  return `EWC_Meta_${season}${shortYear}_Engagement_LocalTest_${cleanName}_${season}`;
 }
 
 // Helper function to clean location names by removing code suffixes
 export function cleanLocationName(locationName: string): string {
-  // Remove only the numeric code suffix (e.g., "-0368", "-1234") while preserving spaces
-  return locationName.replace(/-\d+$/, "");
+  // Remove the numeric code suffix (e.g., " - 0368", " - 1234") and any leading/trailing hyphens
+  return locationName.replace(/\s*-\s*\d+$/, "").replace(/^-+|-+$/g, "");
 } 

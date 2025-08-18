@@ -197,6 +197,7 @@ export type Database = {
           updated_at?: string
         }
       }
+
     }
     Views: {
       [_ in never]: never
