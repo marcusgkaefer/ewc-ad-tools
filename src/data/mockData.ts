@@ -464,7 +464,7 @@ export const generateMockGenerationJob = (
         startDate: '06/26/2025 2:32:00 am',
         endDate: '07/26/2025 11:59:00 pm',
         ads: [],
-        radius: 5
+        radius: 3
       }
     },
     createdAt: new Date().toISOString(),

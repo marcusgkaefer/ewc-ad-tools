@@ -240,7 +240,7 @@ const SimplifiedCampaignCreator: React.FC = () => {
         status: "Active",
       },
     ],
-    radius: 5,
+    radius: 3,
   });
 
   // Generation state

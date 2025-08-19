@@ -25,7 +25,7 @@ const LocationConfigModal: React.FC<LocationConfigModalProps> = ({
 }) => {
   const [config, setConfig] = useState<LocationConfiguration>({
     budget: 100,
-    radius: 5
+    radius: 3
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -48,7 +48,7 @@ const LocationConfigModal: React.FC<LocationConfigModalProps> = ({
     } else {
       setConfig({
         budget: 100,
-        radius: 5
+        radius: 3
       });
     }
     setError(null);

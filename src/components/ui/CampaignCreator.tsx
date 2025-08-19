@@ -237,7 +237,7 @@ const CampaignCreator: React.FC<CampaignCreatorProps> = ({
       scheduledDate: new Date().toLocaleDateString(),
       status: 'Active'
     }],
-    radius: 5
+    radius: 3
   };
 
   const [campaignConfig, setCampaignConfigLocal] = useState<CampaignConfiguration>(
